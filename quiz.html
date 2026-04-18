@@ -1,0 +1,3979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roomeo — Roommate Type Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    :root {
+      --primary: #000000;
+      --primary-hover: #333333;
+      --primary-focus: #1a1a1a;
+      --bg: #ffffff;
+      --page-bg: #f9f5ed;
+      --text-1: #1a1a1a;
+      --text-2: #666666;
+      --text-3: #999999;
+      --border-light: #e8e8e8;
+      --segment-todo: #ececec;
+      --accent-coral: #ff6a2a;
+      --r-sm: 4px;
+      --r-md: 8px;
+      --r-lg: 16px;
+      --r-xl: 20px;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --split-max: 1080px;
+      --quiz-footer-h: 108px;
+      --fs-h1-max: 72px;
+      --fs-h2-max: 48px;
+      /* 插画区高度只由 CSS 控制（img 不再写 width/height）；改这里即可 */
+      --quiz-art-min-h: 300px;
+      --quiz-art-min-h-mobile: 200px;
+      --quiz-art-min-h-quiz-stacked: 120px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+      color: var(--text-1);
+      background: var(--page-bg);
+      line-height: 1.6;
+      font-size: 16px;
+      font-weight: 500;
+      min-height: 100vh;
+    }
+    .quiz-header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--page-bg);
+      background: color-mix(in srgb, var(--page-bg) 88%, #fff);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(8px);
+    }
+    .quiz-header-inner {
+      max-width: calc(var(--split-max) + 48px); margin: 0 auto;
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .quiz-header a.logo {
+      display: flex; align-items: center; text-decoration: none; color: var(--text-1);
+    }
+    .quiz-header .logo img { height: 44px; width: auto; display: block; }
+    .quiz-header .back {
+      font-size: 14px; font-weight: 600; color: var(--text-2);
+      text-decoration: none; white-space: nowrap;
+    }
+    .quiz-header .back:hover { color: var(--text-1); }
+
+    .quiz-main {
+      max-width: calc(var(--split-max) + 48px);
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+    .quiz-split {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    .quiz-art-panel {
+      background: var(--bg);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--border-light);
+      min-height: var(--quiz-art-min-h);
+      height: 100%;
+      align-self: stretch;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .quiz-art-panel.is-empty .quiz-art-fallback { display: flex; }
+    .quiz-art-panel.is-empty .quiz-art-img { display: none; }
+    .quiz-art-img {
+      width: 100%;
+      flex: 1 1 0; /* basis 0：占位高度由父级 flex 分配，不跟图片文件固有尺寸走 */
+      min-height: var(--quiz-art-min-h);
+      min-width: 0;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .quiz-art-fallback {
+      display: none;
+      flex: 1 1 0;
+      min-height: var(--quiz-art-min-h);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px;
+      color: var(--text-3);
+      font-size: 14px;
+      line-height: 1.6;
+      background: linear-gradient(160deg, #fafafa 0%, #f0f0f0 100%);
+    }
+    .quiz-art-fallback code {
+      font-size: 12px; background: rgba(0,0,0,0.06); padding: 2px 8px; border-radius: 4px;
+    }
+
+    .quiz-content-panel {
+      position: relative;
+      background: var(--bg);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--border-light);
+      padding: clamp(24px, 3.6vw, 40px);
+      display: flex;
+      flex-direction: column;
+      min-height: 300px;
+      height: 100%;
+      align-self: stretch;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .quiz-content-panel > * { flex-shrink: 0; }
+    .quiz-content-panel .quiz-intro {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .quiz-content-panel .quiz-flow { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    /* 不要用 flex:1 撑满卡片，否则会留出大块空白、被迫滚动 */
+    .quiz-content-panel .quiz-flow .options { flex: 0 1 auto; }
+
+    .quiz-intro h1 {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 600; letter-spacing: -0.35px; line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .quiz-intro .lede {
+      color: var(--text-2); font-size: 16px; margin-bottom: 24px; line-height: 1.55;
+    }
+    .quiz-meta {
+      display: flex; flex-wrap: wrap; gap: 12px 20px;
+      font-size: 13px; color: var(--text-2); margin-bottom: 32px;
+    }
+    .quiz-meta span { font-weight: 600; color: var(--text-1); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: inherit; font-size: 15px; font-weight: 600;
+      padding: 14px 28px; border-radius: var(--r-md); border: none; cursor: pointer;
+      transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+      text-decoration: none;
+    }
+    .btn-continue {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      padding: 16px 24px;
+      border-radius: var(--r-md);
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .btn-continue:hover:not(:disabled) { background: var(--primary-hover); }
+    .btn-continue:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-continue:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 3px; }
+
+    /* Primary CTA: coral dot → arrow on hover; radius matches .btn-back-quiz */
+    button.card-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      margin-top: 0;
+      padding: 14px 22px 14px 26px;
+      border: none;
+      border-radius: var(--r-md);
+      font-family: inherit; font-size: 15px; font-weight: 600;
+      letter-spacing: 0.25px;
+      cursor: pointer;
+      background: var(--primary);
+      color: #fff;
+      transition:
+        background 0.3s var(--ease),
+        padding 0.4s var(--ease),
+        color 0.2s var(--ease),
+        border-color 0.2s var(--ease);
+    }
+    button.card-btn .card-btn-text { text-align: left; min-width: 0; flex: 1; }
+    button.card-btn .card-btn-tail {
+      position: relative;
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button.card-btn .card-btn-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-coral);
+      transition: opacity 0.3s var(--ease), transform 0.35s var(--ease);
+    }
+    button.card-btn .card-btn-arrow {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      color: var(--accent-coral);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.35s var(--ease), transform 0.45s var(--ease);
+      pointer-events: none;
+    }
+    button.card-btn:hover:not(:disabled),
+    button.card-btn:focus-visible:not(:disabled) {
+      background: var(--primary-hover);
+      color: #fff;
+      padding: 14px 34px 14px 26px;
+    }
+    button.card-btn:hover:not(:disabled) .card-btn-dot,
+    button.card-btn:focus-visible:not(:disabled) .card-btn-dot {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    button.card-btn:hover:not(:disabled) .card-btn-arrow,
+    button.card-btn:focus-visible:not(:disabled) .card-btn-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    button.card-btn:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 3px; }
+    button.card-btn:disabled {
+      justify-content: space-between;
+      background: var(--page-bg);
+      color: var(--text-3);
+      border: 1px solid var(--border-light);
+      cursor: not-allowed;
+      padding: 14px 22px 14px 26px;
+    }
+    button.card-btn:disabled .card-btn-dot { background: var(--border-light); }
+    @media (prefers-reduced-motion: reduce) {
+      button.card-btn,
+      button.card-btn .card-btn-dot,
+      button.card-btn .card-btn-arrow { transition: none; }
+      button.card-btn:not(:disabled) { padding: 14px 34px 14px 26px; }
+      button.card-btn:not(:disabled) .card-btn-dot { opacity: 0; transform: none; }
+      button.card-btn:not(:disabled) .card-btn-arrow { opacity: 1; transform: none; }
+    }
+
+    .btn-back-quiz {
+      align-self: flex-start;
+      background: var(--bg);
+      color: var(--text-1);
+      border: 1px solid var(--border-light);
+      padding: 12px 22px;
+      border-radius: var(--r-md);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .btn-back-quiz:hover { background: var(--page-bg); border-color: #ddd; }
+    .btn-secondary {
+      background: var(--primary); color: #fff;
+    }
+    .btn-secondary:hover { background: var(--primary-hover); }
+    .btn-ghost {
+      background: transparent; color: var(--text-2);
+      border: 1px solid var(--border-light);
+    }
+    .btn-ghost:hover { background: var(--page-bg); color: var(--text-1); }
+
+    .hidden { display: none !important; }
+
+    .progress-segments {
+      display: flex; gap: 6px;
+      margin-bottom: 28px;
+    }
+    .progress-segment {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--segment-todo);
+      transition: background 0.25s var(--ease);
+    }
+    .progress-segment.is-current {
+      background: var(--accent-coral);
+    }
+
+    .question-num {
+      font-size: 13px;
+      color: var(--text-3);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .question-title {
+      font-size: clamp(16px, 2.2vw, 19px); font-weight: 600;
+      line-height: 1.4; margin-bottom: 22px; letter-spacing: -0.2px;
+      white-space: pre-line;
+    }
+    .options {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .option {
+      display: block; width: 100%; text-align: left;
+      padding: 18px 20px; border: 1px solid var(--border-light);
+      border-radius: var(--r-md); background: var(--bg);
+      font-family: inherit; font-size: 15px; color: var(--text-1);
+      cursor: pointer;
+      transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+      line-height: 1.45;
+    }
+    .option:hover { border-color: #d0d0d0; }
+    .option:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 2px; }
+    .option.selected {
+      border-color: var(--text-1);
+      box-shadow: 0 0 0 1px var(--text-1);
+    }
+
+    .quiz-actions-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: auto;
+      padding-top: 32px;
+    }
+    .quiz-actions-stack.intro-stack {
+      margin-top: 0;
+      padding-top: 8px;
+    }
+    .quiz-content-panel .quiz-actions-stack.intro-stack {
+      margin-top: auto;
+      padding-top: 28px;
+    }
+
+    /* Fixed bottom bar (quiz steps only) — Duolingo-style */
+    .quiz-flow-footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      background: var(--page-bg);
+      background: color-mix(in srgb, var(--page-bg) 92%, #fff);
+      border-top: 1px solid rgba(0, 0, 0, 0.07);
+      padding: 20px 24px calc(20px + env(safe-area-inset-bottom, 0px));
+    }
+    .quiz-flow-footer-inner {
+      max-width: calc(var(--split-max) + 48px);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .quiz-flow-footer-inner .btn-back-quiz {
+      flex-shrink: 0;
+      align-self: center;
+      background: var(--page-bg);
+      color: var(--text-3);
+      border: 1px solid var(--border-light);
+      box-shadow: none;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.25px;
+    }
+    .quiz-flow-footer-inner .btn-back-quiz:hover {
+      background: var(--page-bg);
+      color: var(--text-2);
+      border-color: var(--border-light);
+    }
+    .quiz-flow-footer-inner .btn-back-quiz:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 3px;
+    }
+    .quiz-flow-footer-inner .card-btn {
+      width: auto;
+      min-width: min(200px, 46vw);
+      max-width: min(360px, 58vw);
+      margin-left: auto;
+      flex: 0 1 auto;
+    }
+    body.quiz-flow-foot .quiz-main {
+      padding-bottom: calc(var(--quiz-footer-h) + env(safe-area-inset-bottom, 0px) + 28px);
+    }
+
+    /*
+     * Quiz steps: 右侧按内容高度收缩（选项下无空白）；左侧同列 stretch，与右侧等高。
+     * 插画 img 的 min-height 归零，避免图片固有尺寸把行高撑得高于题目卡片。
+     */
+    body.quiz-flow-foot .quiz-content-panel {
+      min-height: 0;
+      height: auto;
+      align-self: start;
+      width: 100%;
+    }
+    body.quiz-flow-foot .quiz-content-panel .quiz-flow {
+      flex: 0 1 auto;
+    }
+    @media (min-width: 901px) {
+      body.quiz-flow-foot .quiz-art-panel {
+        min-height: 0;
+        min-width: 0;
+      }
+      body.quiz-flow-foot .quiz-art-img,
+      body.quiz-flow-foot .quiz-art-fallback {
+        min-height: 0;
+      }
+    }
+
+    /* ── RESULTS — Figma page “1.0” · frame 1478:509 (Quiz_final) ── */
+    .results-page.rfinal-page {
+      margin-top: 0;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      width: 100vw;
+      max-width: 100vw;
+      box-sizing: border-box;
+      /* 与 assets/quiz-result-1-0/hero-roof.svg 默认 fill (#FAFAF8) 一致 */
+      --rfinal-paper: #FAFAF8;
+      --rfinal-paper-grain: rgba(80, 72, 40, 0.035);
+      --fill-0: #FAFAF8;
+      --rfinal-ink: #141414;
+      --rfinal-ink-soft: #3d3d3d;
+      --rfinal-mute: #6b6b6b;
+      --rfinal-warm-900: #2a1f16;
+      --rfinal-warm-700: #4d3221;
+      --rfinal-accent: #e85a24;
+      --rfinal-accent-mid: #ff6c37;
+      --rfinal-line: rgba(77, 50, 33, 0.11);
+      --rfinal-surface: rgba(255, 255, 255, 0.58);
+      --rfinal-surface-strong: rgba(255, 255, 255, 0.82);
+      --rfinal-shadow-sm: 0 2px 16px rgba(45, 35, 28, 0.05);
+      --rfinal-shadow-md: 0 8px 36px rgba(45, 35, 28, 0.08);
+      --rfinal-ease-out: cubic-bezier(0.33, 0.02, 0.18, 1);
+      --font-rfinal-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+      --font-rfinal-body: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      /* 左右大留白（Hero / 正文块左右内边距） */
+      --rfinal-gutter: clamp(14px, 3.5vw, 44px);
+      /* 正文区最大行长：主栏仍铺满屏，文案不跟着拉满 */
+      --rfinal-copy-max: 42rem;
+      background: var(--rfinal-paper);
+      padding: 0 env(safe-area-inset-right, 0px) max(24px, env(safe-area-inset-bottom, 0px))
+        env(safe-area-inset-left, 0px);
+      /* 竖向至少铺满视口（扣除顶栏约高），短内容时背景仍到底 */
+      --rfinal-viewport-offset: 72px;
+      min-height: calc(100dvh - var(--rfinal-viewport-offset));
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-rfinal-body);
+      --font-comico: var(--font-rfinal-display);
+      /* 透明底 PNG 用 normal；只有图里仍是白底时才用 multiply */
+      --rfinal-mascot-blend: normal;
+    }
+    .results-page.rfinal-page .rfinal-shell {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      width: 100%;
+    }
+    .rfinal-shell {
+      max-width: none;
+      width: 100%;
+      margin: 0;
+    }
+    .results-page.rfinal-page .rfinal-receipt-stage {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .rfinal-receipt-stage {
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+    .results-page.rfinal-page .rfinal-card.rfinal-receipt-paper {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .rfinal-card.rfinal-receipt-paper {
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      position: relative;
+      background: var(--rfinal-paper);
+      border-radius: 0;
+      box-shadow: none;
+      overflow: visible;
+    }
+    /* 去掉侧孔与底部撕边，避免「卡片浮在另一块背景上」的边界感 */
+    .rfinal-card.rfinal-receipt-paper::before,
+    .rfinal-card.rfinal-receipt-paper::after {
+      content: none;
+      display: none;
+    }
+    .rfinal-receipt-tear {
+      display: none;
+    }
+    /* Hero 与正文同在小票卡片内 */
+    .results-hero.rfinal-hero {
+      position: relative;
+      height: 587px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .rfinal-back {
+      position: absolute;
+      left: max(12px, env(safe-area-inset-left, 0px));
+      top: max(12px, env(safe-area-inset-top, 0px));
+      z-index: 8;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 249, 237, 0.22);
+      background: rgba(0, 0, 0, 0.22);
+      color: #f9f5ed;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      transition: background 0.2s var(--rfinal-ease-out), border-color 0.2s var(--rfinal-ease-out), transform 0.2s var(--rfinal-ease-out);
+    }
+    .rfinal-back:hover {
+      background: rgba(0, 0, 0, 0.38);
+      border-color: rgba(255, 249, 237, 0.35);
+      transform: scale(1.04);
+    }
+    .rfinal-back:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 2px;
+    }
+    .rfinal-back svg {
+      width: 20px;
+      height: 20px;
+    }
+    .rfinal-hero-media {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .rfinal-hero-photo-wrap {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 251.55%;
+      height: min(924px, 158%);
+      margin-left: -75.78%;
+    }
+    .rfinal-hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      filter: blur(2px);
+      display: block;
+    }
+    .rfinal-hero-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        165deg,
+        rgba(0, 0, 0, 0.52) 0%,
+        rgba(0, 0, 0, 0.22) 42%,
+        rgba(0, 0, 0, 0.38) 100%
+      );
+      pointer-events: none;
+    }
+    .rfinal-hero-heading {
+      position: absolute;
+      left: var(--rfinal-gutter);
+      top: 72px;
+      width: calc(100% - 2 * var(--rfinal-gutter));
+      max-width: min(34rem, calc(100% - 2 * var(--rfinal-gutter)));
+      z-index: 3;
+    }
+    .rfinal-hero-kicker {
+      font-family: var(--font-rfinal-body);
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.28;
+      color: rgba(249, 245, 237, 0.92);
+      margin: 0 0 4px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .rfinal-hero-type {
+      font-family: var(--font-rfinal-display);
+      font-size: clamp(40px, 9.5vw, 58px);
+      font-weight: 700;
+      font-optical-sizing: auto;
+      line-height: 1.05;
+      color: #f9f5ed;
+      letter-spacing: -0.02em;
+      margin: 0;
+      text-shadow: 0 2px 28px rgba(0, 0, 0, 0.35);
+    }
+    /* 角色放大并略下移，下半截由 z-index 更高的波浪/屋顶层盖住，只露上半身 */
+    .rfinal-mascot-wrap {
+      position: absolute;
+      left: var(--rfinal-gutter);
+      bottom: 64px;
+      width: min(392px, calc(100% - 2 * var(--rfinal-gutter)));
+      height: min(368px, 62vw);
+      max-height: 412px;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .rfinal-mascot-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      display: block;
+      background: transparent;
+      transform: scale(1.2) translateY(22%);
+      transform-origin: center bottom;
+      mix-blend-mode: var(--rfinal-mascot-blend, multiply);
+    }
+    .rfinal-wave-row {
+      position: absolute;
+      left: -0.5px;
+      bottom: 0;
+      width: calc(100% + 1.88px);
+      max-width: none;
+      z-index: 5;
+      line-height: 0;
+    }
+    .rfinal-wave-base {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .rfinal-wave-roof {
+      position: absolute;
+      left: 0.15%;
+      bottom: 0;
+      width: 99.78%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .rfinal-body {
+      padding: clamp(22px, 4.5vw, 40px) var(--rfinal-gutter) clamp(36px, 6vw, 52px);
+    }
+    .results-page.rfinal-page .rfinal-receipt-wrap {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .rfinal-receipt-wrap {
+      position: relative;
+      background:
+        radial-gradient(100% 55% at 50% 0%, rgba(255, 200, 150, 0.09) 0%, transparent 58%),
+        radial-gradient(90% 40% at 100% 20%, rgba(255, 255, 255, 0.45) 0%, transparent 50%),
+        var(--rfinal-paper);
+      overflow: visible;
+    }
+    .rfinal-receipt-wrap > .rfinal-print-sheet {
+      display: flex;
+      flex-direction: column;
+    }
+    .results-page.rfinal-page .rfinal-receipt-wrap > .rfinal-print-sheet {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .results-page.rfinal-page .rfinal-body {
+      flex: 1 1 auto;
+      width: 100%;
+      max-width: min(var(--rfinal-copy-max), 100%);
+      margin-inline: auto;
+      box-sizing: border-box;
+    }
+    @media (max-width: 480px) {
+      .results-page.rfinal-page {
+        --rfinal-gutter: 14px;
+      }
+      .rfinal-body { padding-bottom: 36px; }
+      .rfinal-hero-heading {
+        left: var(--rfinal-gutter);
+        width: calc(100% - 2 * var(--rfinal-gutter));
+        max-width: min(34rem, calc(100% - 2 * var(--rfinal-gutter)));
+      }
+      .rfinal-mascot-wrap {
+        left: var(--rfinal-gutter);
+        bottom: 58px;
+        width: min(348px, calc(100% - 2 * var(--rfinal-gutter)));
+        height: min(326px, 58vw);
+      }
+      .rfinal-mascot-wrap img {
+        transform: scale(1.1) translateY(20%);
+      }
+    }
+    .rfinal-quote {
+      font-family: var(--font-rfinal-body);
+      margin: 0 0 clamp(28px, 5vw, 40px);
+      padding: clamp(20px, 4vw, 28px) clamp(18px, 3.2vw, 26px);
+      color: var(--rfinal-mute);
+      line-height: 1.5;
+      display: flow-root;
+      background: var(--rfinal-surface-strong);
+      border: 1px solid var(--rfinal-line);
+      border-radius: 16px;
+      box-shadow: var(--rfinal-shadow-sm), 0 1px 0 rgba(255, 255, 255, 0.75) inset;
+    }
+    /* 大号左引号：float 成「下沉首字」，避免行内巨字把结尾引号挤到词中间 */
+    .rfinal-quote::before {
+      content: '\201c';
+      float: left;
+      font-size: clamp(34px, 7.2vw, 52px);
+      line-height: 0.68;
+      margin: 2px 10px 0 0;
+      color: rgba(232, 90, 36, 0.35);
+      font-weight: 400;
+    }
+    .rfinal-quote-body {
+      font-family: var(--font-rfinal-display);
+      font-size: clamp(21px, 2.7vw, 26px);
+      font-weight: 500;
+      font-optical-sizing: auto;
+      display: block;
+      line-height: 1.52;
+      color: var(--rfinal-warm-900);
+    }
+    /* 小号右引号跟在正文末尾，不参与 64px 行高拆词 */
+    .rfinal-quote-body::after {
+      content: '\201d';
+      font-size: 1.15em;
+      font-weight: 400;
+      color: rgba(232, 90, 36, 0.35);
+      margin-left: 0.06em;
+    }
+    .rfinal-roast {
+      font-size: clamp(18px, 1.2vw, 20px);
+      line-height: 1.72;
+      color: var(--rfinal-ink);
+      margin: 0 0 clamp(26px, 4vw, 34px);
+      padding-left: 14px;
+      border-left: 3px solid rgba(232, 90, 36, 0.45);
+    }
+    .rfinal-roast:empty {
+      display: none;
+    }
+    .rfinal-stats-list {
+      list-style: none;
+      padding: 20px 20px 18px;
+      margin: 0 0 clamp(26px, 4vw, 36px);
+      border: 1px solid var(--rfinal-line);
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 252, 248, 0.72) 100%);
+      box-shadow: var(--rfinal-shadow-md);
+    }
+    .rfinal-stats-list:empty {
+      display: none;
+    }
+    .rfinal-stat-item {
+      margin-bottom: 16px;
+    }
+    .rfinal-stat-item:last-child {
+      margin-bottom: 0;
+    }
+    .rfinal-stat-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .rfinal-stat-label {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--rfinal-warm-700);
+    }
+    .rfinal-stat-pct {
+      font-size: 18px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #1a1a1a;
+      flex-shrink: 0;
+    }
+    .rfinal-stat-bar {
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(77, 50, 33, 0.1);
+      overflow: hidden;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset;
+    }
+    .rfinal-stat-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff8a4a 0%, #ff6c37 55%, #e85a24 100%);
+      min-width: 0;
+      transition: width 0.45s cubic-bezier(0.33, 0.02, 0.18, 1);
+    }
+    .rfinal-stat-fill.rfinal-stat-fill--over {
+      background: linear-gradient(90deg, #ffd24a 0%, #ff8a4a 40%, #ff6c37 100%);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rfinal-stat-fill {
+        transition: none;
+      }
+      .rfinal-match,
+      .rfinal-back,
+      .rfinal-btn-primary,
+      .share-pill {
+        transition: none;
+      }
+      .rfinal-match:hover,
+      .rfinal-back:hover,
+      .rfinal-btn-primary:hover,
+      .share-pill:hover {
+        transform: none;
+      }
+    }
+    .rfinal-stat-note {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.56;
+      color: #444;
+    }
+    .rfinal-stat-fallback {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .rfinal-stat-fallback:last-child {
+      margin-bottom: 0;
+    }
+    .rfinal-survival-tip {
+      grid-column: 1 / -1;
+      font-size: 18px;
+      line-height: 1.72;
+      color: var(--rfinal-ink);
+      margin: 0;
+      padding: 20px 22px 20px 22px;
+      border-radius: 14px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.55) 0%, transparent 42%),
+        linear-gradient(135deg, rgba(255, 214, 175, 0.55) 0%, rgba(255, 182, 77, 0.22) 100%);
+      border: 1px solid rgba(200, 120, 40, 0.28);
+      box-shadow: var(--rfinal-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      position: relative;
+      isolation: isolate;
+    }
+    .rfinal-survival-tip::before {
+      content: 'Roomeo survival tip';
+      display: block;
+      font-family: var(--font-rfinal-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--rfinal-warm-700);
+      opacity: 0.85;
+      margin-bottom: 10px;
+    }
+    .rfinal-survival-tip:empty {
+      display: none;
+    }
+    .rfinal-sec {
+      border-top: none;
+      padding: clamp(22px, 3.5vw, 30px) clamp(18px, 2.8vw, 26px);
+      margin-bottom: clamp(16px, 2.8vw, 22px);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: clamp(14px, 2.2vw, 20px);
+      row-gap: 14px;
+      align-items: start;
+      background:
+        linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 252, 248, 0.42) 100%),
+        var(--rfinal-surface);
+      border: 1px solid var(--rfinal-line);
+      border-radius: 18px;
+      box-shadow: var(--rfinal-shadow-sm), 0 0 0 1px rgba(255, 255, 255, 0.45) inset;
+    }
+    .rfinal-badge {
+      position: relative;
+      flex-shrink: 0;
+      overflow: visible;
+      isolation: isolate;
+      grid-column: 1;
+      grid-row: 1;
+      align-self: center;
+      filter: drop-shadow(0 6px 16px rgba(45, 35, 28, 0.14));
+    }
+    .rfinal-badge--1 { width: 88px; height: 60px; }
+    .rfinal-badge--2 { width: 82px; height: 60px; }
+    .rfinal-badge--3 { width: 88px; height: 64px; }
+    .rfinal-badge--4 { width: 88px; height: 81px; }
+    .rfinal-badge--5 { width: 88px; height: 81px; }
+    .rfinal-badge--6 { width: 88px; height: 81px; }
+    .rfinal-badge-shape {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .rfinal-badge--1 .rfinal-badge-shape {
+      width: 82px;
+      height: 59.889px;
+      transform: rotate(180deg) scaleY(-1);
+    }
+    /* 铺满徽章盒再用 flex 居中，避免 translate 与裁剪导致看不见 */
+    .rfinal-badge-digit {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      font-family: var(--font-rfinal-body);
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      text-align: center;
+      pointer-events: none;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    }
+    .rfinal-sec-title {
+      font-family: var(--font-rfinal-display);
+      font-size: clamp(17px, 1.55vw, 22px);
+      font-weight: 700;
+      font-optical-sizing: auto;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--rfinal-warm-900);
+      margin: 0;
+      line-height: 1.22;
+      grid-column: 2;
+      grid-row: 1;
+      align-self: center;
+    }
+    .rfinal-sec-intro {
+      font-size: clamp(17px, 1.25vw, 19px);
+      line-height: 1.72;
+      color: var(--rfinal-ink-soft);
+      margin: 0;
+      grid-column: 1 / -1;
+    }
+    .rfinal-sec-intro--medium {
+      font-weight: 500;
+    }
+    .rfinal-page .result-list {
+      list-style: disc;
+      padding-left: 26px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      grid-column: 1 / -1;
+    }
+    .rfinal-page .result-list li {
+      font-size: clamp(17px, 1.2vw, 19px);
+      line-height: 1.75;
+      color: var(--rfinal-ink);
+      margin: 0;
+    }
+    .rfinal-page .result-list li::marker {
+      color: rgba(232, 90, 36, 0.55);
+    }
+    .rfinal-matches-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      grid-column: 1 / -1;
+    }
+    .rfinal-match {
+      background: var(--rfinal-surface-strong);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      border: 1px solid var(--rfinal-line);
+      box-shadow: var(--rfinal-shadow-sm);
+      transition: transform 0.22s var(--rfinal-ease-out), box-shadow 0.22s var(--rfinal-ease-out), border-color 0.22s var(--rfinal-ease-out);
+    }
+    .rfinal-match:hover {
+      border-color: rgba(232, 90, 36, 0.22);
+      box-shadow: var(--rfinal-shadow-md);
+      transform: translateY(-1px);
+    }
+    .rfinal-match-thumb {
+      width: 57px;
+      height: 57px;
+      border-radius: 8px;
+      border: none;
+      background: #fff;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .rfinal-match-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0 0 6px;
+      line-height: 1.45;
+    }
+    .rfinal-match-line {
+      font-size: 18px;
+      line-height: 1.66;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    .rfinal-next {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 252, 248, 0.55) 100%);
+      border: 1px solid var(--rfinal-line);
+      border-radius: 16px;
+      padding: 22px 22px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 0;
+      box-shadow: var(--rfinal-shadow-sm), inset 4px 0 0 0 rgba(232, 90, 36, 0.5);
+    }
+    .rfinal-next h2 {
+      font-family: var(--font-rfinal-display);
+      font-size: clamp(17px, 1.5vw, 21px);
+      font-weight: 700;
+      font-optical-sizing: auto;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--rfinal-warm-900);
+      margin: 0;
+      line-height: 1.22;
+    }
+    .rfinal-next p {
+      font-size: 19px;
+      line-height: 1.66;
+      color: var(--rfinal-ink);
+      margin: 0;
+    }
+    .rfinal-cta-block {
+      border-top: none;
+      padding-top: 28px;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+    .rfinal-cta-block::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(77, 50, 33, 0.14) 18%,
+        rgba(77, 50, 33, 0.14) 82%,
+        transparent 100%
+      );
+    }
+    .rfinal-btn-primary {
+      width: 100%;
+      min-height: 48px;
+      border: none;
+      border-radius: 12px;
+      background: #000;
+      color: #f9f5ed;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      padding: 12px 22px;
+      box-sizing: border-box;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+      transition: background 0.2s var(--rfinal-ease-out), box-shadow 0.2s var(--rfinal-ease-out), transform 0.2s var(--rfinal-ease-out);
+    }
+    .rfinal-btn-primary:hover {
+      background: #2a2a2a;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.22);
+      transform: translateY(-1px);
+    }
+    .rfinal-btn-primary:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 3px;
+    }
+    .rfinal-btn-skip {
+      width: 100%;
+      min-height: 44px;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: #666;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .rfinal-share {
+      border-top: none;
+      padding-top: 28px;
+      margin-top: 4px;
+      position: relative;
+    }
+    .rfinal-share::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(77, 50, 33, 0.14) 18%,
+        rgba(77, 50, 33, 0.14) 82%,
+        transparent 100%
+      );
+    }
+    .share-section > h2 {
+      font-family: var(--font-rfinal-display, 'Fraunces', Georgia, serif);
+      font-size: clamp(17px, 1.5vw, 21px);
+      font-weight: 700;
+      font-optical-sizing: auto;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--rfinal-warm-900, #2a1f16);
+      margin: 0 0 10px;
+      line-height: 1.22;
+    }
+    .share-section > .hint {
+      font-size: 17px;
+      line-height: 1.62;
+      color: var(--rfinal-mute, #6b6b6b);
+      margin: 0 0 16px;
+    }
+    .share-pills {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .share-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 8px 10px;
+      min-height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--rfinal-line, rgba(77, 50, 33, 0.12));
+      background: linear-gradient(180deg, #fff 0%, rgba(255, 252, 248, 0.96) 100%);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--rfinal-ink, #141414);
+      cursor: pointer;
+      font-family: inherit;
+      box-sizing: border-box;
+      text-align: center;
+      line-height: 1.25;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 4px 14px rgba(45, 35, 28, 0.06);
+      transition: border-color 0.2s var(--rfinal-ease-out, cubic-bezier(0.33, 0.02, 0.18, 1)), box-shadow 0.2s var(--rfinal-ease-out, cubic-bezier(0.33, 0.02, 0.18, 1)), transform 0.2s var(--rfinal-ease-out, cubic-bezier(0.33, 0.02, 0.18, 1));
+    }
+    .share-pill:hover {
+      border-color: rgba(232, 90, 36, 0.28);
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 8px 22px rgba(45, 35, 28, 0.09);
+      transform: translateY(-1px);
+    }
+    .share-pill:focus-visible {
+      outline: 2px solid var(--primary-focus, #2563eb);
+      outline-offset: 2px;
+    }
+    .share-pill[aria-expanded="true"] {
+      border-color: rgba(157, 110, 62, 0.55);
+      background: rgba(255, 252, 248, 0.95);
+      color: var(--rfinal-warm-700, #4d3221);
+      transform: none;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset, 0 2px 10px rgba(157, 110, 62, 0.12);
+    }
+    .share-pill-icon {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+    /* Compare 与其它两个同排均分，不再单独占满第二行 */
+    .share-pill--wide {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    @media (min-width: 480px) {
+      .share-pills {
+        gap: 10px;
+      }
+      .share-pill {
+        gap: 6px;
+        padding: 8px 14px;
+        min-height: 44px;
+        font-size: 16px;
+      }
+      .share-pill-icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    .share-detail {
+      margin-top: 12px;
+      padding: 16px;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      background: #fff;
+    }
+    .share-detail-hint {
+      font-size: 17px;
+      line-height: 1.62;
+      color: #666;
+      margin: 0 0 12px;
+    }
+    .share-detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+    .share-detail-actions .btn-back-quiz {
+      min-height: 44px;
+      border-radius: 8px;
+      border: 1px solid #e8e8e8;
+      background: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      padding: 13px 18px;
+    }
+    /* Centered in viewport; tokens from :root (Roomeo quiz design system) */
+    .email-modal-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      border: 1px solid var(--border-light);
+      border-radius: var(--r-xl);
+      padding: 0;
+      width: min(440px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      max-height: min(90dvh, calc(100dvh - 32px));
+      overflow: auto;
+      font-family: inherit;
+      color: var(--text-1);
+      background: var(--bg);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+    }
+    .email-modal-dialog::backdrop {
+      background: color-mix(in srgb, var(--text-1) 42%, transparent);
+    }
+    @supports not (background: color-mix(in srgb, black 50%, transparent)) {
+      .email-modal-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.42);
+      }
+    }
+    .email-modal-panel {
+      position: relative;
+      padding: clamp(28px, 5vw, 36px);
+    }
+    .email-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: var(--r-md);
+      background: transparent;
+      color: var(--text-2);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s var(--ease), color 0.2s var(--ease);
+    }
+    .email-modal-close:hover {
+      background: var(--segment-todo);
+      color: var(--text-1);
+    }
+    .email-modal-close:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 2px;
+    }
+    .email-modal-title {
+      font-size: clamp(20px, 2.5vw, 24px);
+      font-weight: 700;
+      letter-spacing: -0.35px;
+      line-height: 1.25;
+      margin: 0 44px 10px 0;
+      color: var(--text-1);
+    }
+    .email-modal-lede {
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.55;
+      margin: 0 0 20px;
+    }
+    .email-modal-field {
+      margin-bottom: 16px;
+    }
+    .email-modal-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 6px 8px 6px 18px;
+      border: 1px solid var(--border-light);
+      border-radius: 999px;
+      background: var(--bg);
+      transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    }
+    .email-modal-input-wrap:focus-within {
+      border-color: var(--text-3);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--text-1) 12%, transparent);
+    }
+    @supports not (box-shadow: 0 0 0 3px color-mix(in srgb, black 12%, transparent)) {
+      .email-modal-input-wrap:focus-within {
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+      }
+    }
+    .email-modal-input-wrap svg {
+      flex-shrink: 0;
+      color: var(--text-3);
+    }
+    .email-modal-input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      padding: 12px 12px 12px 0;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text-1);
+      background: transparent;
+      outline: none;
+    }
+    .email-modal-input::placeholder {
+      color: var(--text-3);
+    }
+    .email-modal-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text-2);
+      cursor: pointer;
+      margin-bottom: 22px;
+    }
+    .email-modal-checkbox input {
+      margin-top: 3px;
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+    .email-modal-hint {
+      font-size: 13px;
+      color: var(--text-3);
+      margin: -8px 0 22px;
+      line-height: 1.5;
+    }
+    .email-modal-send {
+      width: 100%;
+      min-height: 52px;
+      border: none;
+      border-radius: 999px;
+      padding: 16px 28px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s var(--ease);
+    }
+    .email-modal-send:hover {
+      background: var(--primary-hover);
+    }
+    .email-modal-send:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 3px;
+    }
+    .email-modal-dismiss {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 8px;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-2);
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: color 0.2s var(--ease);
+    }
+    .email-modal-dismiss:hover {
+      color: var(--text-1);
+      text-decoration: underline;
+    }
+    .email-modal-dismiss:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 2px;
+      border-radius: var(--r-sm);
+    }
+
+    /* Compare friend modal: shell + toast spacing = email + share patterns */
+    .compare-modal-legal {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text-2);
+    }
+    .compare-modal-legal a {
+      color: var(--text-2);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .compare-modal-legal a:hover {
+      color: var(--text-1);
+    }
+    #compare-friend-form .share-modal-block:last-of-type {
+      margin-bottom: 22px;
+    }
+
+    .share-modal-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      border: 1px solid var(--border-light);
+      border-radius: var(--r-xl);
+      padding: 0;
+      width: min(520px, calc(100vw - 32px));
+      max-height: calc(100vh - 32px);
+      max-height: min(90dvh, calc(100dvh - 32px));
+      overflow: auto;
+      font-family: inherit;
+      color: var(--text-1);
+      background: var(--bg);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+    }
+    .share-modal-dialog::backdrop {
+      background: color-mix(in srgb, var(--text-1) 42%, transparent);
+    }
+    @supports not (background: color-mix(in srgb, black 50%, transparent)) {
+      .share-modal-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.42);
+      }
+    }
+    .share-modal-panel {
+      position: relative;
+      padding: clamp(24px, 4vw, 32px);
+      padding-bottom: 48px;
+    }
+    .share-modal-panel .share-toast {
+      position: absolute;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      margin: 0;
+      padding: 8px 14px;
+      border-radius: var(--r-md);
+      background: var(--text-1);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.2s var(--ease);
+    }
+    .share-modal-panel .share-toast.visible {
+      opacity: 1;
+    }
+    .share-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: var(--r-md);
+      background: transparent;
+      color: var(--text-2);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s var(--ease), color 0.2s var(--ease);
+      z-index: 2;
+    }
+    .share-modal-close:hover {
+      background: var(--segment-todo);
+      color: var(--text-1);
+    }
+    .share-modal-close:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 2px;
+    }
+    .share-modal-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px 20px;
+      align-items: start;
+      margin-bottom: 22px;
+      padding-right: 36px;
+    }
+    .share-modal-title {
+      font-size: clamp(20px, 2.5vw, 24px);
+      font-weight: 700;
+      letter-spacing: -0.35px;
+      line-height: 1.25;
+      margin: 0;
+      color: var(--text-1);
+    }
+    .share-modal-mascot {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      display: block;
+      margin-top: -4px;
+    }
+    .share-modal-mascot.hidden {
+      display: none !important;
+    }
+    .share-modal-social {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .share-social-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: inherit;
+      cursor: pointer;
+      color: var(--text-1);
+    }
+    .share-social-tile:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 4px;
+      border-radius: var(--r-sm);
+    }
+    .share-social-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--border-light);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+    }
+    .share-social-tile:hover .share-social-icon {
+      background: var(--segment-todo);
+      border-color: var(--text-3);
+    }
+    .share-social-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+    .share-modal-block {
+      margin-bottom: 22px;
+    }
+    .share-modal-block:last-of-type {
+      margin-bottom: 0;
+    }
+    .share-modal-block > label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+    .share-modal-block .share-modal-hint {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text-3);
+      margin: 0 0 10px;
+    }
+    .share-modal-url-row {
+      display: flex;
+      align-items: stretch;
+      border: 1px solid var(--border-light);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .share-modal-url-row input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text-1);
+      background: transparent;
+      outline: none;
+    }
+    .share-modal-url-copy {
+      flex-shrink: 0;
+      width: 48px;
+      border: none;
+      border-left: 1px solid var(--border-light);
+      background: var(--segment-todo);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-2);
+      transition: background 0.2s var(--ease), color 0.2s var(--ease);
+    }
+    .share-modal-url-copy:hover {
+      background: color-mix(in srgb, var(--segment-todo) 70%, var(--border-light));
+      color: var(--text-1);
+    }
+    .share-modal-url-copy:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: -2px;
+      z-index: 1;
+    }
+
+    .rfinal-share .share-preview-box,
+    .share-section .share-preview-box {
+      margin-top: 0;
+      padding: 14px 16px;
+      background: #f3f3f3;
+      border: 1px dashed #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      line-height: 1.58;
+      color: #666;
+      text-align: left;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .rfinal-footer-links {
+      border-top: none;
+      padding-top: 24px;
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      position: relative;
+    }
+    .rfinal-footer-links::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(77, 50, 33, 0.12) 22%,
+        rgba(77, 50, 33, 0.12) 78%,
+        transparent 100%
+      );
+    }
+    .rfinal-footer-links .btn-text {
+      color: #666;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .share-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .share-row .btn-back-quiz { min-height: 44px; }
+    .share-toast {
+      font-size: 15px; font-weight: 600; color: var(--text-2);
+      opacity: 0; transition: opacity 0.2s var(--ease);
+    }
+    .share-toast.visible { opacity: 1; }
+    .result-footer-actions {
+      margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    }
+    .btn-text {
+      background: none; border: none; font-family: inherit;
+      font-size: 14px; font-weight: 600; color: var(--text-2);
+      cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+      padding: 8px 0;
+    }
+    .btn-text:hover { color: var(--text-1); }
+
+    .why-intro { font-size: 15px; color: var(--text-1); margin-bottom: 10px; }
+    .why-list {
+      list-style: disc; padding-left: 1.25rem;
+      font-size: 15px; line-height: 1.65; color: var(--text-1);
+    }
+    .why-list li { margin-bottom: 6px; }
+
+    .match-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px; background: var(--page-bg); border-radius: var(--r-md);
+      border: 1px solid var(--border-light); margin-bottom: 10px;
+    }
+    .match-item:last-child { margin-bottom: 0; }
+    .match-thumb {
+      width: 56px; height: 56px; flex-shrink: 0; border-radius: var(--r-md);
+      object-fit: contain; background: var(--bg);
+      border: none;
+    }
+    .match-item-body { min-width: 0; flex: 1; }
+    .match-name { font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+    .match-line { font-size: 15px; color: var(--text-2); line-height: 1.5; margin: 0; }
+
+    .profile-lede {
+      font-size: 14px; color: var(--text-2); line-height: 1.55; margin-bottom: 14px;
+    }
+    .trait-grid {
+      display: grid; gap: 10px 16px;
+      font-size: 15px; line-height: 1.5;
+    }
+    .trait-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--page-bg);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-light);
+    }
+    .trait-dim { color: var(--text-2); }
+    .trait-val { font-weight: 600; color: var(--text-1); text-align: right; }
+    .result-list {
+      list-style: disc; padding-left: 1.25rem;
+      font-size: 15px; line-height: 1.65; color: var(--text-1);
+    }
+    .result-list li { margin-bottom: 8px; }
+    .scenarios-intro { font-size: 15px; color: var(--text-1); margin-bottom: 10px; font-weight: 500; }
+
+    .next-block {
+      margin-top: 28px; padding: 20px 20px;
+      background: linear-gradient(160deg, #fafafa 0%, #f3f3f3 100%);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-light);
+    }
+    .next-block h2 {
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1.1px; color: var(--text-3); margin-bottom: 10px;
+    }
+    .next-block p { font-size: 16px; line-height: 1.6; color: var(--text-1); margin: 0; }
+
+    .btn-skip {
+      width: 100%;
+      background: transparent;
+      color: var(--text-2);
+      border: none;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .btn-skip:hover { color: var(--text-1); }
+
+    .flow-panel {
+      max-width: calc(var(--split-max) + 48px);
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .flow-panel-inner {
+      background: var(--bg);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--border-light);
+      padding: clamp(28px, 4vw, 44px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .flow-panel-inner.wide { max-width: 1000px; }
+    .flow-step-label {
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-3); margin-bottom: 8px;
+    }
+    .flow-panel h1 {
+      font-size: clamp(24px, 4vw, var(--fs-h1-max));
+      font-weight: 700; letter-spacing: -0.5px; line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .flow-lede { color: var(--text-2); font-size: 16px; margin-bottom: 28px; line-height: 1.55; }
+
+    .form-field { margin-bottom: 20px; }
+    .form-field label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--text-1); margin-bottom: 8px;
+    }
+    .form-field .hint { font-size: 12px; color: var(--text-3); font-weight: 500; margin-top: 6px; }
+    .form-input {
+      width: 100%; padding: 14px 16px; font-family: inherit; font-size: 15px;
+      border: 1px solid var(--border-light); border-radius: var(--r-md);
+      background: var(--bg); color: var(--text-1);
+    }
+    .form-input:focus { outline: 2px solid var(--primary-focus); outline-offset: 2px; }
+    textarea.form-input { min-height: 100px; resize: vertical; }
+
+    .profile-split {
+      display: grid;
+      grid-template-columns: 1fr minmax(260px, 320px);
+      gap: 32px;
+      align-items: start;
+    }
+    .preview-panel {
+      position: sticky; top: 88px;
+      background: var(--page-bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      min-height: 280px;
+    }
+    .preview-panel h3 {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-3); margin-bottom: 16px;
+    }
+    .preview-card {
+      background: var(--bg);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-light);
+      padding: 16px;
+      text-align: center;
+    }
+    .preview-photo {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto 12px;
+      background: var(--page-bg); border: 1px solid var(--border-light);
+      object-fit: cover; display: block;
+    }
+    .preview-photo.placeholder { display: flex; align-items: center; justify-content: center; font-size: 36px; }
+    .preview-char-mascot {
+      width: 72px; height: 72px; margin: 0 auto 10px; object-fit: contain;
+      display: block;
+      background: transparent;
+    }
+    .preview-char-mascot.hidden { display: none !important; }
+    .preview-name { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .preview-loc { font-size: 13px; color: var(--text-2); margin-bottom: 12px; }
+    .preview-type {
+      display: inline-block; font-size: 12px; font-weight: 600;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(255, 106, 42, 0.12); color: #c2410c;
+      margin-bottom: 12px;
+    }
+    .preview-intro { font-size: 14px; line-height: 1.55; color: var(--text-1); text-align: left; margin-bottom: 14px; }
+    .preview-rows { font-size: 13px; text-align: left; color: var(--text-2); line-height: 1.5; }
+    .preview-rows dt { font-weight: 600; color: var(--text-1); margin-top: 8px; }
+    .preview-rows dt:first-child { margin-top: 0; }
+    .preview-rows dd { margin: 2px 0 0 0; }
+
+    .waitlist-inner { text-align: center; max-width: 480px; margin: 0 auto; }
+    .waitlist-inner h1 { text-align: center; }
+    .waitlist-sub { font-size: 17px; color: var(--text-2); line-height: 1.55; margin-bottom: 16px; text-align: center; }
+    .waitlist-reinforce {
+      font-size: 15px; font-weight: 600; color: var(--text-1);
+      line-height: 1.5; margin-bottom: 28px; text-align: center;
+    }
+    .waitlist-form .form-field { text-align: left; }
+    .waitlist-success {
+      padding: 24px; background: var(--page-bg); border-radius: var(--r-md);
+      border: 1px solid var(--border-light); margin-bottom: 24px;
+    }
+    .waitlist-success p { font-size: 16px; color: var(--text-1); }
+
+    @media (max-width: 900px) {
+      .quiz-split {
+        grid-template-columns: 1fr;
+      }
+      .quiz-art-panel {
+        min-height: var(--quiz-art-min-h-mobile);
+        order: -1;
+      }
+      .quiz-art-img { min-height: var(--quiz-art-min-h-mobile); }
+      .quiz-art-fallback { min-height: var(--quiz-art-min-h-mobile); }
+      /* 窄屏单列：插画在上，单独一行，给最小高度以免塌成一条线 */
+      body.quiz-flow-foot .quiz-art-panel {
+        min-height: var(--quiz-art-min-h-quiz-stacked);
+      }
+      body.quiz-flow-foot .quiz-art-img,
+      body.quiz-flow-foot .quiz-art-fallback {
+        min-height: 0;
+      }
+      .quiz-content-panel { min-height: 0; }
+      .profile-split { grid-template-columns: 1fr; }
+      .preview-panel { position: static; order: -1; }
+    }
+    @media (max-width: 480px) {
+      .quiz-main { padding: 20px 16px 48px; }
+      body.quiz-flow-foot .quiz-main { padding-bottom: calc(var(--quiz-footer-h) + env(safe-area-inset-bottom, 0px) + 20px); }
+      .quiz-header-inner { padding: 12px 16px; }
+      .quiz-flow-footer { padding-left: 16px; padding-right: 16px; }
+      .progress-segments { gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="quiz-header">
+    <div class="quiz-header-inner">
+      <a href="index.html" class="logo"><img src="logo.svg?v=2026041528" width="200" height="48" alt="Roomeo home" /></a>
+      <a href="index.html" class="back">Home</a>
+    </div>
+  </header>
+
+  <main class="quiz-main">
+    <div id="quiz-split-wrap">
+      <div class="quiz-split">
+        <aside class="quiz-art-panel is-empty" id="quiz-art-panel" aria-label="Quiz illustration">
+          <img class="quiz-art-img" id="quiz-art-img" src="" alt="" decoding="async" />
+          <div class="quiz-art-fallback" id="quiz-art-fallback">
+            <div>
+              <p>Illustration couldn't load</p>
+              <p style="margin-top:8px">Intro: <code>quiz cover.png</code> · Questions: <code>q1</code>–<code>q12</code> next to this page.</p>
+            </div>
+          </div>
+        </aside>
+
+        <div class="quiz-content-panel">
+          <div id="quiz-intro" class="quiz-intro">
+            <h1>Roommate Type Quiz</h1>
+            <p class="lede">Answer 12 quick questions about how you live at home. We’ll suggest a roommate type based on your habits — about two minutes.</p>
+            <div class="quiz-meta">
+              <div><span>12</span> questions</div>
+              <div><span>A–D</span> multiple choice</div>
+              <div><span>~2 min</span> estimated</div>
+            </div>
+            <div class="quiz-actions-stack intro-stack">
+              <button type="button" class="btn btn-continue" id="btn-start">Start the survey</button>
+            </div>
+          </div>
+
+          <div id="quiz-flow" class="quiz-flow hidden" aria-live="polite">
+            <div class="progress-segments" id="progress-segments" aria-hidden="true"></div>
+            <p class="question-num" id="question-num"></p>
+            <p class="sr-only" id="q-section"></p>
+            <h2 class="question-title" id="q-title"></h2>
+            <div class="options" id="q-options" role="radiogroup" aria-labelledby="q-title"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-results" class="results-page rfinal-page hidden" aria-live="polite">
+      <div class="results-shell rfinal-shell" id="results-layout">
+        <div class="rfinal-receipt-stage" id="rfinal-receipt-stage">
+          <div class="rfinal-card rfinal-receipt-paper" id="rfinal-card">
+            <div class="rfinal-receipt-wrap">
+              <div class="rfinal-print-sheet">
+          <section class="results-hero rfinal-hero" id="results-hero" aria-labelledby="res-headline">
+            <h1 class="sr-only" id="res-headline"></h1>
+            <button type="button" class="rfinal-back" id="btn-results-back" aria-label="Back to quiz intro">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="rfinal-hero-media" aria-hidden="true">
+              <div class="rfinal-hero-photo-wrap">
+                <img class="rfinal-hero-photo" src="assets/quiz-result-1-0/hero-room.png" alt="" width="1376" height="768" />
+              </div>
+              <div class="rfinal-hero-scrim"></div>
+            </div>
+            <div class="rfinal-hero-heading">
+              <p class="rfinal-hero-kicker">Your roommate type is:</p>
+              <p class="rfinal-hero-type" id="res-rfinal-type-name"></p>
+            </div>
+            <div class="rfinal-mascot-wrap" aria-hidden="true">
+              <img id="res-rfinal-mascot" src="" alt="" width="295" height="295" />
+            </div>
+            <div class="rfinal-wave-row" aria-hidden="true">
+              <img class="rfinal-wave-base" src="assets/quiz-result-1-0/wave-footer.svg" alt="" width="642" height="147" />
+              <img class="rfinal-wave-roof" src="assets/quiz-result-1-0/hero-roof.svg" alt="" width="641" height="143" />
+            </div>
+          </section>
+
+          <div class="rfinal-body">
+            <p class="rfinal-quote" id="res-rfinal-quote"></p>
+            <p id="res-tagline" class="sr-only"></p>
+            <p class="rfinal-roast" id="res-roast"></p>
+            <ul class="rfinal-stats-list" id="res-stats"></ul>
+
+            <section class="rfinal-sec" aria-labelledby="res-why-heading">
+              <div class="rfinal-badge rfinal-badge--1">
+                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-1.svg" alt="" />
+                <span class="rfinal-badge-digit">1</span>
+              </div>
+              <h2 class="rfinal-sec-title" id="res-why-heading">Why you got this</h2>
+              <p class="rfinal-sec-intro" id="res-why-intro">Your answers suggest that you:</p>
+              <ul class="result-list" id="res-why-list"></ul>
+            </section>
+
+            <section class="rfinal-sec" aria-labelledby="res-live-heading">
+              <div class="rfinal-badge rfinal-badge--2">
+                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-2.svg" alt="" />
+                <span class="rfinal-badge-digit">2</span>
+              </div>
+              <h2 class="rfinal-sec-title" id="res-live-heading">Living habits</h2>
+              <p class="rfinal-sec-intro">The good, the bad, and the ugly.</p>
+              <ul class="result-list" id="res-live-with"></ul>
+            </section>
+
+            <section class="rfinal-sec" aria-labelledby="res-scenarios-heading">
+              <div class="rfinal-badge rfinal-badge--3">
+                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-3.svg" alt="" />
+                <span class="rfinal-badge-digit">3</span>
+              </div>
+              <h2 class="rfinal-sec-title" id="res-scenarios-heading">Main-character moments</h2>
+              <p class="rfinal-sec-intro rfinal-sec-intro--medium">Stuff that probably happens at your place:</p>
+              <ul class="result-list" id="res-scenarios"></ul>
+            </section>
+
+            <section class="rfinal-sec" aria-labelledby="res-others-heading">
+              <div class="rfinal-badge rfinal-badge--4">
+                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-4.svg" alt="" />
+                <span class="rfinal-badge-digit">4</span>
+              </div>
+              <h2 class="rfinal-sec-title" id="res-others-heading">The vibe check</h2>
+              <p class="rfinal-sec-intro">People who live with you often feel:</p>
+              <ul class="result-list" id="res-others"></ul>
+            </section>
+
+            <section class="rfinal-sec" aria-labelledby="res-matches-heading">
+              <div class="rfinal-badge rfinal-badge--5">
+                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-5.svg" alt="" />
+                <span class="rfinal-badge-digit">5</span>
+              </div>
+              <h2 class="rfinal-sec-title" id="res-matches-heading">Compatibility radar</h2>
+              <div id="res-compat" class="rfinal-matches-stack"></div>
+            </section>
+
+            <section class="rfinal-sec" aria-labelledby="res-ideal-heading">
+              <div class="rfinal-badge rfinal-badge--6">
+                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-6.svg" alt="" />
+                <span class="rfinal-badge-digit">6</span>
+              </div>
+              <h2 class="rfinal-sec-title" id="res-ideal-heading">Survival manual</h2>
+              <p class="rfinal-sec-intro">Tips for anyone who lives with you — plus where you actually thrive:</p>
+              <p class="rfinal-survival-tip" id="res-survival"></p>
+              <ul class="result-list" id="res-ideal"></ul>
+            </section>
+
+            <div class="rfinal-next" aria-labelledby="res-next-heading">
+              <h2 id="res-next-heading">What happens next</h2>
+              <p>Now that you know your roommate type, let’s build your profile so we can match you with the right people.</p>
+            </div>
+
+            <div class="rfinal-cta-block">
+              <button type="button" class="rfinal-btn-primary" id="btn-build-profile">Build your profile →</button>
+              <button type="button" class="rfinal-btn-skip" id="btn-skip-profile">Skip for now</button>
+            </div>
+
+            <section class="share-section rfinal-share" aria-labelledby="share-heading">
+              <h2 id="share-heading">Speak your truth about your roommate</h2>
+              <p class="hint">Send it to the group chat, email yourself a copy, or invite someone to compare types.</p>
+              <div class="share-pills" role="group" aria-label="Share options">
+                <button type="button" class="share-pill" id="share-pill-share" aria-haspopup="dialog" aria-controls="share-results-modal">
+                  <svg class="share-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+                  Send to group chat
+                </button>
+                <button type="button" class="share-pill" id="share-pill-email" aria-haspopup="dialog" aria-controls="email-results-modal">
+                  <svg class="share-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 6l8 6 8-6"/></svg>
+                  Email results
+                </button>
+                <button type="button" class="share-pill share-pill--wide" id="share-pill-compare" aria-haspopup="dialog" aria-controls="compare-friend-modal">
+                  <svg class="share-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><circle cx="15" cy="7" r="3"/><path d="M4 19v-2a4 4 0 014-4h2M20 19v-2a4 4 0 00-4-4h-2"/></svg>
+                  Compare with a friend
+                </button>
+              </div>
+            </section>
+
+            <div class="rfinal-footer-links">
+              <button type="button" class="btn-text" id="btn-retry">Take quiz again</button>
+              <a href="index.html#types" class="btn-text" style="text-decoration:underline;">Learn about types</a>
+            </div>
+          </div>
+              </div>
+            </div>
+            <div class="rfinal-receipt-tear" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="flow-profile-1" class="flow-panel hidden" aria-live="polite">
+      <div class="flow-panel-inner">
+        <p class="flow-step-label">Profile · Step 1 of 2</p>
+        <h1>Basic info</h1>
+        <p class="flow-lede">A few details so we know how to reach you — takes under a minute.</p>
+        <form id="form-profile-1">
+          <div class="form-field">
+            <label for="pf-name">Name <span aria-hidden="true">*</span></label>
+            <input class="form-input" type="text" id="pf-name" name="name" required autocomplete="name" placeholder="Your full name" />
+          </div>
+          <div class="form-field">
+            <label for="pf-email">Email <span aria-hidden="true">*</span></label>
+            <input class="form-input" type="email" id="pf-email" name="email" required autocomplete="email" placeholder="you@example.com" />
+          </div>
+          <div class="form-field">
+            <label for="pf-city">Looking in (city) <span aria-hidden="true">*</span></label>
+            <input class="form-input" type="text" id="pf-city" name="city" required autocomplete="address-level2" placeholder="e.g. Austin" />
+          </div>
+          <div class="quiz-actions-stack intro-stack" style="padding-top:8px">
+            <button type="submit" class="btn btn-continue" id="btn-profile1-continue">Continue →</button>
+            <button type="button" class="btn-skip" id="btn-profile1-back">Back to results</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="flow-profile-2" class="flow-panel hidden" aria-live="polite">
+      <div class="flow-panel-inner wide">
+        <p class="flow-step-label">Profile · Step 2 of 2</p>
+        <h1>Your profile</h1>
+        <p class="flow-lede">This is what future roommates will see. We’ve pre-filled lifestyle hints from your quiz — adjust anything.</p>
+        <div class="profile-split">
+          <form id="form-profile-2">
+            <div class="form-field">
+              <label for="pf-photo">Profile photo</label>
+              <input class="form-input" type="file" id="pf-photo" accept="image/*" />
+              <p class="hint">Optional — helps people recognize you.</p>
+            </div>
+            <div class="form-field">
+              <label for="pf-display">Display name</label>
+              <input class="form-input" type="text" id="pf-display" autocomplete="nickname" placeholder="How you’d like to be called" />
+            </div>
+            <div class="form-field">
+              <label for="pf-location">Location</label>
+              <input class="form-input" type="text" id="pf-location" autocomplete="address-level2" placeholder="Neighborhood or city" />
+            </div>
+            <div class="form-field">
+              <label for="pf-intro">What’s it like to live with you?</label>
+              <textarea class="form-input" id="pf-intro" placeholder="I love cozy spaces, shared dinners, and a calm but social home."></textarea>
+            </div>
+            <p class="flow-step-label" style="margin-top:8px">Lifestyle (from quiz)</p>
+            <div class="form-field">
+              <label for="pf-rhythm">Daily rhythm</label>
+              <input class="form-input" type="text" id="pf-rhythm" />
+            </div>
+            <div class="form-field">
+              <label for="pf-clean">Cleanliness</label>
+              <input class="form-input" type="text" id="pf-clean" />
+            </div>
+            <div class="form-field">
+              <label for="pf-social">Social energy</label>
+              <input class="form-input" type="text" id="pf-social" />
+            </div>
+            <p class="flow-step-label" style="margin-top:8px">Additional preferences</p>
+            <div class="form-field">
+              <label for="pf-energy">Ideal home energy</label>
+              <select class="form-input" id="pf-energy">
+                <option value="">Select one</option>
+                <option value="Friendly">Friendly</option>
+                <option value="Communicative">Communicative</option>
+                <option value="Quiet">Quiet</option>
+                <option value="Social">Social</option>
+              </select>
+            </div>
+            <div class="quiz-actions-stack intro-stack" style="padding-top:8px">
+              <button type="submit" class="btn btn-continue" id="btn-profile2-continue">Continue →</button>
+              <button type="button" class="btn-skip" id="btn-profile2-back">Back</button>
+            </div>
+          </form>
+          <aside class="preview-panel" aria-label="Profile preview">
+            <h3>Live preview</h3>
+            <div class="preview-card">
+              <div class="preview-photo placeholder" id="pv-photo">👤</div>
+              <img class="preview-photo hidden" id="pv-photo-img" alt="" width="88" height="88" />
+              <img class="preview-char-mascot hidden" id="pv-char-img" src="" alt="" width="72" height="72" />
+              <div class="preview-type" id="pv-type">The Beaver</div>
+              <div class="preview-name" id="pv-name">Your name</div>
+              <div class="preview-loc" id="pv-loc">Location</div>
+              <p class="preview-intro" id="pv-intro">Your intro will show here.</p>
+              <dl class="preview-rows">
+                <dt>Daily rhythm</dt>
+                <dd id="pv-rhythm">—</dd>
+                <dt>Cleanliness</dt>
+                <dd id="pv-clean">—</dd>
+                <dt>Social energy</dt>
+                <dd id="pv-social">—</dd>
+                <dt>Home energy</dt>
+                <dd id="pv-energy">—</dd>
+              </dl>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div id="flow-waitlist" class="flow-panel hidden" aria-live="polite">
+      <div class="flow-panel-inner">
+        <div class="waitlist-inner">
+          <h1>You're on the list 🎉</h1>
+          <p class="waitlist-sub">We’ll notify you when compatible roommates become available.</p>
+          <p class="waitlist-reinforce" id="waitlist-reinforce"></p>
+          <form id="form-waitlist" class="waitlist-form">
+            <div class="form-field" id="waitlist-email-field">
+              <label for="waitlist-email">Email</label>
+              <input class="form-input" type="email" id="waitlist-email" autocomplete="email" required placeholder="you@example.com" />
+            </div>
+            <div class="quiz-actions-stack intro-stack" style="padding-top:8px">
+              <button type="submit" class="btn btn-continue" id="btn-waitlist-submit">Join waitlist →</button>
+            </div>
+          </form>
+          <div id="waitlist-success" class="waitlist-success hidden">
+            <p>You’re in. Watch your inbox — we’ll be in touch.</p>
+          </div>
+          <p style="margin-top:20px"><a href="index.html#types" class="btn-text" style="text-decoration:underline;">Explore roommate types</a></p>
+          <section class="share-section" style="margin-top:32px;text-align:left">
+            <h2 style="text-align:left">Speak your truth about your roommate</h2>
+            <p class="hint" style="margin-bottom:14px">Send it to the group chat, email yourself a copy, or invite someone to compare types.</p>
+            <div class="share-pills" role="group" aria-label="Share options">
+              <button type="button" class="share-pill" id="share-pill-wl-share" aria-haspopup="dialog" aria-controls="share-results-modal">
+                <svg class="share-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+                Send to group chat
+              </button>
+              <button type="button" class="share-pill" id="share-pill-wl-email" aria-haspopup="dialog" aria-controls="email-results-modal">
+                <svg class="share-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 6l8 6 8-6"/></svg>
+                Email results
+              </button>
+              <button type="button" class="share-pill share-pill--wide" id="share-pill-wl-compare" aria-haspopup="dialog" aria-controls="compare-friend-modal">
+                <svg class="share-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><circle cx="15" cy="7" r="3"/><path d="M4 19v-2a4 4 0 014-4h2M20 19v-2a4 4 0 00-4-4h-2"/></svg>
+                Compare with a friend
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <dialog id="share-results-modal" class="share-modal-dialog" aria-labelledby="share-modal-title">
+    <div class="share-modal-panel">
+      <button type="button" class="share-modal-close" id="share-modal-close" aria-label="Close">×</button>
+      <div class="share-modal-head">
+        <h2 class="share-modal-title" id="share-modal-title">Share your result</h2>
+        <img class="share-modal-mascot hidden" id="share-modal-mascot" src="" alt="" width="100" height="100" />
+      </div>
+      <div class="share-modal-social" role="group" aria-label="Share on social">
+        <button type="button" class="share-social-tile" id="share-modal-fb">
+          <span class="share-social-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true"><path d="M14 13.5h2.5l1-4H14v-1.3c0-1 .3-1.7 1.7-1.7H18V3.1C17.4 3 16.6 3 15.7 3 13.4 3 12 4.3 12 6.5V9.5H9v4h3V21h4v-7.5z"/></svg>
+          </span>
+          <span class="share-social-label">Facebook</span>
+        </button>
+        <button type="button" class="share-social-tile" id="share-modal-x">
+          <span class="share-social-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 3H21l-7.14 8.01L21.5 21h-4.95l-4.43-5.8L6.5 21H3.77l7.64-8.63L3 3h5.06l4.01 5.18L18.244 3zm-1.7 16h1.7L8.5 5H6.7l9.844 14z"/></svg>
+          </span>
+          <span class="share-social-label">X</span>
+        </button>
+        <button type="button" class="share-social-tile" id="share-modal-ig">
+          <span class="share-social-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="share-social-label">Instagram</span>
+        </button>
+        <button type="button" class="share-social-tile" id="share-modal-tt">
+          <span class="share-social-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
+          </span>
+          <span class="share-social-label">TikTok</span>
+        </button>
+      </div>
+      <div class="share-modal-links">
+        <div class="share-modal-block">
+          <label for="share-modal-url-a">Link to your roommate type</label>
+          <p class="share-modal-hint">Jumps straight to your result. Doesn’t include your full on-page write-up — good for social posts and bios.</p>
+          <div class="share-modal-url-row">
+            <input type="text" id="share-modal-url-a" readonly tabindex="0" />
+            <button type="button" class="share-modal-url-copy" id="share-modal-copy-a" aria-label="Copy result link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="share-modal-block">
+          <label for="share-modal-url-b">Quiz link for friends</label>
+          <p class="share-modal-hint">Opens the quiz from the start. Best when you want someone to take it themselves — tell them your type in person or in a message.</p>
+          <div class="share-modal-url-row">
+            <input type="text" id="share-modal-url-b" readonly tabindex="0" />
+            <button type="button" class="share-modal-url-copy" id="share-modal-copy-b" aria-label="Copy quiz link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <span class="share-toast" id="share-modal-toast" role="status">Copied</span>
+    </div>
+  </dialog>
+
+  <dialog id="email-results-modal" class="email-modal-dialog" aria-labelledby="email-modal-title">
+    <div class="email-modal-panel">
+      <button type="button" class="email-modal-close" id="email-modal-close" aria-label="Close">×</button>
+      <h2 class="email-modal-title" id="email-modal-title">Get your results</h2>
+      <p class="email-modal-lede">Would you like an email copy of your results?</p>
+      <div class="email-modal-field">
+        <label class="sr-only" for="email-modal-input">Your email</label>
+        <div class="email-modal-input-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 6l8 6 8-6"/></svg>
+          <input class="email-modal-input" type="email" id="email-modal-input" autocomplete="email" inputmode="email" placeholder="your@email.com" required />
+        </div>
+      </div>
+      <label class="email-modal-checkbox">
+        <input type="checkbox" id="email-modal-optin" />
+        <span>Send me <span id="email-modal-type-hint">roommate type</span> tips and Roomeo updates</span>
+      </label>
+      <p class="email-modal-hint">We’ll open your email app with your address and results filled in — you can edit and send.</p>
+      <button type="button" class="email-modal-send" id="email-modal-send">Send results</button>
+      <button type="button" class="email-modal-dismiss" id="email-modal-later">Maybe later</button>
+    </div>
+  </dialog>
+
+  <dialog id="compare-friend-modal" class="email-modal-dialog" aria-labelledby="compare-modal-title">
+    <div class="share-modal-panel">
+      <button type="button" class="email-modal-close" id="compare-modal-close" aria-label="Close">×</button>
+      <h2 class="email-modal-title" id="compare-modal-title">Compare with a friend</h2>
+      <p class="email-modal-lede">Enter your details below. We’ll copy a ready-to-send invite so your friend can take the quiz and compare types with you.</p>
+      <form id="compare-friend-form">
+        <div class="share-modal-block">
+          <label for="compare-modal-email">Email address</label>
+          <div class="email-modal-input-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 6l8 6 8-6"/></svg>
+            <input class="email-modal-input" type="email" id="compare-modal-email" autocomplete="email" inputmode="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="share-modal-block">
+          <label for="compare-modal-name">Name</label>
+          <div class="email-modal-input-wrap">
+            <input class="email-modal-input" type="text" id="compare-modal-name" autocomplete="name" placeholder="Your name" required />
+          </div>
+        </div>
+        <label class="email-modal-checkbox">
+          <input type="checkbox" id="compare-modal-tips" />
+          <span>Send me <span id="compare-modal-type-hint">roommate type</span> tips and Roomeo updates</span>
+        </label>
+        <label class="email-modal-checkbox">
+          <input type="checkbox" id="compare-modal-terms" required />
+          <span class="compare-modal-legal">I’m at least 16 and I agree to the <a href="index.html" target="_blank" rel="noopener noreferrer">Terms</a> and <a href="index.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</span>
+        </label>
+        <button type="submit" class="email-modal-send" id="compare-modal-continue">Continue <span aria-hidden="true">→</span></button>
+        <button type="button" class="email-modal-dismiss" id="compare-modal-copy-link-only">Copy quiz link only</button>
+      </form>
+      <span class="share-toast" id="compare-modal-toast" role="status">Invite copied</span>
+    </div>
+  </dialog>
+
+  <footer id="quiz-flow-footer" class="quiz-flow-footer hidden" aria-label="Quiz navigation">
+    <div class="quiz-flow-footer-inner">
+      <button type="button" class="btn btn-back-quiz hidden" id="btn-prev">back</button>
+      <button type="button" class="card-btn" id="btn-next" disabled>
+        <span class="card-btn-text" id="btn-next-label">continue</span>
+        <span class="card-btn-tail" aria-hidden="true">
+          <span class="card-btn-dot"></span>
+          <svg class="card-btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    const QUIZ = [
+      {
+        section: '🧼 A. Cleanliness & Initiative',
+        q: "It's 2 a.m., you're dying of thirst, and there's no water left. The only cold thing in the fridge is your roommate's unopened Sprite. They're asleep. What are you most likely to do?",
+        opts: [
+          "Absolutely not. I'd rather dehydrate in peace than touch someone else's drink without asking.",
+          "I'm texting first. If I have to suffer while waiting, so be it.",
+          "If we already have that kind of sharing vibe, I'm taking it and replacing it later.",
+          "I'm drinking it now and dealing with the consequences later."
+        ],
+        votes: [['owl', 'beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
+      },
+      {
+        section: '🧼 A. Cleanliness & Initiative',
+        q: 'You get home exhausted, make the easiest meal possible, eat, and all you want to do is collapse. Your dishes are sitting in the sink. What are you most likely to do?',
+        opts: [
+          "I wash them right away because I refuse to wake up and see that mess staring back at me.",
+          "I rinse or soak them and deal with them later that night. I'm tired, not feral.",
+          "I leave them for later, but they're still getting done today.",
+          'Those dishes and I will reconnect when the universe allows.'
+        ],
+        votes: [['beaver'], ['owl', 'fox'], ['turtle'], ['cat']]
+      },
+      {
+        section: '🧼 A. Cleanliness & Initiative',
+        q: "The trash is overflowing, it smells a little evil, and nobody has taken it out yet. What's your move?",
+        opts: [
+          'I take it out immediately because why are we living like this.',
+          "I'll do it, but I'm definitely thinking this should not have gotten this far in the first place.",
+          'I wait a bit and see if someone else handles it before I step in.',
+          "If it's not directly messing with me, I'm not rushing to save the house."
+        ],
+        votes: [['beaver'], ['owl', 'bunny'], ['fox', 'turtle'], ['cat']]
+      },
+      {
+        section: '🎉 B. Social Energy & Guests',
+        q: "You brought someone over, and your roommate gets home way earlier than expected while you're having an intimate moment. What feels most like you?",
+        opts: [
+          "I'd be spiritually leaving my body. This is exactly why I'd rather give a heads-up first.",
+          "I'm texting my roommate immediately, apologizing, and trying to smooth it over.",
+          "It's awkward, sure, but it's not the end of the world if it's a one-time thing and not causing chaos.",
+          "It's my room. Unless my roommate has an actual issue, I'm not turning this into a whole scandal."
+        ],
+        votes: [['owl'], ['beaver', 'turtle'], ['fox'], ['bunny', 'cat']]
+      },
+      {
+        section: '🎉 B. Social Energy & Guests',
+        q: "It's Friday night. You and your roommate are both home, no one has work tomorrow, and the apartment vibe is up for grabs. What sounds most like your ideal?",
+        opts: [
+          'Separate corners, separate peace. We can coexist quietly and beautifully.',
+          'A cozy little catch-up, then everyone disappears and recharges.',
+          "I'm down to hang if it happens naturally, but I'm not forcing a bonding moment.",
+          'I want the place to actually feel social and alive.'
+        ],
+        votes: [['owl'], ['turtle'], ['beaver', 'fox'], ['bunny']]
+      },
+      {
+        section: '🎉 B. Social Energy & Guests',
+        q: "It's after 10:30 p.m. Someone's on FaceTime, music is low, and the apartment is definitely not dead quiet. What feels most like you?",
+        opts: [
+          'No. Nighttime means quiet. That is the policy in my soul.',
+          "I like it mostly quiet, but I'm not going to lose it over normal human activity.",
+          "Depends what's going on and how often it happens.",
+          "I'm really not pressed about late-night noise unless it's truly obnoxious."
+        ],
+        votes: [['owl', 'turtle'], ['beaver', 'turtle'], ['fox'], ['bunny', 'cat']]
+      },
+      {
+        section: '🧭 C. Structure vs Flexibility',
+        q: "Every morning, your roommate is in the bathroom forever right when you need it most, and it's starting to ruin your whole day. What do you do?",
+        opts: [
+          "I'm saying something immediately because this has officially gotten ridiculous.",
+          'I bring it up nicely after it keeps happening, because clearly this is now a pattern.',
+          "I start getting in there before them and taking my sweet time too. Since we're clearly playing games now.",
+          "I suggest an actual bathroom rule or time limit because this house is not doing morning warfare every day."
+        ],
+        votes: [['beaver'], ['turtle', 'owl'], ['fox', 'cat'], ['owl', 'beaver']]
+      },
+      {
+        section: '🧭 C. Structure vs Flexibility',
+        q: "The sink is messy, guests keep popping up, and nobody agrees on quiet hours. What kind of system feels right to you?",
+        opts: [
+          'No giant rulebook. We deal with things as they come up.',
+          'We should have general rules, but people need to read the room.',
+          "Basic house rules are good, as long as there's flexibility when people communicate.",
+          'Clear rules. Consistent rules. The rules stay the rules.'
+        ],
+        votes: [['fox', 'cat'], ['bunny'], ['turtle'], ['owl', 'beaver']]
+      },
+      {
+        section: '🧭 C. Structure vs Flexibility',
+        q: "Your roommate's habits are pretty different from yours. What feels most like your instinct?",
+        opts: [
+          "I'm usually willing to adjust if it keeps the peace.",
+          'I can adjust, but only if we actually talk clearly about expectations.',
+          "I'd rather we both meet in the middle instead of one person doing all the bending.",
+          "I prefer one shared standard so nobody's just freelancing the house rules."
+        ],
+        votes: [['bunny'], ['owl'], ['turtle', 'fox'], ['beaver']]
+      },
+      {
+        section: '🧭 C. Structure vs Flexibility',
+        q: 'If your roommate had to describe living with you…\n\nWhich of these would sound the most accurate?',
+        opts: [
+          '"They kind of have their own system, and whether you asked for it or not, the apartment usually ends up running more their way."',
+          '"They\'re pretty solid to live with. They\'re around, they do their part, and the place feels more settled with them there."',
+          '"They\'re not super rigid. They kind of go with the flow and figure things out as they go."',
+          '"They mostly stay in their own lane and don\'t really get involved unless something becomes their problem."'
+        ],
+        votes: [['beaver', 'owl'], ['turtle'], ['fox', 'bunny'], ['cat']]
+      },
+      {
+        section: '🏠 D. Presence & Shared-Home Engagement',
+        q: "It's Saturday. Where are you most likely at?",
+        opts: [
+          'Honestly, at home for most of the day.',
+          'In and out, but home pretty regularly.',
+          'Out a lot and popping back in between things.',
+          'Barely home long enough to count.'
+        ],
+        votes: [['turtle'], ['beaver', 'owl'], ['bunny', 'fox'], ['cat']]
+      },
+      {
+        section: '🏠 D. Presence & Shared-Home Engagement',
+        q: "You and your roommate each have your own section in the fridge. One day, you open it and notice something from your roommate's side has leaked and is getting onto your stuff and the shared shelves. What do you do?",
+        opts: [
+          "I clean it up right away and tell them, because once it starts affecting the whole fridge, it's everybody's problem.",
+          'I text them and tell them to handle it, because it came from their side and they should deal with it.',
+          'I move my stuff, contain the mess if I need to, and wait a bit to see if they take care of it.',
+          "I'm not touching their biohazard unless it starts directly ruining my stuff."
+        ],
+        votes: [['beaver', 'turtle'], ['owl', 'beaver'], ['fox', 'turtle'], ['cat']]
+      }
+    ];
+
+    /** One file per question, same folder as quiz.html (mixed .png / .jpg ok). */
+    const QUIZ_QUESTION_ART = [
+      'q1.png',
+      'q2.png',
+      'q3.png',
+      'q4.jpg',
+      'q5.png',
+      'q6.png',
+      'q7.png',
+      'q8.png',
+      'q9.png',
+      'q10.jpg',
+      'q11.png',
+      'q12.png'
+    ];
+    const QUIZ_ART_Q = '?v=20260418';
+    const QUIZ_INTRO_COVER = 'quiz cover.png';
+
+    const STORAGE = {
+      answers: 'roomeo_quiz_answers',
+      type: 'roomeo_type',
+      p1: 'roomeo_profile_step1',
+      p2: 'roomeo_profile_step2'
+    };
+
+    const TYPES = {
+      beaver: {
+        name: 'The Beaver',
+        emoji: '🦫',
+        subtitle: "I'm not controlling, I'm just the only one here with a frontal lobe.",
+        shareTrait: 'The unpaid landlord — structure, receipts, and a color-coded cleaning rotation.',
+        signatureQuote:
+          "I went ahead and made a color-coded cleaning rotation for the next six months. It's on the fridge. Please don't use magnets that aren't silver.",
+        roast:
+          "You aren't just a roommate — you're why the Wi-Fi still works and the hallway doesn't smell like a locker room. You have a physical reaction to a dish in the sink for more than four minutes. Your roommates are secretly terrified of your \"Gentle Reminders\" in the group chat, which everyone knows are actually legal threats.",
+        stats: [
+          'Cleanliness: 100% — you dream in Clorox',
+          'Social energy: 60% — socializing is fine, as long as no one spills wine on the rug',
+          'Predictability: 150% — we know exactly where you are and what you are cleaning at 7:14 AM',
+          'Reliability: 99% — the 1% is for that one time you forgot to label the milk'
+        ],
+        whatLiving: [
+          'The Pro: You are a human spreadsheet. Utility bills down to the cent. Living with you is like a 5-star hotel, minus room service and plus judgment.',
+          'The Con: A crooked rug is a personal insult. You have definitely thought about a PowerPoint on how to load the dishwasher.',
+          'The Nightmare: You have definitely said, \"I shouldn\'t have to ask you to do this,\" while holding a vacuum like a weapon.'
+        ],
+        scenarios: [
+          'If someone \"forgets\" trash day, you have already mentally drafted three follow-ups.',
+          'You relax when the kitchen passes your silent inspection — which is always.',
+          'You would rather run a five-minute house sync than let resentment marinate.',
+          'Guests learn quickly: coasters are not optional; they are a lifestyle.'
+        ],
+        othersFeel: [
+          'clear on what \"done\" looks like in shared spaces',
+          'confident bills and chores will not ghost them',
+          'sometimes nudged toward more structure than they would pick alone',
+          'secretly grateful the plants are still alive'
+        ],
+        idealBullets: [
+          'households with simple agreements people actually follow',
+          'roommates who say when plans change — early',
+          'shared tidiness standards that do not require a tribunal',
+          'a steady rhythm: not perfection, but consistency'
+        ],
+        compat: [
+          { emoji: '🦉', name: 'The Owl', line: 'Soulmate — they follow your rules, stay quiet, and pay on time. Bureaucratic heaven.' },
+          { emoji: '🐱', name: 'The Cat', line: 'Roommate war — chaos, mystery, unwashed bowls. Your villain arc loads here.' }
+        ],
+        survivalTip:
+          'Just comply. Do not argue dish soap — they researched eco-cost for four hours. Say \"Wow, the baseboards look great\" and watch them melt.',
+        whyFallback: [
+          'value clear expectations in shared spaces',
+          'take initiative when something clearly needs doing',
+          'prefer consistency in how the home runs day to day'
+        ]
+      },
+      cat: {
+        name: 'The Cat',
+        emoji: '🐱',
+        subtitle: "I don't live here. I'm just a recurring guest in your life.",
+        shareTrait: 'The mystery guest — low presence, high audacity, rent eventually.',
+        signatureQuote:
+          'Oh, was today the day we buy toilet paper? My bad, I will Venmo you in like... three to five business days.',
+        roast:
+          'You are the roommate equivalent of a glitch in the matrix. You exist, but no one is quite sure when or where. You can leave one dirty cereal bowl and disappear for 72 hours. You are not trying to be a nightmare; you just operate on a plane that does not include chore charts or checking the group chat.',
+        stats: [
+          'Cleanliness: 22% — the floor is just a big shelf',
+          'Social energy: 50% — only when you feel like it',
+          'Predictability: 5% — are you home? Another country? No one knows',
+          'Reliability: 15% — you will pay rent... eventually, probably on the 5th'
+        ],
+        whatLiving: [
+          'The Pro: You are the least judgmental person on earth. Kitchen on fire? You say \"Wild\" and go back to your room.',
+          'The Con: Common areas become a museum of your stuff — one sock here, a charger there, territory claimed.',
+          'The Mystery: You have a roommate but you have not spoken since the Obama administration.'
+        ],
+        scenarios: [
+          'You answer \"U up?\" faster than \"Who took the trash out?\"',
+          'Your door is closed, your noise-canceling era is permanent, and your snacks are a rumor.',
+          'You thrive in the overlap between \"I will handle it\" and \"the universe will handle it.\"',
+          'Venmo captions carry more emotional range than your house group chat.'
+        ],
+        othersFeel: [
+          'low pressure — you rarely demand a performance',
+          'sometimes unsure if you are home, on a plane, or a legend',
+          'clear that your bandwidth is a limited edition drop',
+          'half impressed, half filing a missing-person report for the sponge'
+        ],
+        idealBullets: [
+          'roommates who text once, then let it breathe',
+          'homes where quiet defaults are normal',
+          'boundaries that do not require a TED Talk',
+          'fridges with zones that are mostly suggestions'
+        ],
+        compat: [
+          { emoji: '🦊', name: 'The Fox', line: 'Soulmate — \"dishes tomorrow\" is a lifestyle. Chaos, but happy chaos.' },
+          { emoji: '🦫', name: 'The Beaver', line: 'Roommate war — they have your face on a dartboard and a PDF about recycling.' }
+        ],
+        survivalTip:
+          'Do not wait up. If you want a Cat to do something, skip the group chat — they muted it. Corner them near the fridge and make eye contact.',
+        whyFallback: [
+          'value personal space and quiet time',
+          'do not rely on constant interaction at home to feel settled',
+          'prefer low-conflict, low-maintenance living'
+        ]
+      },
+      owl: {
+        name: 'The Owl',
+        emoji: '🦉',
+        subtitle: "I'm not being rude, I'm just practicing the fine art of existing without being perceived.",
+        shareTrait: 'The resident ghost — stealth kitchen runs, rent two days early, zero hallway eye contact.',
+        signatureQuote:
+          'Oh, were you guys having a party in the living room? Sorry, I did not hear anything... white noise machine on level 10 and my door double-locked.',
+        roast:
+          'You are a living shadow. Roommates sometimes forget you pay rent because they have not seen you in three days. You have mastered the Ninja Kitchen Run: cook, wash, vanish the moment a door handle moves. You do not hate people; you find small talk about weather psychologically hostile.',
+        stats: [
+          'Social energy: 5% — a 15-minute daily cap on human interaction',
+          'Predictability: 95% — routine with Swiss-watch precision',
+          'Cleanliness: 85% — no trace; crime-scene-cleaner energy',
+          'Reliability: 100% — rent early so nobody has to talk to you about it'
+        ],
+        whatLiving: [
+          'The Pro: Dream roommate for peace — no stolen food, no loud parties, no hair in the shower.',
+          'The Con: You text from five feet away. You have pretended to be asleep to avoid a \"hey\" in the living room.',
+          'The Mystery: No one knows your job. Engineer? Spy? Organized vampire? Unclear.'
+        ],
+        scenarios: [
+          'You celebrate a canceled hang more than a birthday.',
+          'Your white noise could drown out a helicopter parent.',
+          'You can meal-prep in stealth mode faster than anyone can say \"how was your day?\"',
+          'If the vibe is \"party,\" you are \"notion doc titled boundaries.\"'
+        ],
+        othersFeel: [
+          'like the apartment finally exhaled',
+          'sometimes unsure if you moved out or leveled up in stealth',
+          'grateful for quiet defaults and clean sinks',
+          'learning that a nod in the hallway is intimacy'
+        ],
+        idealBullets: [
+          'flexible quiet hours that still protect sleep',
+          'roommates who text before they knock',
+          'guest norms that do not feel like an ambush',
+          'a home that adapts when work shifts — without guilt trips'
+        ],
+        compat: [
+          { emoji: '🐢', name: 'The Turtle', line: 'Soulmate — cozy silence, scented candles, mutual bed-rot respect.' },
+          { emoji: '🐰', name: 'The Bunny', line: 'Roommate war — they want karaoke at 2 AM; you want to evaporate.' }
+        ],
+        survivalTip:
+          'Do not knock. Send an email, Slack, or carrier pigeon. Respect the fridge shelf — they counted the blueberries.',
+        whyFallback: [
+          'adapt when plans, sleep, or work schedules shift',
+          'prefer flexible house norms over rigid scripts',
+          'keep energy for evenings or off-hours without apology'
+        ]
+      },
+      fox: {
+        name: 'The Fox',
+        emoji: '🦊',
+        subtitle: "I know I haven't done my dishes, but look at this vintage lamp I found on the sidewalk!",
+        shareTrait: 'The human tornado — creative clutter, 2 AM brilliance, and a bike in the hallway \"for a few days.\"',
+        signatureQuote:
+          'Does anyone mind if I keep my bike in the hallway for a few days? I am thinking about stripping the paint and turning it into a planter.',
+        roast:
+          'You do not just live in an apartment; you occupy it. Half-painted canvas in the living room, three sourdough starters, a suitcase since 2022. Fun at 2 AM; your roommates are tired of \"art supplies\" that are objectively trash on the dining table.',
+        stats: [
+          'Social energy: 85% — life of the party, even if the party is two people',
+          'Cleanliness: 35% — not mess, creative clutter',
+          'Predictability: 15% — go out for milk, come back with a tattoo',
+          'Presence: 60% — hosting a salon or gone for a week'
+        ],
+        whatLiving: [
+          'The Pro: Life is never boring — best stories, hidden gems, spontaneous 1 AM tacos.',
+          'The Con: Shared space is an extension of your bedroom. \"Mold or science experiment?\" is a daily game.',
+          'The Chaos: You owe $12 from four months ago but offered good vibes or a dinner you never cooked.'
+        ],
+        scenarios: [
+          'You fix vibes before you fix dishes — dishes are a tomorrow problem.',
+          'You can de-escalate drama with one joke and one questionable DIY solution.',
+          'Thrift finds migrate indoors faster than your roommates can say \"lease violation.\"',
+          'Your hobbies multiply like tabs in a browser nobody will close.'
+        ],
+        othersFeel: [
+          'like they can tell you the truth without a seminar',
+          'sometimes dizzy from your mode switches — social, solo, busy, chill',
+          'confident small conflicts will not become a cold war',
+          'aware you care about the home — just not in a spreadsheet way'
+        ],
+        idealBullets: [
+          'roommates who can talk plainly without taking everything personally',
+          'guest norms that flex for real life — with accountability',
+          'simple systems that can actually stick',
+          'a vibe that can be social sometimes and quiet sometimes'
+        ],
+        compat: [
+          { emoji: '🐰', name: 'The Bunny', line: 'Soulmate — vibe beats a clean floor; the apartment becomes legend.' },
+          { emoji: '🦫', name: 'The Beaver', line: 'Roommate war — they have a label maker; you have a vision. Furniture may go missing.' }
+        ],
+        survivalTip:
+          'Lower counter expectations. Frame cleaning as an aesthetic reset. Never lend a pen — you will never see it again.',
+        whyFallback: [
+          'adapt quickly when shared norms need a reset',
+          'name awkward issues early instead of letting them linger',
+          'prefer flexible plans that still respect roommates\' basics'
+        ]
+      },
+      bunny: {
+        name: 'The Bunny',
+        emoji: '🐰',
+        subtitle: "Living alone is for people with boring secrets. Anyway, is it okay if 8 people come over for a few drinks?",
+        shareTrait: 'The main character — social battery infinite, Brita filter empty, neighbors know your unit.',
+        signatureQuote:
+          "OMG, don't be mad, but I told the guy from the elevator he could come over for a drink. He is cool, I think his name is Brad? Or Chad?",
+        roast:
+          'You do not just live in an apartment; you treat it like a content house. A roommate is a live-in audience or emergency backup for a night out. Main Character syndrome in the best and worst ways. Neighbors know your number; your roommates have a social life because of you.',
+        stats: [
+          'Social energy: 120% — battery never empty, unlike your Brita filter',
+          'Cleanliness: 40% — the common area is a stage for outfits',
+          'Predictability: 10% — who are you bringing home? What time? Unknown',
+          'Presence: 65% — fully on or literally dead asleep'
+        ],
+        whatLiving: [
+          'The Pro: You are the plug — best bars, stolen party snacks, the apartment feels like a home not a storage unit.',
+          'The Con: Boundary is not in your vocabulary. 1 AM selfie consult while they are in REM is on brand.',
+          'The Chaos: There is probably a random jacket on the sofa that does not belong to anyone on the lease.'
+        ],
+        scenarios: [
+          'You remember birthdays, milestones, and \"we should celebrate that\" like it is oxygen.',
+          'If someone is hands-off, you become the default event planner — voluntarily, loudly.',
+          'You can respect quiet — you just need it communicated, not telepathically implied.',
+          'Your \"quick drink\" has a guest list and a lighting plan.'
+        ],
+        othersFeel: [
+          'welcomed without pressure to become a different personality',
+          'like the home has a heartbeat — not noise 24/7, not a library either',
+          'sometimes gently nudged toward more social energy than they would pick alone',
+          'heard when they need quiet — especially with a heads-up'
+        ],
+        idealBullets: [
+          'occasional shared dinners without guilt trips',
+          'quiet hours that still allow normal living',
+          'an \"ask first\" culture for big disruptions',
+          'kindness as the default tone in hard conversations'
+        ],
+        compat: [
+          { emoji: '🦊', name: 'The Fox', line: 'Soulmate — disaster apartment, legendary memories, cursed Instagram Stories.' },
+          { emoji: '🦉', name: 'The Owl', line: 'Roommate war — they want silence; you want a 90s karaoke documentary.' }
+        ],
+        survivalTip:
+          'Noise-canceling headphones + snack lock. Want a Bunny to clean? Say you are hosting — they will sparkle for the photo, not the germs.',
+        whyFallback: [
+          'bring warmth and social energy to shared spaces',
+          'prefer friendly check-ins over cold assumptions',
+          'like a home that feels connected, not just coexisting'
+        ]
+      },
+      turtle: {
+        name: 'The Turtle',
+        emoji: '🐢',
+        subtitle: "I'm not stuck at home. I'm thriving in my ecosystem. Also, is that my specialized mug you're touching?",
+        shareTrait: 'The couch CEO — packages signed, plants watered, weighted blanket PhD.',
+        signatureQuote:
+          'Are you going out? Again? In this economy? Stay here, I just started a 10-episode documentary about cults and I made tea.',
+        roast:
+          'You are the main furniture of the apartment. Roommates do not check if you are home; they assume you are under a weighted blanket. A grocery trip is a major excursion. You know every creak and which neighbor fights at 3 PM. You are the heart of the home because you never leave it.',
+        stats: [
+          'Social energy: 30% — you like people, if they come to your couch',
+          'Presence: 100% — always there. Watching. Judging. Nesting.',
+          'Cleanliness: 80% — you clean because you have to stare at the mess all day',
+          'Predictability: 100% — if there is a fire, we know you are on the corner of the sofa'
+        ],
+        whatLiving: [
+          'The Pro: Ultimate house sitter — packages, plants, vent sessions because you are always available.',
+          'The Con: You claimed the living room. Roommates enter like a library. Pillow fluff rules exist.',
+          'The Struggle: You know too much from overheard calls — a wiki of secrets you never asked for.'
+        ],
+        scenarios: [
+          'You suggest reset Sundays, shared calendars, and \"let us debrief the week\" like it is therapy.',
+          'Chaos roommates make you carry stress quietly until you finally speak — then it matters.',
+          'You do not need constant socializing — you need reliability and follow-through.',
+          'True crime counts as a social plan if someone sits on the other cushion.'
+        ],
+        othersFeel: [
+          'calm when something needs a sensible fix',
+          'reassured you will not explode over one-off mistakes',
+          'surprised when you speak up — because it truly matters',
+          'clear you are paying attention even when you are quiet'
+        ],
+        idealBullets: [
+          'early communication about schedules, guests, travel',
+          'systems that do not require daily policing',
+          'a culture of repair: apologize, adjust, move on',
+          'consistency: good enough every week, not perfect then chaos'
+        ],
+        compat: [
+          { emoji: '🦉', name: 'The Owl', line: 'Soulmate — outside is a scam; silent bubble and scented candles.' },
+          { emoji: '🦊', name: 'The Fox', line: 'Roommate war — outside dirt and half-finished projects invade your zen zone.' }
+        ],
+        survivalTip:
+          'Respect the nest — remote goes back where it belongs. Party notice: 3-5 business days so they can hide. Bring a snack, earn a protector for life.',
+        whyFallback: [
+          'prefer steady, realistic norms over constant renegotiation',
+          'notice patterns before they become crises',
+          'value long-term peace over short-term \"winning\" the argument'
+        ]
+      }
+    };
+
+    /** A=4 … D=1 — used for trait grid / copy heuristics (not final type). */
+    function answerScores(ans) {
+      return ans.map((i) => (i === null || i === undefined ? 0 : 4 - i));
+    }
+
+    /** n = number of questions in the slice (QUIZ is 3+3+4+2 by section). */
+    function traitLevel(sum, invert, n) {
+      n = n == null ? 3 : n;
+      const min = n;
+      const max = n * 4;
+      if (sum < min || sum > max) return '—';
+      const highT = Math.round(9 * (n / 3));
+      const lowT = Math.round(5 * (n / 3));
+      if (invert) {
+        if (sum >= highT) return 'Low';
+        if (sum <= lowT) return 'High';
+        return 'Moderate';
+      }
+      if (sum >= highT) return 'High';
+      if (sum <= lowT) return 'Low';
+      return 'Moderate';
+    }
+
+    /** Weighted animal votes from each option’s tag list (1 ÷ number of tags per pick). */
+    function resolveType(ans) {
+      const tally = { beaver: 0, cat: 0, owl: 0, fox: 0, bunny: 0, turtle: 0 };
+      for (let qi = 0; qi < QUIZ.length; qi++) {
+        const ch = ans[qi];
+        const row = QUIZ[qi];
+        if (ch == null || ch === undefined || !row.votes || !row.votes[ch]) continue;
+        const tags = row.votes[ch];
+        const w = 1 / tags.length;
+        for (let ti = 0; ti < tags.length; ti++) {
+          const t = tags[ti];
+          if (Object.prototype.hasOwnProperty.call(tally, t)) tally[t] += w;
+        }
+      }
+      const tieOrder = ['beaver', 'owl', 'turtle', 'fox', 'bunny', 'cat'];
+      let best = 'owl';
+      let bestV = -1;
+      for (let i = 0; i < tieOrder.length; i++) {
+        const k = tieOrder[i];
+        const v = tally[k];
+        if (v > bestV) {
+          bestV = v;
+          best = k;
+        }
+      }
+      return best;
+    }
+
+    let step = -1;
+    let lastResultKey = null;
+    const answers = new Array(QUIZ.length).fill(null);
+    const el = (id) => document.getElementById(id);
+
+    function setQuizFlowFooterVisible(visible) {
+      const foot = el('quiz-flow-footer');
+      if (!foot) return;
+      if (visible) {
+        foot.classList.remove('hidden');
+        document.body.classList.add('quiz-flow-foot');
+      } else {
+        foot.classList.add('hidden');
+        document.body.classList.remove('quiz-flow-foot');
+      }
+    }
+
+    /* 角色 PNG 放在项目根目录的「Character images」文件夹（beaver.png …） */
+    const CHARACTER_IMG_DIR = 'Character images/';
+    /* 换一批角色图 / result page 角色层时改日期，避免浏览器沿用旧缓存 */
+    const CHARACTER_IMG_VER = '20260418';
+    const CHARACTER_IMG_Q = '?v=' + CHARACTER_IMG_VER;
+    const MATCH_QUIZ_RESULT_THUMB = {
+      'The Cat': CHARACTER_IMG_DIR + 'cat.png' + CHARACTER_IMG_Q,
+      'The Owl': CHARACTER_IMG_DIR + 'owl.png' + CHARACTER_IMG_Q,
+    };
+    /** 角色图文件名：rabbit 与 bunny 同一套，统一用 bunny.png */
+    function characterImageFilename(slugOrKey) {
+      const s = String(slugOrKey || '').toLowerCase();
+      return s === 'rabbit' ? 'bunny' : s;
+    }
+    /** 叠在固定底图 `hero-room.png` 上的角色层：根目录 `{slug} result page.png` */
+    function resultPageCharacterSrc(typeKey) {
+      if (!typeKey || !TYPES[typeKey]) return '';
+      const slug = characterImageFilename(typeKey);
+      return encodeURI(slug + ' result page.png') + CHARACTER_IMG_Q;
+    }
+    /** 顶栏 / 预览 / 分享里的角色图：优先 result page 角色 PNG，失败再用 Character images */
+    function bindCharacterImgResultPageFirst(img, typeKey, altText) {
+      if (!img) return;
+      img.onload = null;
+      img.onerror = null;
+      const t = typeKey && TYPES[typeKey];
+      if (!t) {
+        img.removeAttribute('src');
+        img.alt = '';
+        return;
+      }
+      const primary = resultPageCharacterSrc(typeKey);
+      const fb = characterImageSrcFromKey(typeKey);
+      img.alt = altText || t.name;
+      if (!primary && !fb) {
+        img.removeAttribute('src');
+        return;
+      }
+      if (!primary) {
+        img.onerror = null;
+        img.src = fb;
+        return;
+      }
+      let triedFb = false;
+      img.onerror = () => {
+        if (triedFb) return;
+        triedFb = true;
+        if (fb) img.src = fb;
+        else img.removeAttribute('src');
+      };
+      img.onload = () => {
+        img.onerror = null;
+      };
+      img.src = primary;
+    }
+    function characterImageSrcFromKey(typeKey) {
+      if (!typeKey || !TYPES[typeKey]) return '';
+      return CHARACTER_IMG_DIR + characterImageFilename(typeKey) + '.png' + CHARACTER_IMG_Q;
+    }
+    function characterImageSrcFromDisplayName(name) {
+      const m = name && name.match(/^The\s+(.+)$/i);
+      if (!m) return '';
+      const slug = m[1].trim().toLowerCase().replace(/\s+/g, '-');
+      return CHARACTER_IMG_DIR + characterImageFilename(slug) + '.png' + CHARACTER_IMG_Q;
+    }
+
+    function matchThumbSrc(displayName) {
+      return MATCH_QUIZ_RESULT_THUMB[displayName] || characterImageSrcFromDisplayName(displayName);
+    }
+
+    function matchBlocksHtml(items) {
+      return items
+        .map((c) => {
+          const src = matchThumbSrc(c.name);
+          const thumb = src
+            ? `<img class="rfinal-match-thumb" src="${src}" width="57" height="57" alt="" loading="lazy" />`
+            : '';
+          return `<div class="rfinal-match">${thumb}<div class="rfinal-match-body"><p class="rfinal-match-name">${escHtml(c.name)}</p><p class="rfinal-match-line">— ${escHtml(c.line)}</p></div></div>`;
+        })
+        .join('');
+    }
+
+    function bulletListHtml(items) {
+      return items.map((t) => `<li>${t}</li>`).join('');
+    }
+
+    function buildTraitGridHtml(ans) {
+      if (!ans || ans.some((x) => x === null || x === undefined)) return '';
+      const s = answerScores(ans);
+      const cl = s[0] + s[1] + s[2];
+      const soc = s[3] + s[4] + s[5];
+      const st = s[6] + s[7] + s[8] + s[9];
+      const en = s[10] + s[11];
+      const rows = [
+        { dim: 'Cleanliness', val: traitLevel(cl, false, 3) },
+        { dim: 'Social energy', val: traitLevel(soc, true, 3) },
+        { dim: 'Structure', val: traitLevel(st, false, 4) },
+        { dim: 'Engagement', val: traitLevel(en, false, 2) }
+      ];
+      return rows
+        .map(
+          (r) =>
+            `<div class="trait-row"><span class="trait-dim">${r.dim}</span><span class="trait-val">${r.val}</span></div>`
+        )
+        .join('');
+    }
+
+    function deriveLifestyle(ans) {
+      const s = answerScores(ans);
+      const cl = s[0] + s[1] + s[2];
+      const soc = s[3] + s[4] + s[5];
+      const st = s[6] + s[7] + s[8] + s[9];
+      const en = s[10] + s[11];
+      const cleanLv = traitLevel(cl, false, 3);
+      const socLv = traitLevel(soc, true, 3);
+      const stLv = traitLevel(st, false, 4);
+      const enLv = traitLevel(en, false, 2);
+      const rhythm =
+        stLv === 'High'
+          ? 'Steady routine most days — you like predictability at home.'
+          : stLv === 'Low'
+            ? 'Flexible rhythm — your schedule shifts and home adapts with you.'
+            : 'Mix of routine and flexibility depending on the week.';
+      const clean =
+        cleanLv === 'High'
+          ? 'Higher bar for shared tidiness — you notice and reset shared spaces.'
+          : cleanLv === 'Low'
+            ? 'Relaxed cleanliness — you clean on a flexible timeline.'
+            : 'Balanced — tidy shared areas without micromanaging.';
+      const socialE =
+        socLv === 'High'
+          ? 'More social energy — guests and shared time feel natural.'
+          : socLv === 'Low'
+            ? 'Quieter social energy — you recharge with more solo time at home.'
+            : 'Moderate — some shared moments, plenty of independent time too.';
+      const engage =
+        enLv === 'High'
+          ? 'You tend to stay engaged with how the shared home feels day to day.'
+          : enLv === 'Low'
+            ? 'You focus on your own lane unless something directly affects you.'
+            : 'You engage when it matters — not every small detail.';
+      return { rhythm, clean, social: socialE, engagement: engage };
+    }
+
+    function getWhyBullets(ans, typeKey) {
+      const s = answerScores(ans);
+      const cl = s[0] + s[1] + s[2];
+      const soc = s[3] + s[4] + s[5];
+      const st = s[6] + s[7] + s[8] + s[9];
+      const en = s[10] + s[11];
+      const pool = [];
+      if (st >= 12) pool.push('prefer clear expectations when everyone shares a space');
+      if (cl >= 9 || en >= 6) pool.push('step in when shared areas clearly need attention');
+      if (st >= 11) pool.push('like day-to-day living to feel consistent, not improvised');
+      if (soc >= 9) pool.push('recharge in calmer, lower-traffic home time');
+      if (soc <= 5) pool.push('enjoy more guests, shared moments, and activity at home');
+      if (st <= 7) pool.push('adapt when house norms need to flex with real life');
+      if (cl <= 5) pool.push('keep cleaning expectations realistic, not constant');
+      if (en <= 4) pool.push('focus your energy mostly where it affects your space');
+      const seen = new Set();
+      const out = [];
+      for (const p of pool) {
+        if (!seen.has(p)) {
+          seen.add(p);
+          out.push(p);
+        }
+        if (out.length >= 3) break;
+      }
+      const fb = TYPES[typeKey].whyFallback;
+      for (const p of fb) {
+        if (out.length >= 3) break;
+        if (!seen.has(p)) {
+          seen.add(p);
+          out.push(p);
+        }
+      }
+      return out.slice(0, 3);
+    }
+
+    function escHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /** Parses "Label: 85% — note" (em/en/hyphen dash) into a stat row with bar. */
+    function statVisualHtml(line) {
+      const raw = String(line).trim();
+      const m = raw.match(/^(.+?):\s*(\d{1,3})%\s*\u2014\s*(.+)$/) || raw.match(/^(.+?):\s*(\d{1,3})%\s*-\s*(.+)$/);
+      if (!m) {
+        return `<li class="rfinal-stat-fallback">${escHtml(raw)}</li>`;
+      }
+      const label = m[1].trim();
+      const pctNum = parseInt(m[2], 10);
+      const note = m[3].trim();
+      const barW = Math.min(100, Math.max(0, pctNum));
+      const over = pctNum > 100;
+      const fillClass = 'rfinal-stat-fill' + (over ? ' rfinal-stat-fill--over' : '');
+      const ariaText = label + ', ' + pctNum + '%. ' + note;
+      return (
+        `<li class="rfinal-stat-item">` +
+        `<div class="rfinal-stat-top">` +
+        `<span class="rfinal-stat-label">${escHtml(label)}</span>` +
+        `<span class="rfinal-stat-pct">${pctNum}%</span>` +
+        `</div>` +
+        `<div class="rfinal-stat-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${barW}" aria-valuetext="${escHtml(ariaText)}">` +
+        `<div class="${fillClass}" style="width:${barW}%"></div>` +
+        `</div>` +
+        `<p class="rfinal-stat-note">${escHtml(note)}</p>` +
+        `</li>`
+      );
+    }
+
+    function applyResultUI(typeKey, ans) {
+      const t = TYPES[typeKey];
+      const hasFull = ans && ans.length === QUIZ.length && ans.every((x) => x !== null && x !== undefined);
+      const typeWord = t.name.replace(/^The\s+/i, '');
+      el('res-headline').textContent = `Your roommate type: ${t.name}`;
+      el('res-rfinal-type-name').textContent = typeWord;
+      el('res-tagline').textContent = t.subtitle;
+      const animal = typeWord.toLowerCase();
+      if (t.signatureQuote) {
+        el('res-rfinal-quote').innerHTML = `<span class="rfinal-quote-body">${escHtml(t.signatureQuote)}</span>`;
+      } else {
+        let subRest = t.subtitle.trim();
+        subRest = subRest.charAt(0).toLowerCase() + subRest.slice(1);
+        const quoteEnd = subRest.endsWith('.') ? subRest.slice(0, -1) : subRest;
+        el('res-rfinal-quote').innerHTML =
+          `<span class="rfinal-quote-body">As a ${escHtml(animal)}, ${escHtml(quoteEnd)}.</span>`;
+      }
+      const roastEl = el('res-roast');
+      if (roastEl) roastEl.textContent = t.roast || '';
+      const statsEl = el('res-stats');
+      if (statsEl) statsEl.innerHTML = t.stats && t.stats.length ? t.stats.map(statVisualHtml).join('') : '';
+      const survEl = el('res-survival');
+      if (survEl) survEl.textContent = t.survivalTip || '';
+      bindCharacterImgResultPageFirst(el('res-rfinal-mascot'), typeKey, t.name);
+      const why = hasFull ? getWhyBullets(ans, typeKey) : t.whyFallback.slice(0, 3);
+      el('res-why-list').innerHTML = bulletListHtml(why);
+      el('res-why-intro').textContent = 'Your answers suggest that you:';
+      el('res-live-with').innerHTML = bulletListHtml(t.whatLiving);
+      el('res-scenarios').innerHTML = bulletListHtml(t.scenarios);
+      el('res-others').innerHTML = bulletListHtml(t.othersFeel);
+      el('res-compat').innerHTML = matchBlocksHtml(t.compat);
+      el('res-ideal').innerHTML = bulletListHtml(t.idealBullets);
+      updateSharePreviewBoxes();
+    }
+
+    function resetResultsPrintAnimation() {
+      if (window.__resultGenT) {
+        clearTimeout(window.__resultGenT);
+        window.__resultGenT = 0;
+      }
+    }
+
+    /** Fills the result view. Third argument kept for call sites; print animation removed. */
+    function scheduleResultsReveal(typeKey, ans, _fast) {
+      resetResultsPrintAnimation();
+      applyResultUI(typeKey, ans);
+    }
+
+    function saveSession() {
+      try {
+        sessionStorage.setItem(STORAGE.answers, JSON.stringify(answers));
+        if (lastResultKey) sessionStorage.setItem(STORAGE.type, lastResultKey);
+      } catch (_) {}
+    }
+
+    function loadSessionAnswers() {
+      try {
+        const raw = sessionStorage.getItem(STORAGE.answers);
+        if (!raw) return null;
+        const a = JSON.parse(raw);
+        if (!Array.isArray(a) || a.length !== QUIZ.length) return null;
+        if (a.some((x) => x === null || x === undefined)) return null;
+        return a;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function bootFromHash() {
+      const h = (location.hash || '').replace(/^#/, '');
+      if (!TYPES[h]) return;
+      const saved = loadSessionAnswers();
+      if (saved) {
+        for (let i = 0; i < saved.length; i++) answers[i] = saved[i];
+      }
+      lastResultKey = h;
+      try {
+        sessionStorage.setItem(STORAGE.type, h);
+      } catch (_) {}
+      el('quiz-split-wrap').classList.add('hidden');
+      hidePostQuizFlow();
+      el('quiz-results').classList.remove('hidden');
+      scheduleResultsReveal(h, saved || answers, true);
+      setQuizFlowFooterVisible(false);
+    }
+
+    const artImg = el('quiz-art-img');
+    const artPanel = el('quiz-art-panel');
+    artImg.addEventListener('error', () => {
+      artPanel.classList.add('is-empty');
+    });
+    artImg.addEventListener('load', () => {
+      if (artImg.naturalWidth > 0) artPanel.classList.remove('is-empty');
+    });
+
+    /** Intro (questionIndex < 0): quiz cover. Quiz: q1–q12 from QUIZ_QUESTION_ART. */
+    function setQuizIllustration(questionIndex) {
+      if (questionIndex < 0) {
+        artPanel.classList.remove('is-empty');
+        artImg.alt = 'Roommate Type Quiz cover illustration';
+        artImg.src = encodeURI(QUIZ_INTRO_COVER) + QUIZ_ART_Q;
+        return;
+      }
+      if (questionIndex >= QUIZ_QUESTION_ART.length) {
+        artImg.removeAttribute('src');
+        artImg.alt = '';
+        artPanel.classList.add('is-empty');
+        return;
+      }
+      artPanel.classList.remove('is-empty');
+      artImg.alt = `Illustration for question ${questionIndex + 1}`;
+      artImg.src = QUIZ_QUESTION_ART[questionIndex] + QUIZ_ART_Q;
+    }
+
+    const resultsArtImg = el('results-art-img');
+    const resultsArtFallback = el('results-art-fallback');
+    if (resultsArtImg && resultsArtFallback) {
+      resultsArtImg.addEventListener('error', () => {
+        resultsArtImg.classList.add('hidden');
+        resultsArtFallback.classList.remove('hidden');
+      });
+      resultsArtImg.addEventListener('load', () => {
+        if (resultsArtImg.naturalWidth > 0) {
+          resultsArtImg.classList.remove('hidden');
+          resultsArtFallback.classList.add('hidden');
+        }
+      });
+    }
+
+    function buildProgressSegments() {
+      const wrap = el('progress-segments');
+      wrap.innerHTML = '';
+      for (let i = 0; i < QUIZ.length; i++) {
+        const d = document.createElement('div');
+        d.className = 'progress-segment' + (i === step ? ' is-current' : '');
+        d.setAttribute('aria-hidden', 'true');
+        wrap.appendChild(d);
+      }
+    }
+
+    function hidePostQuizFlow() {
+      el('flow-profile-1').classList.add('hidden');
+      el('flow-profile-2').classList.add('hidden');
+      el('flow-waitlist').classList.add('hidden');
+    }
+
+    function showIntro() {
+      if (location.hash) {
+        try {
+          history.replaceState(null, '', location.pathname + location.search);
+        } catch (_) {}
+      }
+      el('quiz-split-wrap').classList.remove('hidden');
+      el('quiz-intro').classList.remove('hidden');
+      el('quiz-flow').classList.add('hidden');
+      el('quiz-results').classList.add('hidden');
+      resetResultsPrintAnimation();
+      hidePostQuizFlow();
+      step = -1;
+      answers.fill(null);
+      lastResultKey = null;
+      try {
+        sessionStorage.removeItem(STORAGE.answers);
+        sessionStorage.removeItem(STORAGE.type);
+        sessionStorage.removeItem(STORAGE.p1);
+        sessionStorage.removeItem(STORAGE.p2);
+      } catch (_) {}
+      setQuizFlowFooterVisible(false);
+      setQuizIllustration(-1);
+    }
+
+    function showFlow() {
+      el('quiz-split-wrap').classList.remove('hidden');
+      el('quiz-intro').classList.add('hidden');
+      el('quiz-flow').classList.remove('hidden');
+      el('quiz-results').classList.add('hidden');
+      resetResultsPrintAnimation();
+      hidePostQuizFlow();
+      step = 0;
+      buildProgressSegments();
+      renderQuestion();
+      setQuizFlowFooterVisible(true);
+    }
+
+    function showProfileStep1() {
+      el('quiz-split-wrap').classList.add('hidden');
+      el('quiz-results').classList.add('hidden');
+      resetResultsPrintAnimation();
+      el('flow-profile-2').classList.add('hidden');
+      el('flow-waitlist').classList.add('hidden');
+      el('flow-profile-1').classList.remove('hidden');
+      try {
+        const p1 = sessionStorage.getItem(STORAGE.p1);
+        if (p1) {
+          const o = JSON.parse(p1);
+          if (o.name) el('pf-name').value = o.name;
+          if (o.email) el('pf-email').value = o.email;
+          if (o.city) el('pf-city').value = o.city;
+        }
+      } catch (_) {}
+      setQuizFlowFooterVisible(false);
+      window.scrollTo(0, 0);
+    }
+
+    function fillProfileStep2Defaults() {
+      const validQuiz = answers.every((x) => x !== null);
+      const ls = validQuiz ? deriveLifestyle(answers) : { rhythm: '', clean: '', social: '' };
+      el('pf-rhythm').value = ls.rhythm;
+      el('pf-clean').value = ls.clean;
+      el('pf-social').value = ls.social;
+      try {
+        const p1 = JSON.parse(sessionStorage.getItem(STORAGE.p1) || '{}');
+        el('pf-display').value = p1.name || '';
+        el('pf-location').value = p1.city || '';
+      } catch (_) {}
+      try {
+        const p2 = sessionStorage.getItem(STORAGE.p2);
+        if (p2) {
+          const o = JSON.parse(p2);
+          if (o.display) el('pf-display').value = o.display;
+          if (o.location) el('pf-location').value = o.location;
+          if (o.intro) el('pf-intro').value = o.intro;
+          if (o.rhythm) el('pf-rhythm').value = o.rhythm;
+          if (o.clean) el('pf-clean').value = o.clean;
+          if (o.social) el('pf-social').value = o.social;
+          if (o.homeEnergy) el('pf-energy').value = o.homeEnergy;
+        }
+      } catch (_) {}
+      syncLivePreview();
+    }
+
+    function showProfileStep2() {
+      const savedA = loadSessionAnswers();
+      if (savedA) {
+        for (let i = 0; i < savedA.length; i++) answers[i] = savedA[i];
+      }
+      el('flow-profile-1').classList.add('hidden');
+      el('flow-waitlist').classList.add('hidden');
+      el('flow-profile-2').classList.remove('hidden');
+      const key = lastResultKey || sessionStorage.getItem(STORAGE.type);
+      const t = key ? TYPES[key] : null;
+      const cimg = el('pv-char-img');
+      if (t && key) {
+        el('pv-type').textContent = `${t.name} ${t.emoji}`;
+        bindCharacterImgResultPageFirst(cimg, key, t.name);
+        cimg.classList.remove('hidden');
+      } else {
+        el('pv-type').textContent = 'Your type';
+        cimg.classList.add('hidden');
+        cimg.removeAttribute('src');
+      }
+      fillProfileStep2Defaults();
+      setQuizFlowFooterVisible(false);
+      window.scrollTo(0, 0);
+    }
+
+    function syncLivePreview() {
+      const d = el('pf-display').value.trim();
+      const loc = el('pf-location').value.trim();
+      const intro = el('pf-intro').value.trim();
+      el('pv-name').textContent = d || 'Your name';
+      el('pv-loc').textContent = loc || 'Location';
+      el('pv-intro').textContent = intro || 'Your intro will show here.';
+      el('pv-rhythm').textContent = el('pf-rhythm').value.trim() || '—';
+      el('pv-clean').textContent = el('pf-clean').value.trim() || '—';
+      el('pv-social').textContent = el('pf-social').value.trim() || '—';
+      const en = el('pf-energy').value;
+      el('pv-energy').textContent = en || '—';
+    }
+
+    function showWaitlist(variant) {
+      el('quiz-split-wrap').classList.add('hidden');
+      el('quiz-results').classList.add('hidden');
+      resetResultsPrintAnimation();
+      el('flow-profile-1').classList.add('hidden');
+      el('flow-profile-2').classList.add('hidden');
+      el('flow-waitlist').classList.remove('hidden');
+      const reinforce = el('waitlist-reinforce');
+      const form = el('form-waitlist');
+      const success = el('waitlist-success');
+      success.classList.add('hidden');
+      form.classList.remove('hidden');
+      if (variant === 'full') {
+        reinforce.textContent =
+          'Your profile will be prioritized when matching opens.';
+      } else {
+        reinforce.textContent =
+          'We’ll save your spot — you can finish your profile anytime from your inbox.';
+      }
+      let email = '';
+      try {
+        const p1 = JSON.parse(sessionStorage.getItem(STORAGE.p1) || '{}');
+        email = p1.email || '';
+      } catch (_) {}
+      el('waitlist-email').value = email;
+      el('waitlist-email').setAttribute('required', '');
+      updateSharePreviewBoxes();
+      setQuizFlowFooterVisible(false);
+      window.scrollTo(0, 0);
+    }
+
+    function showResults() {
+      el('quiz-split-wrap').classList.add('hidden');
+      el('quiz-intro').classList.add('hidden');
+      el('quiz-flow').classList.add('hidden');
+      hidePostQuizFlow();
+      el('quiz-results').classList.remove('hidden');
+      const key = resolveType(answers);
+      lastResultKey = key;
+      saveSession();
+      scheduleResultsReveal(key, answers, false);
+      setQuizFlowFooterVisible(false);
+      window.scrollTo(0, 0);
+    }
+
+    function showResultsFromMemory() {
+      const saved = loadSessionAnswers();
+      if (!saved) return false;
+      for (let i = 0; i < saved.length; i++) answers[i] = saved[i];
+      const key = sessionStorage.getItem(STORAGE.type) || resolveType(answers);
+      if (!TYPES[key]) return false;
+      lastResultKey = key;
+      el('quiz-split-wrap').classList.add('hidden');
+      el('quiz-results').classList.remove('hidden');
+      hidePostQuizFlow();
+      scheduleResultsReveal(key, answers, true);
+      setQuizFlowFooterVisible(false);
+      window.scrollTo(0, 0);
+      return true;
+    }
+
+    function shareUrl() {
+      const base = window.location.href.replace(/#.*$/, '');
+      const type = lastResultKey || sessionStorage.getItem(STORAGE.type);
+      return type ? `${base}#${type}` : base;
+    }
+
+    function quizBaseUrl() {
+      return window.location.href.replace(/#.*$/, '');
+    }
+
+    function buildShareText() {
+      const key = lastResultKey || sessionStorage.getItem(STORAGE.type);
+      const t = key ? TYPES[key] : null;
+      const url = shareUrl();
+      if (!t) return `Find your roommate type → ${url}`;
+      return `I'm ${t.name} ${t.emoji}\n${t.shareTrait}\n\nFind your roommate type → ${url}`;
+    }
+
+    function buildCompareInviteText() {
+      const url = shareUrl();
+      const key = lastResultKey || sessionStorage.getItem(STORAGE.type);
+      const t = key ? TYPES[key] : null;
+      const line = t ? `I’m ${t.name} ${t.emoji} on Roomeo.` : 'I took the Roomeo roommate type quiz.';
+      return `${line} Take it too and we can compare our types:\n${url}`;
+    }
+
+    function updateEmailModalTypeHint() {
+      const hint = el('email-modal-type-hint');
+      if (!hint) return;
+      const key = lastResultKey || sessionStorage.getItem(STORAGE.type);
+      const t = key && TYPES[key] ? TYPES[key] : null;
+      hint.textContent = t ? t.name.replace(/^The\s+/, '') : 'roommate type';
+    }
+
+    function updateShareModalContent() {
+      const a = el('share-modal-url-a');
+      const b = el('share-modal-url-b');
+      if (a) a.value = shareUrl();
+      if (b) b.value = quizBaseUrl();
+      const img = el('share-modal-mascot');
+      const key = lastResultKey || sessionStorage.getItem(STORAGE.type);
+      if (img && key && TYPES[key]) {
+        bindCharacterImgResultPageFirst(img, key, TYPES[key].name);
+        img.classList.remove('hidden');
+      } else if (img) {
+        img.classList.add('hidden');
+        img.removeAttribute('src');
+        img.alt = '';
+      }
+    }
+
+    function updateCompareModalTypeHint() {
+      const hint = el('compare-modal-type-hint');
+      if (!hint) return;
+      const key = lastResultKey || sessionStorage.getItem(STORAGE.type);
+      const t = key && TYPES[key] ? TYPES[key] : null;
+      hint.textContent = t ? t.name.replace(/^The\s+/, '') : 'roommate type';
+    }
+
+    function updateSharePreviewBoxes() {
+      updateEmailModalTypeHint();
+      updateCompareModalTypeHint();
+      updateShareModalContent();
+    }
+
+    let lastEmailModalTrigger = null;
+
+    function getPrefillEmailForModal() {
+      const w = el('waitlist-email');
+      if (w && w.value.trim()) return w.value.trim();
+      try {
+        const raw = sessionStorage.getItem(STORAGE.p1);
+        if (raw) {
+          const o = JSON.parse(raw);
+          if (o && o.email && String(o.email).trim()) return String(o.email).trim();
+        }
+      } catch (_) {}
+      return '';
+    }
+
+    function prefillCompareFriendModal() {
+      const em = el('compare-modal-email');
+      const nm = el('compare-modal-name');
+      if (!em || !nm) return;
+      const w = el('waitlist-email');
+      if (w && w.value.trim()) em.value = w.value.trim();
+      try {
+        const raw = sessionStorage.getItem(STORAGE.p1);
+        if (raw) {
+          const o = JSON.parse(raw);
+          if (o) {
+            if (o.email && String(o.email).trim()) em.value = String(o.email).trim();
+            if (o.name && String(o.name).trim()) nm.value = String(o.name).trim();
+          }
+        }
+      } catch (_) {}
+    }
+
+    function buildCompareInviteClipboardBody() {
+      let body = buildCompareInviteText();
+      const tips = el('compare-modal-tips');
+      if (tips && tips.checked) {
+        body += '\n\n[I’m interested in roommate-type tips and Roomeo updates.]';
+      }
+      return body;
+    }
+
+    let lastCompareModalTrigger = null;
+
+    function openCompareFriendModal(trigger) {
+      const shareDlg = el('share-results-modal');
+      if (shareDlg && shareDlg.open) shareDlg.close();
+      const emailDlg = el('email-results-modal');
+      if (emailDlg && emailDlg.open) emailDlg.close();
+      const form = el('compare-friend-form');
+      if (form) form.reset();
+      prefillCompareFriendModal();
+      updateCompareModalTypeHint();
+      lastCompareModalTrigger = trigger || null;
+      const d = el('compare-friend-modal');
+      if (d) d.showModal();
+      const focusEm = el('compare-modal-email');
+      if (focusEm) queueMicrotask(() => focusEm.focus());
+    }
+
+    function openEmailResultsModal(trigger) {
+      const shareDlg = el('share-results-modal');
+      if (shareDlg && shareDlg.open) shareDlg.close();
+      const compareDlg = el('compare-friend-modal');
+      if (compareDlg && compareDlg.open) compareDlg.close();
+      updateEmailModalTypeHint();
+      const input = el('email-modal-input');
+      const dialog = el('email-results-modal');
+      if (!input || !dialog) return;
+      if (!input.value.trim()) input.value = getPrefillEmailForModal();
+      lastEmailModalTrigger = trigger || null;
+      dialog.showModal();
+      queueMicrotask(() => input.focus());
+    }
+
+    let lastShareModalTrigger = null;
+
+    function openShareResultsModal(trigger) {
+      const emailDlg = el('email-results-modal');
+      if (emailDlg && emailDlg.open) emailDlg.close();
+      const compareDlg = el('compare-friend-modal');
+      if (compareDlg && compareDlg.open) compareDlg.close();
+      updateShareModalContent();
+      lastShareModalTrigger = trigger || null;
+      const d = el('share-results-modal');
+      if (d) d.showModal();
+    }
+
+    const shareToastTimers = {};
+    function flashShareToast(id) {
+      const tid = id || 'share-toast';
+      const toast = el(tid);
+      if (!toast) return;
+      toast.classList.add('visible');
+      clearTimeout(shareToastTimers[tid]);
+      shareToastTimers[tid] = setTimeout(() => toast.classList.remove('visible'), 2000);
+    }
+
+    async function copyShareFullText(toastId) {
+      const text = buildShareText();
+      const tid = toastId || 'share-toast';
+      try {
+        await navigator.clipboard.writeText(text);
+        flashShareToast(tid);
+      } catch {
+        flashShareToast(tid);
+      }
+    }
+
+    async function copyTextToToast(text, toastId) {
+      const tid = toastId || 'share-modal-toast';
+      try {
+        await navigator.clipboard.writeText(text);
+        flashShareToast(tid);
+      } catch {
+        flashShareToast(tid);
+      }
+    }
+
+    function openShareDestination(url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    async function shareInstagram(toastId) {
+      await copyShareFullText(toastId || 'share-toast');
+      openShareDestination('https://www.instagram.com/');
+    }
+
+    async function shareTikTok(toastId) {
+      await copyShareFullText(toastId || 'share-toast');
+      openShareDestination('https://www.tiktok.com/');
+    }
+
+    function renderQuestion() {
+      const q = QUIZ[step];
+      buildProgressSegments();
+      el('question-num').textContent = `Question ${step + 1}`;
+      el('q-section').textContent = q.section;
+      el('q-title').textContent = q.q;
+      const optsEl = el('q-options');
+      optsEl.innerHTML = '';
+      q.opts.forEach((text, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'option' + (answers[step] === i ? ' selected' : '');
+        b.textContent = text;
+        b.addEventListener('click', () => {
+          answers[step] = i;
+          optsEl.querySelectorAll('.option').forEach((x) => x.classList.remove('selected'));
+          b.classList.add('selected');
+          el('btn-next').disabled = false;
+        });
+        optsEl.appendChild(b);
+      });
+      el('btn-prev').classList.toggle('hidden', step === 0);
+      el('btn-next-label').textContent = step === QUIZ.length - 1 ? 'see results' : 'continue';
+      el('btn-next').disabled = answers[step] === null;
+      setQuizIllustration(step);
+    }
+
+    el('btn-start').addEventListener('click', showFlow);
+    el('btn-prev').addEventListener('click', () => {
+      if (step > 0) {
+        step--;
+        renderQuestion();
+      }
+    });
+    el('btn-next').addEventListener('click', () => {
+      if (answers[step] === null) return;
+      if (step < QUIZ.length - 1) {
+        step++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    });
+    el('btn-retry').addEventListener('click', showIntro);
+
+    el('btn-results-back').addEventListener('click', showIntro);
+
+    el('btn-build-profile').addEventListener('click', () => showProfileStep1());
+    el('btn-skip-profile').addEventListener('click', () => showWaitlist('light'));
+
+    el('btn-profile1-back').addEventListener('click', () => {
+      if (!showResultsFromMemory()) showIntro();
+    });
+
+    el('form-profile-1').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = el('pf-name').value.trim();
+      const email = el('pf-email').value.trim();
+      const city = el('pf-city').value.trim();
+      if (!name || !email || !city) return;
+      try {
+        sessionStorage.setItem(STORAGE.p1, JSON.stringify({ name, email, city }));
+      } catch (_) {}
+      showProfileStep2();
+    });
+
+    el('btn-profile2-back').addEventListener('click', () => showProfileStep1());
+
+    ['pf-display', 'pf-location', 'pf-intro', 'pf-rhythm', 'pf-clean', 'pf-social', 'pf-energy'].forEach((id) => {
+      el(id).addEventListener('input', syncLivePreview);
+      el(id).addEventListener('change', syncLivePreview);
+    });
+
+    el('pf-photo').addEventListener('change', (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        el('pv-photo-img').src = r.result;
+        el('pv-photo-img').classList.remove('hidden');
+        el('pv-photo').classList.add('hidden');
+      };
+      r.readAsDataURL(f);
+    });
+
+    el('form-profile-2').addEventListener('submit', (e) => {
+      e.preventDefault();
+      try {
+        sessionStorage.setItem(
+          STORAGE.p2,
+          JSON.stringify({
+            display: el('pf-display').value.trim(),
+            location: el('pf-location').value.trim(),
+            intro: el('pf-intro').value.trim(),
+            rhythm: el('pf-rhythm').value.trim(),
+            clean: el('pf-clean').value.trim(),
+            social: el('pf-social').value.trim(),
+            homeEnergy: el('pf-energy').value
+          })
+        );
+      } catch (_) {}
+      showWaitlist('full');
+    });
+
+    el('form-waitlist').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = el('waitlist-email').value.trim();
+      if (!email) return;
+      el('form-waitlist').classList.add('hidden');
+      el('waitlist-success').classList.remove('hidden');
+    });
+
+    const sharePillEmail = el('share-pill-email');
+    if (sharePillEmail) sharePillEmail.addEventListener('click', () => openEmailResultsModal(sharePillEmail));
+    const sharePillWlEmail = el('share-pill-wl-email');
+    if (sharePillWlEmail) sharePillWlEmail.addEventListener('click', () => openEmailResultsModal(sharePillWlEmail));
+
+    const sharePillMainShare = el('share-pill-share');
+    if (sharePillMainShare) sharePillMainShare.addEventListener('click', () => openShareResultsModal(sharePillMainShare));
+    const sharePillWlShare = el('share-pill-wl-share');
+    if (sharePillWlShare) sharePillWlShare.addEventListener('click', () => openShareResultsModal(sharePillWlShare));
+
+    const shareResultsDialog = el('share-results-modal');
+    const shareModalToastId = 'share-modal-toast';
+    if (shareResultsDialog) {
+      shareResultsDialog.addEventListener('close', () => {
+        if (lastShareModalTrigger && typeof lastShareModalTrigger.focus === 'function') lastShareModalTrigger.focus();
+        lastShareModalTrigger = null;
+      });
+    }
+    const shareModalClose = el('share-modal-close');
+    if (shareModalClose && shareResultsDialog) {
+      shareModalClose.addEventListener('click', () => shareResultsDialog.close());
+    }
+    const shareModalFb = el('share-modal-fb');
+    if (shareModalFb) {
+      shareModalFb.addEventListener('click', () => {
+        openShareDestination('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl()));
+      });
+    }
+    const shareModalX = el('share-modal-x');
+    if (shareModalX) {
+      shareModalX.addEventListener('click', () => {
+        openShareDestination('https://twitter.com/intent/tweet?text=' + encodeURIComponent(buildShareText()));
+      });
+    }
+    const shareModalIg = el('share-modal-ig');
+    if (shareModalIg) shareModalIg.addEventListener('click', () => shareInstagram(shareModalToastId));
+    const shareModalTt = el('share-modal-tt');
+    if (shareModalTt) shareModalTt.addEventListener('click', () => shareTikTok(shareModalToastId));
+    const shareModalCopyA = el('share-modal-copy-a');
+    if (shareModalCopyA) shareModalCopyA.addEventListener('click', () => copyTextToToast(shareUrl(), shareModalToastId));
+    const shareModalCopyB = el('share-modal-copy-b');
+    if (shareModalCopyB) shareModalCopyB.addEventListener('click', () => copyTextToToast(quizBaseUrl(), shareModalToastId));
+
+    const emailResultsDialog = el('email-results-modal');
+    if (emailResultsDialog) {
+      emailResultsDialog.addEventListener('close', () => {
+        if (lastEmailModalTrigger && typeof lastEmailModalTrigger.focus === 'function') lastEmailModalTrigger.focus();
+        lastEmailModalTrigger = null;
+      });
+    }
+    const emailModalClose = el('email-modal-close');
+    if (emailModalClose && emailResultsDialog) {
+      emailModalClose.addEventListener('click', () => emailResultsDialog.close());
+    }
+    const emailModalLater = el('email-modal-later');
+    if (emailModalLater && emailResultsDialog) {
+      emailModalLater.addEventListener('click', () => emailResultsDialog.close());
+    }
+    const emailModalSend = el('email-modal-send');
+    if (emailModalSend && emailResultsDialog) {
+      emailModalSend.addEventListener('click', () => {
+        const input = el('email-modal-input');
+        if (!input) return;
+        const raw = input.value.trim();
+        if (!raw) {
+          input.reportValidity();
+          return;
+        }
+        if (!input.checkValidity()) {
+          input.reportValidity();
+          return;
+        }
+        const subj = 'My roommate type — Roomeo';
+        let body = buildShareText();
+        const opt = el('email-modal-optin');
+        if (opt && opt.checked) {
+          body += '\n\n[I’m interested in roommate-type tips and Roomeo updates.]';
+        }
+        const href = `mailto:${encodeURIComponent(raw)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+        emailResultsDialog.close();
+        window.location.href = href;
+      });
+    }
+
+    const sharePillCompare = el('share-pill-compare');
+    if (sharePillCompare) sharePillCompare.addEventListener('click', () => openCompareFriendModal(sharePillCompare));
+    const sharePillWlCompare = el('share-pill-wl-compare');
+    if (sharePillWlCompare) sharePillWlCompare.addEventListener('click', () => openCompareFriendModal(sharePillWlCompare));
+
+    const compareFriendDialog = el('compare-friend-modal');
+    const compareModalToastId = 'compare-modal-toast';
+    if (compareFriendDialog) {
+      compareFriendDialog.addEventListener('close', () => {
+        if (lastCompareModalTrigger && typeof lastCompareModalTrigger.focus === 'function') lastCompareModalTrigger.focus();
+        lastCompareModalTrigger = null;
+      });
+    }
+    const compareModalCloseBtn = el('compare-modal-close');
+    if (compareModalCloseBtn && compareFriendDialog) {
+      compareModalCloseBtn.addEventListener('click', () => compareFriendDialog.close());
+    }
+    const compareFriendForm = el('compare-friend-form');
+    if (compareFriendForm && compareFriendDialog) {
+      compareFriendForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!compareFriendForm.checkValidity()) {
+          compareFriendForm.reportValidity();
+          return;
+        }
+        const email = el('compare-modal-email').value.trim();
+        const name = el('compare-modal-name').value.trim();
+        try {
+          sessionStorage.setItem(
+            'roomeo_compare_friend',
+            JSON.stringify({
+              email,
+              name,
+              tips: el('compare-modal-tips').checked,
+              ts: Date.now()
+            })
+          );
+        } catch (_) {}
+        await copyTextToToast(buildCompareInviteClipboardBody(), compareModalToastId);
+        setTimeout(() => compareFriendDialog.close(), 850);
+      });
+    }
+    const compareCopyLinkOnly = el('compare-modal-copy-link-only');
+    if (compareCopyLinkOnly) {
+      compareCopyLinkOnly.addEventListener('click', () => copyTextToToast(shareUrl(), compareModalToastId));
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (el('quiz-flow').classList.contains('hidden')) return;
+      const n = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3 }[e.code];
+      if (n !== undefined) {
+        const btns = el('q-options').querySelectorAll('.option');
+        if (btns[n]) btns[n].click();
+      }
+    });
+
+    function bootFromFigmaCapturePreview() {
+      const raw = location.hash ? location.hash.slice(1) : '';
+      if (!raw.includes('figmacapture=')) return false;
+      const qs = new URLSearchParams(raw);
+      const typeKey = qs.get('previewResult');
+      if (!typeKey || !TYPES[typeKey]) return false;
+      lastResultKey = typeKey;
+      try {
+        sessionStorage.setItem(STORAGE.type, typeKey);
+      } catch (_) {}
+      el('quiz-split-wrap').classList.add('hidden');
+      hidePostQuizFlow();
+      el('quiz-results').classList.remove('hidden');
+      scheduleResultsReveal(typeKey, answers, true);
+      setQuizFlowFooterVisible(false);
+      return true;
+    }
+
+    if (!bootFromFigmaCapturePreview()) bootFromHash();
+    {
+      const split = el('quiz-split-wrap');
+      const res = el('quiz-results');
+      if (split && res && !split.classList.contains('hidden') && res.classList.contains('hidden')) {
+        setQuizIllustration(-1);
+      }
+    }
+
+  </script>
+</body>
+</html>

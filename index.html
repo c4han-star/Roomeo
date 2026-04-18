@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roomeo — Find a roommate who actually fits your life</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #000000;
+      --primary-hover: #333333;
+      --primary-focus: #1a1a1a;
+      --bg: #FFFFFF;
+      --bg-subtle: #F5F5F5;
+      --bg-muted: #EEEEEE;
+      --text-1: #1a1a1a;
+      --text-2: #666666;
+      --text-3: #999999;
+      --border: #D9D9D9;
+      --border-light: #EEEEEE;
+      --link: #0066CC;
+      --link-hover: #005AA0;
+      --success: #4CAF50;
+      --warning: #FF9800;
+      --error: #F44336;
+      --info: #2196F3;
+      --r-sm: 4px;
+      --r-md: 8px;
+      --r-lg: 12px;
+      --shadow-1: 0 1px 3px rgba(0,0,0,0.12);
+      --shadow-2: 0 2px 6px rgba(0,0,0,0.16);
+      --shadow-3: 0 4px 12px rgba(0,0,0,0.15);
+      --shadow-4: 0 8px 24px rgba(0,0,0,0.18);
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --max-w: 1200px;
+      --accent-coral: #ff6a2a;
+      --house-cream: #f9f5ed;
+      /* Heading caps only (vs. earlier 80 / 56); all other type matches pre-scale design */
+      --fs-h1-max: 72px;
+      --fs-h2-max: 48px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+      color: var(--text-1);
+      background: var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 72px;
+      background: transparent;
+      border-bottom: none;
+      transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    }
+    .nav.scrolled {
+      background: rgba(255,255,255,0.98);
+      box-shadow: var(--shadow-1);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .nav-logo {
+      flex-shrink: 0;
+      height: 48px;
+      padding-left: max(48px, env(safe-area-inset-left));
+      padding-right: 24px;
+      align-self: center;
+    }
+    .nav-inner {
+      flex: 1;
+      min-width: 0;
+      max-width: none;
+      margin: 0;
+      padding: 0 max(32px, env(safe-area-inset-right)) 0 0;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .nav-logo .nav-logo-svg {
+      height: 100%;
+      width: auto;
+      display: block;
+      /* 大图 hero 上：白色单色；滚动离开 hero 后恢复彩色 */
+      filter: brightness(0) invert(1);
+      transition: filter 0.3s var(--ease);
+    }
+    .nav.scrolled .nav-logo .nav-logo-svg {
+      filter: none;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 32px; list-style: none;
+      margin-left: clamp(40px, 7vw, 120px);
+    }
+    .nav-links a {
+      text-decoration: none; color: rgba(255,255,255,0.75);
+      font-size: 16px; font-weight: 500; transition: color 0.2s var(--ease);
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav.scrolled .nav-links a { color: var(--text-2); }
+    .nav.scrolled .nav-links a:hover { color: var(--text-1); }
+    .nav-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .nav .btn-login,
+    .nav .btn-primary {
+      font-size: 16px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-login {
+      background: none; border: none; color: rgba(255,255,255,0.8);
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      cursor: pointer; padding: 8px 16px; border-radius: var(--r-sm);
+      transition: background 0.2s var(--ease), color 0.2s var(--ease);
+    }
+    .btn-login:hover { background: rgba(255,255,255,0.1); }
+    .nav.scrolled .btn-login { color: var(--text-1); }
+    .nav.scrolled .btn-login:hover { background: var(--bg-subtle); }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--primary); color: #fff; border: none;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      padding: 8px 16px; border-radius: var(--r-sm); cursor: pointer;
+      min-height: 40px;
+      transition: background 0.2s var(--ease), box-shadow 0.2s var(--ease);
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: var(--primary-hover); box-shadow: var(--shadow-2); }
+    .btn-primary:active { background: var(--primary); }
+    .btn-primary:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 4px; }
+    .nav .btn-primary {
+      background: transparent; border: 1px solid rgba(255,255,255,0.5);
+      color: #fff;
+    }
+    .nav .btn-primary:hover { background: rgba(255,255,255,0.1); box-shadow: none; }
+    .nav.scrolled .btn-primary {
+      background: var(--primary); border: none; color: #fff;
+    }
+    .nav.scrolled .btn-primary:hover { background: var(--primary-hover); }
+    .btn-primary-lg { font-size: 14px; padding: 12px 24px; }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg); color: var(--primary); border: 1px solid var(--primary);
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      padding: 8px 16px; border-radius: var(--r-sm); cursor: pointer;
+      min-height: 40px;
+      transition: background 0.2s var(--ease), color 0.2s var(--ease);
+    }
+    .btn-secondary:hover { background: var(--primary); color: #fff; }
+
+    .btn-tertiary {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; border: none;
+      color: var(--text-1); font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; padding: 8px 0;
+      text-decoration: underline; text-underline-offset: 3px;
+      transition: color 0.2s var(--ease);
+    }
+    a.btn-tertiary { text-decoration: underline; }
+    .btn-tertiary:hover { color: var(--text-2); }
+
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .hamburger span {
+      display: block; width: 20px; height: 2px;
+      background: var(--text-1); margin: 5px 0;
+    }
+
+    /* ── LAYOUT ── */
+    section { padding: 96px 32px; }
+    .container { max-width: var(--max-w); margin: 0 auto; }
+    .section-label {
+      font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--text-3); margin-bottom: 16px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 85vh;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.65) 0%,
+        rgba(0,0,0,0.20) 40%,
+        rgba(0,0,0,0.10) 100%
+      );
+    }
+    .hero-inner {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      z-index: 1;
+      width: 100%; max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 32px 32px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 48px;
+    }
+    .hero-text { max-width: 640px; }
+    .hero h1.hero-title {
+      font-size: clamp(32px, 5vw, var(--fs-h1-max));
+      font-weight: 700; line-height: 1.2; letter-spacing: -1.5px;
+      color: #fff; margin-bottom: 16px;
+    }
+    .hero-title-line {
+      display: block;
+      white-space: nowrap;
+    }
+    .hero-sub {
+      font-size: 18px; font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      max-width: 480px;
+      line-height: 1.6; letter-spacing: 0.5px;
+      margin-bottom: 20px;
+    }
+    .hero-tags {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .hero-tag {
+      font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.3px;
+      padding: 5px 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+    }
+    .hero-cta {
+      flex-shrink: 0;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .hero-cta .btn-primary {
+      background: #FF6A2A; color: var(--text-1);
+      font-size: 14px; font-weight: 600;
+      padding: 0 24px; height: 48px;
+      border-radius: var(--r-sm);
+      letter-spacing: 0.5px;
+    }
+    .hero-cta .btn-primary:hover { background: #E85A1F; }
+    .hero-cta .btn-primary:first-child {
+      background: var(--primary); color: #fff; border: none;
+    }
+    .hero-cta .btn-primary:first-child:hover {
+      background: var(--primary-hover); color: #fff;
+    }
+    .hero-cta .btn-primary:last-child {
+      color: #fff;
+    }
+
+    /* ── CARDS ── */
+    .cards-section { background: var(--bg); border-top: 1px solid var(--border-light); }
+    .cards-header { text-align: center; margin-bottom: 64px; }
+    .cards-header h2 {
+      font-size: clamp(21px, 2.75vw, var(--fs-h2-max));
+      font-weight: 700; line-height: 1.3;
+      letter-spacing: -0.03em;
+    }
+    @media (min-width: 768px) {
+      .cards-header h2 {
+        white-space: nowrap;
+      }
+    }
+    .cards-header .cards-sub {
+      font-size: 18px; font-weight: 500;
+      color: var(--text-2);
+      max-width: min(100%, 40rem);
+      margin: 16px auto 0;
+      line-height: 1.6; letter-spacing: 0.25px;
+      padding: 0 8px;
+    }
+    @media (min-width: 1000px) {
+      .cards-header .cards-sub {
+        max-width: none;
+        white-space: nowrap;
+      }
+    }
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
+    /* Entire tile is a house silhouette (wood); no overlay gradient */
+    .card:nth-child(1) { --card-house-badge: #c8d2dc; }
+    .card:nth-child(2) { --card-house-badge: #ebe4a8; }
+    .card:nth-child(3) { --card-house-badge: #d8cfe8; }
+    .card {
+      --card-text: #4d3221;
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      aspect-ratio: 10 / 12.5;
+      min-height: 420px;
+      border: none;
+      border-radius: 0;
+      clip-path: polygon(8% 18%, 50% 3.5%, 92% 18%, 92% 99.2%, 8% 99.2%);
+      transition: transform 0.22s var(--ease);
+      isolation: isolate;
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.05) 0 1px,
+          transparent 1px 5px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.022) 0 2px,
+          transparent 2px 17px
+        ),
+        linear-gradient(168deg, #efe4d4 0%, #e5d4bc 42%, #d9c8ae 72%, #d0bfa5 100%);
+      pointer-events: none;
+    }
+    .card:nth-child(2)::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0 2px, transparent 2px 16px),
+        linear-gradient(168deg, #f2e8d8 0%, #e8dcc8 45%, #dccbad 100%);
+    }
+    .card:nth-child(3)::before {
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.048) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.021) 0 2px, transparent 2px 18px),
+        linear-gradient(168deg, #ece4dc 0%, #dfd2c4 50%, #d1c2b4 100%);
+    }
+    .card-house-index {
+      position: absolute;
+      top: 10%;
+      left: 11%;
+      z-index: 2;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--card-text);
+      background: var(--card-house-badge, #c8d2dc);
+      padding: 7px 8px;
+      line-height: 1;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+    .card,
+    .card-copy,
+    .card-copy h3,
+    .card-copy p,
+    .card-btn,
+    .card-btn-text,
+    .card-btn-circle,
+    .card-house-index {
+      text-shadow: none;
+    }
+    /* Icon strip = fixed height so three cards’ titles start on one baseline */
+    .card-body {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-height: 0;
+      margin-top: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 28px clamp(28px, 11%, 52px) 34px;
+      box-sizing: border-box;
+    }
+    .card-top-icon {
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+      width: 100%;
+      min-height: clamp(108px, 19vw, 132px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+    .card-top-icon img {
+      max-height: 48px;
+      max-width: 88px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .card-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+      max-width: min(20rem, 100%);
+      margin: 0 auto;
+      padding-inline: clamp(4px, 2vw, 12px);
+      box-sizing: border-box;
+    }
+    .card-copy h3 {
+      font-size: clamp(18px, 2vw, 20px);
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--card-text);
+      margin: 0;
+      letter-spacing: -0.2px;
+    }
+    .card-copy p {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.62;
+      color: var(--card-text);
+      margin: 0;
+      letter-spacing: 0.15px;
+    }
+    /* Glass pill + white ring + circular arrow chip (system accent on arrow) */
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      margin-top: 0;
+      padding: 8px 9px 8px 16px;
+      border: none;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      text-decoration: none;
+      cursor: pointer;
+      color: #fff;
+      background: rgba(32, 26, 22, 0.42);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      box-sizing: border-box;
+      transition: background 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
+    @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+      .card-btn {
+        background: rgba(77, 50, 33, 0.58);
+      }
+    }
+    .card-body .card-btn {
+      margin-top: auto;
+      align-self: center;
+      width: 100%;
+      max-width: min(15.5rem, 100%);
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card-body .card-btn .card-btn-text {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+    }
+    .card-btn-text { text-align: left; min-width: 0; }
+    .card-btn-circle {
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card-btn-arrow {
+      width: 15px;
+      height: 15px;
+      color: var(--accent-coral);
+      display: block;
+    }
+    a.card-btn,
+    a.card-btn:visited {
+      color: #fff;
+      background: rgba(32, 26, 22, 0.42);
+    }
+    a.card-btn:hover,
+    a.card-btn:focus-visible {
+      background: rgba(32, 26, 22, 0.58);
+      color: #fff;
+      box-shadow:
+        0 3px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    }
+    .card-btn:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 3px;
+    }
+    .card-body .card-btn:focus-visible {
+      outline-color: rgba(255, 255, 255, 0.95);
+    }
+    .card-body .card-btn:disabled {
+      max-width: min(15.5rem, 100%);
+      align-self: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(32, 26, 22, 0.28);
+      color: rgba(255, 255, 255, 0.72);
+      cursor: not-allowed;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .card-body .card-btn:disabled .card-btn-circle {
+      background: rgba(255, 255, 255, 0.78);
+    }
+    .card-body .card-btn:disabled .card-btn-arrow {
+      color: rgba(77, 50, 33, 0.5);
+    }
+    .card-btn:disabled {
+      padding: 8px 9px 8px 16px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card-btn { transition: none; }
+    }
+
+    /* ── PROBLEM ── */
+    .problem {
+      position: relative;
+      text-align: center;
+      padding: 96px 32px;
+      min-height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: #2a2826;
+      color: #fff;
+    }
+    .problem::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0.62)),
+        url('background-image-01.jpg?v=problem') center / cover no-repeat;
+    }
+    .problem h2 {
+      font-size: clamp(22px, 3.35vw, var(--fs-h2-max));
+      font-weight: 700; line-height: 1.25; letter-spacing: -0.04em;
+      max-width: 640px; margin: 0 auto;
+      color: #fff;
+      text-shadow: 0 1px 32px rgba(0, 0, 0, 0.45);
+    }
+    @media (min-width: 768px) {
+      .problem h2 {
+        white-space: nowrap;
+        max-width: none;
+      }
+    }
+    .problem .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { background: var(--bg); border-top: 1px solid var(--border-light); }
+    .how-header { text-align: center; margin-bottom: 72px; }
+    .how-header h2 {
+      font-size: clamp(24px, 3vw, var(--fs-h2-max));
+      font-weight: 700; line-height: 1.3; letter-spacing: -0.5px;
+    }
+    .how-video-wrap {
+      width: 100%;
+      margin: 56px auto 0;
+      max-width: min(920px, 100%);
+      aspect-ratio: 16 / 9;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-light);
+      background: var(--bg-subtle);
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .how-video-wrap video,
+    .how-video-wrap iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 0;
+    }
+    .how-video-wrap video {
+      object-fit: contain;
+      background: #0f0f0f;
+    }
+    .steps {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 48px; position: relative;
+    }
+    .steps::before {
+      content: ''; position: absolute; top: 28px;
+      left: 16.67%; right: 16.67%; height: 1px;
+      background: var(--border);
+    }
+    .step { text-align: center; position: relative; }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700;
+      margin: 0 auto 24px; position: relative; z-index: 1;
+      background: var(--primary); color: #fff;
+    }
+    .step h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.15px; }
+    .step p {
+      font-size: 16px; color: var(--text-2);
+      max-width: 260px; margin: 0 auto; line-height: 1.6;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── HOUSE WRAP (personality → footer) ── */
+    .house-wrap {
+      background-color: var(--house-cream);
+      /* Roof depth in px so it doesn’t scale with section height (unlike %). */
+      --house-roof: clamp(56px, 14vw, 120px);
+      clip-path: polygon(
+        50% 0%,
+        100% var(--house-roof),
+        100% 100%,
+        0% 100%,
+        0% var(--house-roof)
+      );
+      overflow-x: clip;
+      padding-top: clamp(40px, 6vw, 80px);
+      padding-bottom: 4px;
+    }
+    @supports not (overflow: clip) {
+      .house-wrap { overflow-x: hidden; }
+    }
+
+    /* ── PERSONALITY ── */
+    .personality-section { background: transparent; }
+    .personality-header { text-align: center; margin-bottom: 64px; }
+    .personality-header h2 {
+      font-size: clamp(24px, 3vw, var(--fs-h2-max));
+      font-weight: 700; line-height: 1.3; letter-spacing: -0.5px;
+    }
+    .personality-scroll {
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+    }
+    .personality-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(16px, 2.5vw, 22px);
+      padding: 0 0 14px;
+    }
+    @media (max-width: 720px) {
+      .personality-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 420px) {
+      .personality-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* Roommate type cards: 无白底、无边框阴影，图直接贴在分区背景上 */
+    .personality-card.roommate-type-card {
+      width: 100%;
+      max-width: none;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      overflow: visible;
+      line-height: 0;
+      cursor: default;
+      transition: transform 0.3s var(--ease);
+    }
+    .personality-card.roommate-type-card:hover {
+      box-shadow: none;
+      transform: translateY(-3px);
+    }
+    .personality-card.roommate-type-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+      transition: filter 0.35s var(--ease);
+    }
+    .personality-card.roommate-type-card:hover img {
+      filter: brightness(1.03);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .personality-card.roommate-type-card {
+        transition: none;
+      }
+      .personality-card.roommate-type-card:hover {
+        transform: none;
+        box-shadow: none;
+      }
+      .personality-card.roommate-type-card img {
+        transition: none;
+      }
+      .personality-card.roommate-type-card:hover img {
+        filter: none;
+      }
+    }
+    .personality-cta { text-align: center; margin-top: 48px; }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      position: relative;
+      color: #fff;
+      text-align: center;
+      padding: 96px 32px;
+      overflow: hidden;
+      background-color: var(--primary);
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.68)),
+        url('background-image-02.png?v=footer') center / cover no-repeat;
+    }
+    .final-cta .container {
+      position: relative;
+      z-index: 1;
+    }
+    .final-cta h2 {
+      font-size: clamp(22px, 3.35vw, var(--fs-h2-max));
+      font-weight: 700; line-height: 1.25; letter-spacing: -0.04em;
+      max-width: 560px; margin: 0 auto 16px;
+      text-shadow: 0 1px 28px rgba(0, 0, 0, 0.35);
+    }
+    @media (min-width: 768px) {
+      .final-cta h2 {
+        white-space: nowrap;
+        max-width: none;
+      }
+    }
+    .final-cta p {
+      font-size: 18px; color: rgba(255,255,255,0.82);
+      margin-bottom: 40px; letter-spacing: 0.5px;
+      text-shadow: 0 1px 16px rgba(0, 0, 0, 0.3);
+    }
+    .final-cta .btn-primary {
+      background: var(--accent-coral); color: #fff; border: none;
+    }
+    .final-cta .btn-primary:hover { background: #e85a1f; color: #fff; box-shadow: none; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: transparent;
+      border-top: 1px solid rgba(26, 26, 26, 0.08);
+      padding: 32px;
+    }
+    .footer-inner {
+      max-width: var(--max-w); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-2);
+      margin: 0;
+    }
+    .footer-social {
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .footer-social a {
+      display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px;
+      min-width: 40px; min-height: 40px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: var(--r-md);
+      border: 1px solid transparent;
+      transition: background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease), opacity 0.2s var(--ease);
+    }
+    /* Filled tile + white glyph (Facebook-style) */
+    .footer-social a.footer-social-filled:hover { background: var(--primary-hover); }
+    /* Outline Instagram: light tile + stroke icon */
+    .footer-social a.footer-social-outline {
+      background: #fff;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .footer-social a.footer-social-outline:hover {
+      background: var(--bg);
+      border-color: var(--primary-hover);
+      color: var(--primary-hover);
+    }
+    .footer-social a:focus-visible {
+      outline: 2px solid var(--primary-focus);
+      outline-offset: 4px;
+    }
+    .footer-social svg {
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ── ANIM ── */
+    @media (prefers-reduced-motion: no-preference) {
+      .fade-up {
+        opacity: 0; transform: translateY(24px);
+        transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+      }
+      .fade-up.visible { opacity: 1; transform: translateY(0); }
+      .d1 { transition-delay: 0.1s; }
+      .d2 { transition-delay: 0.2s; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { opacity: 1; transform: none; }
+      .card:hover { transform: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .nav-logo { padding-left: max(32px, env(safe-area-inset-left)); padding-right: 20px; }
+      .nav-inner { padding-right: max(16px, env(safe-area-inset-right)); padding-left: 0; }
+      .cards-grid, .steps { grid-template-columns: 1fr; gap: 16px; }
+      .steps::before { display: none; }
+      .steps { gap: 40px; }
+      .how-video-wrap { margin-top: 40px; }
+      section { padding: 64px 16px; }
+      .hero { min-height: 80vh; }
+      .hero-inner {
+        flex-direction: column; align-items: flex-start;
+        padding: 0 16px 48px; gap: 32px;
+      }
+      .hero-cta { align-self: flex-start; }
+      .final-cta, .problem { padding: 64px 16px; }
+      .footer { padding: 24px 16px; }
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    @media (max-width: 480px) {
+      .nav-right .btn-primary { display: none; }
+      section { padding: 48px 16px; }
+      .hero { min-height: 75vh; }
+      .card { padding: 0; min-height: 380px; }
+      .card-body { padding: 22px clamp(22px, 7%, 36px) 24px; }
+      .card-top-icon {
+        min-height: clamp(100px, 26vw, 116px);
+        padding: 10px clamp(16px, 5%, 28px);
+      }
+      .card-top-icon img { max-height: 42px; max-width: 76px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="/" class="nav-logo">
+      <svg class="nav-logo-svg" width="200" height="48" viewBox="0 0 240 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Roomeo">
+        <title>Roomeo</title>
+        <rect x="52.9922" y="9.24805" width="13.2479" height="24.6032" rx="3.78511" fill="#FF6C37"/>
+        <path d="M54 14.0016C54 12.8961 54.8961 12 56.0016 12H62.0063C63.1117 12 64.0078 12.8961 64.0078 14.0016V34.0172C64.0078 35.1226 63.1117 36.0188 62.0063 36.0188H56.0016C54.8961 36.0188 54 35.1226 54 34.0172V14.0016Z" fill="#C94B2D"/>
+        <path d="M28.6387 4.63158C33.4799 0.694378 40.4195 0.694463 45.2607 4.63158L69.0391 23.9695C72.1145 26.4707 73.8993 30.225 73.8994 34.1892V58.5974C73.8994 65.7973 68.0631 71.6344 60.8633 71.6345H13.0371C5.83717 71.6345 0 65.7973 0 58.5974V34.1892C9.64224e-05 30.225 1.78586 26.4707 4.86133 23.9695L28.6387 4.63158Z" fill="#FF6C37"/>
+        <g transform="rotate(12.7073 33.2818 31.1963)">
+          <g id="logo-eye-roll-left">
+            <circle cx="33.2818" cy="31.1963" r="8.12308" fill="white"/>
+            <path d="M23.6422 35.5894C22.0975 31.4231 22.7167 27.6553 25.4996 24.2858C27.4705 21.897 30.088 20.7103 33.352 20.7256C40.0615 20.9831 44.958 26.3035 43.5903 32.9642C42.2371 39.5609 36.3161 42.9523 29.8873 41.0327C27.0276 40.1775 24.9459 38.3631 23.6422 35.5894ZM41.3834 33.1043C41.6396 31.9683 41.6695 30.7929 41.4714 29.6453C41.2734 28.4978 40.8512 27.4004 40.229 26.416C39.6069 25.4316 38.7969 24.5793 37.8454 23.9079C36.8939 23.2365 35.8194 22.7591 34.6834 22.5029C32.3891 21.9856 29.9832 22.4008 27.995 23.6573C26.0069 24.9138 24.5993 26.9086 24.0819 29.203C23.5646 31.4973 23.9799 33.9032 25.2364 35.8913C26.4929 37.8795 28.4877 39.287 30.782 39.8044C31.918 40.0606 33.0934 40.0905 34.241 39.8924C35.3886 39.6943 36.4859 39.2721 37.4703 38.65C38.4548 38.0278 39.307 37.2179 39.9784 36.2663C40.6498 35.3148 41.1273 34.2404 41.3834 33.1043Z" fill="#F7F8F5"/>
+            <path d="M41.3742 33.1C41.1181 34.236 40.6406 35.3104 39.9692 36.262C39.2978 37.2135 38.4456 38.0235 37.4612 38.6456C36.4767 39.2678 35.3794 39.6899 34.2318 39.888C33.0842 40.0861 31.9088 40.0562 30.7728 39.8C28.4785 39.2827 26.4837 37.8751 25.2272 35.8869C23.9707 33.8988 23.5554 31.4929 24.0728 29.1986C24.5901 26.9043 25.9977 24.9094 27.9858 23.6529C29.974 22.3964 32.3799 21.9812 34.6742 22.4985C35.8102 22.7547 36.8847 23.2321 37.8362 23.9035C38.7877 24.5749 39.5977 25.4272 40.2198 26.4116C40.842 27.3961 41.2642 28.4934 41.4622 29.641C41.6603 30.7886 41.6304 31.9639 41.3742 33.1ZM38.6902 28.8357C38.8361 28.1884 38.719 27.5096 38.3645 26.9487C38.01 26.3878 37.4472 25.9907 36.7999 25.8447C36.4794 25.7724 36.1478 25.764 35.824 25.8199C35.5003 25.8758 35.1907 25.9949 34.9129 26.1704C34.6352 26.3459 34.3948 26.5744 34.2053 26.8429C34.0159 27.1113 33.8812 27.4145 33.809 27.735C33.7367 28.0555 33.7282 28.3871 33.7841 28.7108C33.84 29.0346 33.9591 29.3442 34.1346 29.6219C34.3102 29.8997 34.5387 30.1401 34.8071 30.3295C35.0756 30.519 35.3787 30.6537 35.6992 30.7259C36.3465 30.8719 37.0253 30.7547 37.5862 30.4002C38.1471 30.0457 38.5442 29.4829 38.6902 28.8357ZM31.0069 33.5216C31.1093 33.0675 31.0271 32.5913 30.7784 32.1978C30.5297 31.8043 30.1349 31.5256 29.6807 31.4232C29.2266 31.3208 28.7504 31.403 28.3569 31.6517C27.9634 31.9004 27.6848 32.2953 27.5824 32.7494C27.48 33.2035 27.5622 33.6797 27.8109 34.0732C28.0596 34.4668 28.4544 34.7454 28.9085 34.8478C29.3627 34.9502 29.8389 34.868 30.2324 34.6193C30.6259 34.3706 30.9045 33.9757 31.0069 33.5216Z" fill="#3C362D"/>
+          </g>
+        </g>
+        <g transform="rotate(12.7073 57.7598 37.8842)">
+          <g id="logo-eye-roll-right">
+            <circle cx="57.7598" cy="37.8842" r="7.23053" fill="white"/>
+            <path d="M49.1785 41.7944C47.8036 38.0859 48.3547 34.7321 50.8318 31.7328C52.5862 29.6065 54.916 28.5501 57.8214 28.5638C63.7937 28.793 68.1521 33.5288 66.9348 39.4576C65.7302 45.3295 60.4598 48.3483 54.7374 46.6396C52.1919 45.8784 50.3389 44.2633 49.1785 41.7944ZM64.9704 39.5824C65.1984 38.5712 65.225 37.525 65.0487 36.5035C64.8724 35.482 64.4966 34.5052 63.9428 33.629C63.389 32.7527 62.668 31.9941 61.8211 31.3964C60.9741 30.7988 60.0177 30.3738 59.0065 30.1458C56.9643 29.6853 54.8227 30.0549 53.0531 31.1734C51.2834 32.2918 50.0304 34.0675 49.5699 36.1097C49.1094 38.1519 49.479 40.2934 50.5975 42.0631C51.7159 43.8328 53.4916 45.0857 55.5338 45.5463C56.545 45.7743 57.5912 45.8009 58.6127 45.6246C59.6342 45.4483 60.611 45.0725 61.4872 44.5187C62.3635 43.9649 63.1221 43.2439 63.7197 42.397C64.3174 41.55 64.7423 40.5936 64.9704 39.5824Z" fill="#F7F8F5"/>
+            <path d="M64.961 39.5792C64.7329 40.5904 64.308 41.5468 63.7103 42.3937C63.1127 43.2407 62.3541 43.9617 61.4778 44.5155C60.6016 45.0693 59.6248 45.445 58.6033 45.6214C57.5818 45.7977 56.5356 45.771 55.5244 45.543C53.4822 45.0825 51.7065 43.8296 50.5881 42.0599C49.4696 40.2902 49.1 38.1487 49.5605 36.1065C50.021 34.0642 51.274 32.2886 53.0437 31.1702C54.8134 30.0517 56.9549 29.6821 58.9971 30.1426C60.0083 30.3706 60.9647 30.7956 61.8117 31.3932C62.6586 31.9908 63.3796 32.7495 63.9334 33.6257C64.4872 34.502 64.863 35.4787 65.0393 36.5002C65.2156 37.5217 65.189 38.568 64.961 39.5792ZM62.5718 35.7834C62.7017 35.2072 62.5974 34.6031 62.2819 34.1038C61.9664 33.6045 61.4654 33.251 60.8892 33.1211C60.604 33.0568 60.3088 33.0493 60.0206 33.099C59.7324 33.1487 59.4568 33.2548 59.2096 33.411C58.9624 33.5672 58.7484 33.7706 58.5798 34.0096C58.4112 34.2485 58.2913 34.5184 58.2269 34.8037C58.1626 35.0889 58.1551 35.3841 58.2048 35.6723C58.2546 35.9605 58.3606 36.2361 58.5168 36.4833C58.6731 36.7305 58.8765 36.9445 59.1154 37.1131C59.3544 37.2817 59.6242 37.4016 59.9095 37.466C60.4857 37.5959 61.0898 37.4916 61.5891 37.1761C62.0884 36.8605 62.4419 36.3596 62.5718 35.7834ZM55.7328 39.9545C55.8239 39.5503 55.7508 39.1264 55.5294 38.7761C55.308 38.4258 54.9565 38.1778 54.5523 38.0867C54.1481 37.9955 53.7242 38.0687 53.374 38.2901C53.0237 38.5114 52.7757 38.8629 52.6845 39.2671C52.5934 39.6713 52.6665 40.0952 52.8879 40.4455C53.1093 40.7958 53.4607 41.0438 53.865 41.1349C54.2692 41.2261 54.6931 41.1529 55.0433 40.9315C55.3936 40.7102 55.6416 40.3587 55.7328 39.9545Z" fill="#3C362D"/>
+          </g>
+        </g>
+        <path d="M29.4745 9.64837L31.0788 8.33574C33.1972 6.60254 34.2564 5.73593 35.4404 5.42021C36.3989 5.16465 37.4076 5.16465 38.366 5.42021C39.5501 5.73593 40.6093 6.60253 42.7276 8.33573L42.7276 8.33574L44.332 9.64837C44.6734 9.92776 44.8442 10.0675 44.8595 10.1904C44.8716 10.2878 44.8368 10.3852 44.7658 10.4529C44.6761 10.5384 44.4555 10.5384 44.0143 10.5384H29.7922C29.351 10.5384 29.1304 10.5384 29.0406 10.4529C28.9696 10.3852 28.9349 10.2878 28.947 10.1904C28.9623 10.0675 29.133 9.92776 29.4745 9.64837Z" fill="#C94B2D"/>
+        <path d="M228.28 71.9995C226.053 71.9995 224.128 71.5532 222.505 70.6606C220.892 69.759 219.647 68.4742 218.773 66.8062C217.898 65.1382 217.461 63.1592 217.461 60.8691C217.461 58.561 217.898 56.5729 218.773 54.9049C219.647 53.2279 220.892 51.9386 222.505 51.037C224.128 50.1354 226.053 49.6846 228.28 49.6846C230.516 49.6846 232.441 50.1354 234.055 51.037C235.669 51.9386 236.913 53.2279 237.788 54.9049C238.662 56.5729 239.1 58.561 239.1 60.8691C239.1 63.1592 238.662 65.1382 237.788 66.8062C236.913 68.4742 235.669 69.759 234.055 70.6606C232.441 71.5532 230.516 71.9995 228.28 71.9995ZM228.28 67.3337C229.29 67.3337 230.066 66.7837 230.606 65.6837C231.147 64.5838 231.418 62.9654 231.418 60.8285C231.418 58.6917 231.147 57.0733 230.606 55.9733C230.066 54.8734 229.29 54.3234 228.28 54.3234C227.271 54.3234 226.495 54.8734 225.954 55.9733C225.413 57.0733 225.143 58.6917 225.143 60.8285C225.143 62.9654 225.413 64.5838 225.954 65.6837C226.495 66.7837 227.271 67.3337 228.28 67.3337Z" fill="#181716"/>
+        <path d="M164.113 71.6087V66.9428H166.277V54.744H164.113V50.0781H175.081L179.639 61.8442L184.346 50.0781H194.259V54.744H192.095V66.9428H194.259V71.6087H183.399V66.9428H185.292V57.9898L179.91 71.6087H176.069L170.686 57.9898V66.9428H172.579V71.6087H164.113Z" fill="#181716"/>
+        <path d="M151.624 71.9995C149.397 71.9995 147.472 71.5532 145.849 70.6606C144.235 69.759 142.991 68.4742 142.117 66.8062C141.242 65.1382 140.805 63.1592 140.805 60.8691C140.805 58.561 141.242 56.5729 142.117 54.9049C142.991 53.2279 144.235 51.9386 145.849 51.037C147.472 50.1354 149.397 49.6846 151.624 49.6846C153.86 49.6846 155.785 50.1354 157.399 51.037C159.013 51.9386 160.257 53.2279 161.132 54.9049C162.006 56.5729 162.443 58.561 162.443 60.8691C162.443 63.1592 162.006 65.1382 161.132 66.8062C160.257 68.4742 159.013 69.759 157.399 70.6606C155.785 71.5532 153.86 71.9995 151.624 71.9995ZM151.624 67.3337C152.634 67.3337 153.409 66.7837 153.95 65.6837C154.491 64.5838 154.762 62.9654 154.762 60.8285C154.762 58.6917 154.491 57.0733 153.95 55.9733C153.409 54.8734 152.634 54.3234 151.624 54.3234C150.614 54.3234 149.839 54.8734 149.298 55.9733C148.757 57.0733 148.486 58.6917 148.486 60.8285C148.486 62.9654 148.757 64.5838 149.298 65.6837C149.839 66.7837 150.614 67.3337 151.624 67.3337Z" fill="#181716"/>
+        <path d="M128.331 71.9995C126.104 71.9995 124.179 71.5532 122.556 70.6606C120.942 69.759 119.698 68.4742 118.824 66.8062C117.949 65.1382 117.512 63.1592 117.512 60.8691C117.512 58.561 117.949 56.5729 118.824 54.9049C119.698 53.2279 120.942 51.9386 122.556 51.037C124.179 50.1354 126.104 49.6846 128.331 49.6846C130.567 49.6846 132.492 50.1354 134.106 51.037C135.72 51.9386 136.964 53.2279 137.839 54.9049C138.713 56.5729 139.15 58.561 139.15 60.8691C139.15 63.1592 138.713 65.1382 137.839 66.8062C136.964 68.4742 135.72 69.759 134.106 70.6606C132.492 71.5532 130.567 71.9995 128.331 71.9995ZM128.331 67.3337C129.341 67.3337 130.116 66.7837 130.657 65.6837C131.198 64.5838 131.469 62.9654 131.469 60.8285C131.469 58.6917 131.198 57.0733 130.657 55.9733C130.116 54.8734 129.341 54.3234 128.331 54.3234C127.321 54.3234 126.546 54.8734 126.005 55.9733C125.464 57.0733 125.193 58.6917 125.193 60.8285C125.193 62.9654 125.464 64.5838 126.005 65.6837C126.546 66.7837 127.321 67.3337 128.331 67.3337Z" fill="#181716"/>
+        <path d="M94.0078 71.6087V66.9428H96.1717V54.744H94.0078V50.0781H106.437C109.123 50.0781 111.188 50.583 112.631 51.5928C114.073 52.5936 114.795 54.0633 114.795 56.0017C114.795 57.255 114.483 58.2963 113.861 59.1258C113.239 59.9553 112.396 60.5459 111.332 60.8975C112.18 61.177 112.806 61.6143 113.212 62.2094C113.627 62.8044 113.843 63.5302 113.861 64.3868L113.888 65.5093C113.906 65.9871 114.01 66.3478 114.199 66.5912C114.398 66.8256 114.731 66.9428 115.2 66.9428H116.634V71.6087H111.927C110.205 71.6087 108.93 71.212 108.1 70.4186C107.28 69.6161 106.86 68.444 106.842 66.9023L106.815 65.1035C106.788 63.661 106.121 62.9397 104.814 62.9397H103.042V66.9428H104.868V71.6087H94.0078ZM105.138 54.6087H103.042V59.1799H105.138C106.869 59.1799 107.735 58.4181 107.735 56.8943C107.735 55.3706 106.869 54.6087 105.138 54.6087Z" fill="#181716"/>
+        <path d="M128.787 47.0361V42.4213H132.666V37.6058L126.459 30.3424H124.52V25.7275H136.612V30.3424H135.14L137.762 33.5126L140.009 30.3424H138.538V25.7275H147.019V30.3424H145.079L139.461 37.8867V42.4213H143.34V47.0361H128.787Z" fill="#181716"/>
+        <path d="M94 47.0364V42.4216H96.1402V30.3561H94V25.7412H104.848L109.356 37.3787L114.011 25.7412H123.816V30.3561H121.676V42.4216H123.816V47.0364H113.075V42.4216H114.947V33.5664L109.624 47.0364H105.825L100.501 33.5664V42.4216H102.374V47.0364H94Z" fill="#181716"/>
+        <path d="M215.85 49.9234H215.809V49.8467L196.53 49.9023H196.473V54.3883L201.762 60.4905L196.473 66.7008L196.502 71.3435H196.996H215.85V67.4417V66.8019H212.07H203.738L209.911 60.5091L203.738 54.1997H215.85V49.9234Z" fill="#181716"/>
+      </svg>
+    </a>
+    <div class="nav-inner">
+      <ul class="nav-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#types">Roommate types</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <div class="nav-right">
+        <button type="button" class="btn-login">Log in</button>
+        <a href="quiz.html" class="btn-primary">Take the quiz</a>
+      </div>
+      <button type="button" class="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="banner.png?v=c7e2a1" alt="Roomeo characters hanging out around a house" />
+    </div>
+    <div class="hero-inner">
+      <div class="hero-text fade-up">
+        <h1 class="hero-title">
+          <span class="hero-title-line">Find a roommate who fits</span>
+          <span class="hero-title-line">Not just the space</span>
+        </h1>
+        <p class="hero-sub">Search, match, and connect with confidence. Every living situation deserves a good start.</p>
+      </div>
+      <div class="hero-cta fade-up d1">
+        <a href="quiz.html" class="btn-primary">Meet your match</a>
+        <a href="quiz.html" class="btn-primary">Take the quiz</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="cards-section" id="about">
+    <div class="container">
+      <div class="cards-header">
+        <h2 class="fade-up">Find a room, save with roommates, or list your space to earn</h2>
+        <p class="cards-sub fade-up d1">Roomeo helps you search, match, and connect with confidence, so every living situation starts off right.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card fade-up">
+          <span class="card-house-index" aria-hidden="true">01</span>
+          <div class="card-top-icon" aria-hidden="true">
+            <img src="icon1.png?v=c3f9e4" width="162" height="92" alt="" />
+          </div>
+          <div class="card-body">
+            <div class="card-copy">
+              <h3>Live with someone who gets you</h3>
+              <p>We match you based on real lifestyle, signals, sleep, cleanliness, and social habits, so you don't just share space, you actually get along.</p>
+            </div>
+            <a href="quiz.html" class="card-btn">
+              <span class="card-btn-text">Find your match</span>
+              <span class="card-btn-circle" aria-hidden="true">
+                <svg class="card-btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="card fade-up d1">
+          <span class="card-house-index" aria-hidden="true">02</span>
+          <div class="card-top-icon" aria-hidden="true">
+            <img src="icon2.png?v=2641a3" width="80" height="80" alt="" />
+          </div>
+          <div class="card-body">
+            <div class="card-copy">
+              <h3>No surprises. No guesswork</h3>
+              <p>Verified profiles and upfront preferences help you know exactly who you're living with, before you commit.</p>
+            </div>
+            <a href="#" class="card-btn">
+              <span class="card-btn-text">Browse safely</span>
+              <span class="card-btn-circle" aria-hidden="true">
+                <svg class="card-btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="card fade-up d2">
+          <span class="card-house-index" aria-hidden="true">03</span>
+          <div class="card-top-icon" aria-hidden="true">
+            <img src="icon3.png?v=f4a056" width="101" height="108" alt="" />
+          </div>
+          <div class="card-body">
+            <div class="card-copy">
+              <h3>Find or list a room</h3>
+              <p>Spaces matter, but the right person matters more.</p>
+            </div>
+            <button type="button" class="card-btn" disabled>
+              <span class="card-btn-text">Coming soon</span>
+              <span class="card-btn-circle" aria-hidden="true">
+                <svg class="card-btn-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem">
+    <div class="container">
+      <h2 class="fade-up">Feel confident every step of the way</h2>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how">
+    <div class="container">
+      <div class="how-header">
+        <p class="section-label fade-up">How it works</p>
+        <h2 class="fade-up d1">Three steps to your perfect match</h2>
+      </div>
+      <div class="steps">
+        <div class="step fade-up">
+          <div class="step-num">1</div>
+          <h3>Answer real-life questions</h3>
+          <p>Quick questions about how you actually live at home.</p>
+        </div>
+        <div class="step fade-up d1">
+          <div class="step-num">2</div>
+          <h3>Get your roommate type</h3>
+          <p>Find out your home personality, and what kind of roommate you really are.</p>
+        </div>
+        <div class="step fade-up d2">
+          <div class="step-num">3</div>
+          <h3>Match with compatible people</h3>
+          <p>Connect with roommates who share your rhythm and respect your space.</p>
+        </div>
+      </div>
+      <!-- Intro video: use <video controls playsinline poster="…"><source src="…" type="video/mp4"></video> or paste a YouTube/Vimeo iframe inside .how-video-wrap -->
+      <div class="how-video-wrap fade-up" aria-label="Introduction video">
+      </div>
+    </div>
+  </section>
+
+  <div class="house-wrap">
+    <!-- PERSONALITY -->
+    <section class="personality-section" id="types">
+      <div class="container">
+        <div class="personality-header">
+          <p class="section-label fade-up">Roommate types</p>
+          <h2 class="fade-up d1">Which one are you?</h2>
+        </div>
+        <div class="personality-scroll">
+        <div class="personality-grid" role="list" aria-label="Roommate type cards">
+          <article class="personality-card roommate-type-card fade-up" role="listitem">
+            <img src="roommate-type-cards/RoommateTypeCard_beaver.png?v=2026041521" width="1152" height="1152" alt="The Beaver — roommate type card" loading="lazy" />
+          </article>
+          <article class="personality-card roommate-type-card fade-up d1" role="listitem">
+            <img src="roommate-type-cards/RoommateTypeCard_bunny.png?v=2026041521" width="1152" height="1152" alt="The Bunny — roommate type card" loading="lazy" />
+          </article>
+          <article class="personality-card roommate-type-card fade-up d2" role="listitem">
+            <img src="roommate-type-cards/RoommateTypeCard_cat.png?v=2026041521" width="1152" height="1152" alt="The Cat — roommate type card" loading="lazy" />
+          </article>
+          <article class="personality-card roommate-type-card fade-up" role="listitem">
+            <img src="roommate-type-cards/RoommateTypeCard_fox.png?v=2026041521" width="1152" height="1152" alt="The Fox — roommate type card" loading="lazy" />
+          </article>
+          <article class="personality-card roommate-type-card fade-up d1" role="listitem">
+            <img src="roommate-type-cards/RoommateTypeCard_owl.png?v=2026041521" width="1152" height="1152" alt="The Owl — roommate type card" loading="lazy" />
+          </article>
+          <article class="personality-card roommate-type-card fade-up d2" role="listitem">
+            <img src="roommate-type-cards/RoommateTypeCard_turtle.png?v=2026041521" width="1152" height="1152" alt="The Turtle — roommate type card" loading="lazy" />
+          </article>
+        </div>
+        </div>
+        <div class="personality-cta fade-up">
+          <a href="quiz.html" class="btn-tertiary">Find your type →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+      <div class="container">
+        <h2 class="fade-up">Ready to meet your match?</h2>
+        <p class="fade-up d1">Build your profile and connect with roommates who live like you do.</p>
+        <div class="fade-up d2">
+          <button class="btn-primary btn-primary-lg">Start my profile</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="footer-copy">&copy; 2026 Roomeo. All rights reserved.</p>
+        <div class="footer-social">
+          <a class="footer-social-filled" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Roomeo on Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M9.1 23.69v-9.29H6.63v-3.79h2.47v-2.84c0-3.77 2.03-5.86 6.03-5.86 1.59 0 3.25.28 3.25.28v3.57h-1.83c-1.8 0-2.36.86-2.36 2.73v2.09h4.02l-.64 3.79h-3.38v9.29H9.1z"/></svg>
+          </a>
+          <a class="footer-social-outline" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Roomeo on Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="3.75" y="3.75" width="16.5" height="16.5" rx="4.5" ry="4.5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3.75" stroke="currentColor" stroke-width="1.5"/><circle cx="17.25" cy="6.75" r="1.1" fill="currentColor"/></svg>
+          </a>
+          <a class="footer-social-filled" href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Roomeo on X">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a class="footer-social-filled" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="Roomeo on TikTok">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const nav = document.getElementById('nav');
+    const eyeL = nav && nav.querySelector('#logo-eye-roll-left');
+    const eyeR = nav && nav.querySelector('#logo-eye-roll-right');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function updateNavOnScroll() {
+      const y = window.scrollY;
+      if (nav) nav.classList.toggle('scrolled', y > 10);
+      if (!eyeL || !eyeR) return;
+      const doc = document.documentElement;
+      const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+      const t = Math.max(0, Math.min(1, (y / maxScroll) * 2.4));
+      const gentle = reduceMotion.matches;
+      const ty = t * (gentle ? 2 : 6);
+      const tx = t * (gentle ? 0.5 : 2);
+      eyeL.setAttribute('transform', 'translate(' + tx + ',' + ty + ')');
+      eyeR.setAttribute('transform', 'translate(' + (tx * 0.92) + ',' + (ty * 0.95) + ')');
+    }
+
+    window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+    updateNavOnScroll();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
