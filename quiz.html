@@ -1963,7 +1963,7 @@
 <body>
   <header class="quiz-header">
     <div class="quiz-header-inner">
-      <a href="index.html" class="logo"><img src="logo.svg?v=2026041528" width="200" height="48" alt="Roomeo home" /></a>
+      <a href="index.html" class="logo"><img src="assets/brand/logo.svg?v=2026041528" width="200" height="48" alt="Roomeo home" /></a>
       <a href="index.html" class="back">Home</a>
     </div>
   </header>
@@ -1976,7 +1976,7 @@
           <div class="quiz-art-fallback" id="quiz-art-fallback">
             <div>
               <p>Illustration couldn't load</p>
-              <p style="margin-top:8px">Intro: <code>quiz cover.png</code> · Questions: <code>q1</code>–<code>q12</code> next to this page.</p>
+              <p style="margin-top:8px">Intro: <code>assets/quiz/questions/quiz cover.png</code> · Questions: <code>assets/quiz/questions/q1</code>–<code>q12</code>.</p>
             </div>
           </div>
         </aside>
@@ -2555,23 +2555,23 @@
       }
     ];
 
-    /** One file per question, same folder as quiz.html (mixed .png / .jpg ok). */
+    /** One file per question under assets/quiz/questions/ (mixed .png / .jpg ok). */
     const QUIZ_QUESTION_ART = [
-      'q1.png',
-      'q2.png',
-      'q3.png',
-      'q4.jpg',
-      'q5.png',
-      'q6.png',
-      'q7.png',
-      'q8.png',
-      'q9.png',
-      'q10.jpg',
-      'q11.png',
-      'q12.png'
+      'assets/quiz/questions/q1.png',
+      'assets/quiz/questions/q2.png',
+      'assets/quiz/questions/q3.png',
+      'assets/quiz/questions/q4.jpg',
+      'assets/quiz/questions/q5.png',
+      'assets/quiz/questions/q6.png',
+      'assets/quiz/questions/q7.png',
+      'assets/quiz/questions/q8.png',
+      'assets/quiz/questions/q9.png',
+      'assets/quiz/questions/q10.jpg',
+      'assets/quiz/questions/q11.png',
+      'assets/quiz/questions/q12.png'
     ];
     const QUIZ_ART_Q = '?v=20260418';
-    const QUIZ_INTRO_COVER = 'quiz cover.png';
+    const QUIZ_INTRO_COVER = 'assets/quiz/questions/quiz cover.png';
 
     const STORAGE = {
       answers: 'roomeo_quiz_answers',
@@ -2951,8 +2951,8 @@
       }
     }
 
-    /* 角色 PNG 放在项目根目录的「Character images」文件夹（beaver.png …） */
-    const CHARACTER_IMG_DIR = 'Character images/';
+    /* 角色 PNG：assets/characters/{slug}.png */
+    const CHARACTER_IMG_DIR = 'assets/characters/';
     /* 换一批角色图 / result page 角色层时改日期，避免浏览器沿用旧缓存 */
     const CHARACTER_IMG_VER = '20260418';
     const CHARACTER_IMG_Q = '?v=' + CHARACTER_IMG_VER;
@@ -2965,11 +2965,11 @@
       const s = String(slugOrKey || '').toLowerCase();
       return s === 'rabbit' ? 'bunny' : s;
     }
-    /** 叠在固定底图 `hero-room.png` 上的角色层：根目录 `{slug} result page.png` */
+    /** 叠在固定底图 `hero-room.png` 上的角色层：assets/result-hero/{slug}.png */
     function resultPageCharacterSrc(typeKey) {
       if (!typeKey || !TYPES[typeKey]) return '';
       const slug = characterImageFilename(typeKey);
-      return encodeURI(slug + ' result page.png') + CHARACTER_IMG_Q;
+      return 'assets/result-hero/' + slug + '.png' + CHARACTER_IMG_Q;
     }
     /** 顶栏 / 预览 / 分享里的角色图：优先 result page 角色 PNG，失败再用 Character images */
     function bindCharacterImgResultPageFirst(img, typeKey, altText) {
