@@ -1,33 +1,37 @@
 # Roomeo
 
-Roommate type quiz (`quiz.html`) and marketing landing (`index.html`).
+Roommate type quiz (`quiz.html`) and marketing landing page (`index.html`).
 
-## 本地打开网站（推荐给协作者）
+## Run the site locally (recommended)
 
-不要用 `file://` 直接双击打开（部分资源路径与浏览器策略可能异常）。在项目根目录执行：
+Opening `index.html` directly via `file://` can break relative paths or browser rules. From the project root, start a small static server:
 
 ```bash
 cd Roomeo
 python3 -m http.server 8000
 ```
 
-浏览器访问：**http://127.0.0.1:8000/** 打开首页，点 **Take the quiz** 进入测验。
+Then open **http://127.0.0.1:8000/** in your browser. Use **Take the quiz** to open the quiz flow.
 
-若已安装 Node.js，也可用：`npx --yes serve -l 8000`。
+With Node.js installed, you can use:
 
-## 仓库与权限
+```bash
+npx --yes serve -l 8000
+```
 
-本仓库在 GitHub 上为 **Private**：只有你邀请的协作者能访问。邀请路径：**GitHub → 仓库 → Settings → Collaborators**。
+## Repository access
 
-## 资源目录（简要）
+This GitHub repository is **private**. Only people you invite can see or clone it. Invite collaborators under **Settings → Collaborators** (or **Manage access**) on GitHub.
 
-| 路径 | 内容 |
-|------|------|
+## Asset layout
+
+| Path | Contents |
+|------|----------|
 | `assets/brand/` | `logo.svg` |
-| `assets/site/` | 首页用图：banner、icons、背景图等 |
-| `assets/quiz/questions/` | `quiz cover.png`、`q1.png`–`q12` |
-| `assets/characters/` | 各类型小头像 `beaver.png` … |
-| `assets/result-hero/` | 结果页顶栏角色层 `turtle.png` …（透明底叠在 hero-room 上） |
-| `assets/roommate-type-cards/` | 落地页类型大卡 |
-| `assets/quiz-result-1-0/` | 结果页 UI（波浪、徽章、底图等） |
-| `docs/` | 产品/设计说明 Markdown（不参与页面加载） |
+| `assets/site/` | Landing imagery: banner, icons, backgrounds, etc. |
+| `assets/quiz/questions/` | `quiz cover.png`, `q1.png`–`q12` (mixed `.png` / `.jpg` as needed) |
+| `assets/characters/` | Type avatars, e.g. `beaver.png` … `turtle.png` |
+| `assets/result-hero/` | Result hero character overlays, e.g. `turtle.png` (transparent PNG over `hero-room`) |
+| `assets/roommate-type-cards/` | Large type cards for the landing page |
+| `assets/quiz-result-1-0/` | Quiz result UI (waves, badges, room background, etc.) |
+| `docs/` | Product and design Markdown (not loaded by the pages) |
