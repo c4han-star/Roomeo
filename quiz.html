@@ -427,36 +427,49 @@
     }
 
     /* ── RESULTS — Figma page “1.0” · frame 1478:509 (Quiz_final) ── */
+    body:has(#quiz-results:not(.hidden)) {
+      overflow-x: clip;
+    }
+    .quiz-main:has(#quiz-results:not(.hidden)) {
+      max-width: none;
+      margin-inline: 0;
+      padding-inline: 0;
+      padding-top: 0;
+      overflow-x: clip;
+    }
     .results-page.rfinal-page {
-      margin-top: 0;
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-      width: 100vw;
-      max-width: 100vw;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: clip;
       box-sizing: border-box;
-      /* 与 assets/quiz-result-1-0/hero-roof.svg 默认 fill (#FAFAF8) 一致 */
-      --rfinal-paper: #FAFAF8;
-      --rfinal-paper-grain: rgba(80, 72, 40, 0.035);
-      --fill-0: #FAFAF8;
-      --rfinal-ink: #141414;
-      --rfinal-ink-soft: #3d3d3d;
-      --rfinal-mute: #6b6b6b;
-      --rfinal-warm-900: #2a1f16;
-      --rfinal-warm-700: #4d3221;
-      --rfinal-accent: #e85a24;
-      --rfinal-accent-mid: #ff6c37;
-      --rfinal-line: rgba(77, 50, 33, 0.11);
-      --rfinal-surface: rgba(255, 255, 255, 0.58);
-      --rfinal-surface-strong: rgba(255, 255, 255, 0.82);
-      --rfinal-shadow-sm: 0 2px 16px rgba(45, 35, 28, 0.05);
-      --rfinal-shadow-md: 0 8px 36px rgba(45, 35, 28, 0.08);
+      /* Warm editorial palette (Natalie Brunswick–inspired) */
+      --rfinal-paper: #FAF6EF;
+      --rfinal-pale-yellow: #F7F2E8;
+      --rfinal-paper-grain: rgba(80, 72, 40, 0.03);
+      --fill-0: #FAF6EF;
+      --rfinal-ink: #2D1B14;
+      --rfinal-ink-soft: #4A3228;
+      --rfinal-mute: #6B5A50;
+      --rfinal-warm-900: #2D1B14;
+      --rfinal-warm-700: #4A3228;
+      --rfinal-accent: #D96C4B;
+      --rfinal-accent-mid: #E07A3A;
+      --rfinal-sky: #B8D4E3;
+      --rfinal-espresso: #4A3228;
+      --rfinal-line: rgba(74, 50, 40, 0.12);
+      --rfinal-surface: #ffffff;
+      --rfinal-surface-strong: #ffffff;
+      --rfinal-shadow-sm: 0 2px 14px rgba(45, 27, 20, 0.05);
+      --rfinal-shadow-md: 0 8px 32px rgba(45, 27, 20, 0.08);
       --rfinal-ease-out: cubic-bezier(0.33, 0.02, 0.18, 1);
       --font-rfinal-display: 'Fraunces', Georgia, 'Times New Roman', serif;
       --font-rfinal-body: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       /* 左右大留白（Hero / 正文块左右内边距） */
       --rfinal-gutter: clamp(14px, 3.5vw, 44px);
       /* 正文区最大行长：主栏仍铺满屏，文案不跟着拉满 */
-      --rfinal-copy-max: 42rem;
+      --rfinal-copy-max: 40rem;
       background: var(--rfinal-paper);
       padding: 0 env(safe-area-inset-right, 0px) max(24px, env(safe-area-inset-bottom, 0px))
         env(safe-area-inset-left, 0px);
@@ -476,10 +489,14 @@
       flex-direction: column;
       min-height: 0;
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: clip;
     }
     .rfinal-shell {
-      max-width: none;
+      max-width: 100%;
       width: 100%;
+      min-width: 0;
       margin: 0;
     }
     .results-page.rfinal-page .rfinal-receipt-stage {
@@ -502,14 +519,15 @@
       min-height: 0;
     }
     .rfinal-card.rfinal-receipt-paper {
-      max-width: none;
+      max-width: 100%;
       width: 100%;
+      min-width: 0;
       margin: 0;
       position: relative;
       background: var(--rfinal-paper);
       border-radius: 0;
       box-shadow: none;
-      overflow: visible;
+      overflow-x: clip;
     }
     /* 去掉侧孔与底部撕边，避免「卡片浮在另一块背景上」的边界感 */
     .rfinal-card.rfinal-receipt-paper::before,
@@ -520,12 +538,16 @@
     .rfinal-receipt-tear {
       display: none;
     }
-    /* Hero 与正文同在小票卡片内 */
+    /* Hero — editorial split card */
     .results-hero.rfinal-hero {
       position: relative;
-      height: 587px;
+      min-height: clamp(360px, 44vw, 460px);
       overflow: hidden;
       flex-shrink: 0;
+      background: var(--rfinal-surface);
+      border: 1px solid var(--rfinal-line);
+      border-radius: 24px;
+      box-shadow: var(--rfinal-shadow-md);
     }
     .rfinal-back {
       position: absolute;
@@ -535,22 +557,20 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 249, 237, 0.22);
-      background: rgba(0, 0, 0, 0.22);
-      color: #f9f5ed;
+      border: 1px solid rgba(74, 50, 40, 0.14);
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--rfinal-espresso);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 0;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 2px 12px rgba(45, 27, 20, 0.08);
       transition: background 0.2s var(--rfinal-ease-out), border-color 0.2s var(--rfinal-ease-out), transform 0.2s var(--rfinal-ease-out);
     }
     .rfinal-back:hover {
-      background: rgba(0, 0, 0, 0.38);
-      border-color: rgba(255, 249, 237, 0.35);
+      background: #fff;
+      border-color: rgba(74, 50, 40, 0.22);
       transform: scale(1.04);
     }
     .rfinal-back:focus-visible {
@@ -561,77 +581,28 @@
       width: 20px;
       height: 20px;
     }
-    .rfinal-hero-media {
-      position: absolute;
-      inset: 0;
+    .rfinal-hero-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+      min-height: inherit;
+    }
+    .rfinal-hero-character {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: clamp(48px, 6vw, 64px) clamp(12px, 2.5vw, 24px) clamp(12px, 2vw, 20px);
+      background:
+        radial-gradient(80% 60% at 50% 100%, rgba(243, 235, 212, 0.9) 0%, transparent 70%),
+        var(--rfinal-paper);
       overflow: hidden;
     }
-    .rfinal-hero-photo-wrap {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 251.55%;
-      height: min(924px, 158%);
-      margin-left: -75.78%;
-    }
-    .rfinal-hero-photo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      filter: blur(2px);
-      display: block;
-    }
-    .rfinal-hero-scrim {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        165deg,
-        rgba(0, 0, 0, 0.52) 0%,
-        rgba(0, 0, 0, 0.22) 42%,
-        rgba(0, 0, 0, 0.38) 100%
-      );
-      pointer-events: none;
-    }
-    .rfinal-hero-heading {
-      position: absolute;
-      left: var(--rfinal-gutter);
-      top: 72px;
-      width: calc(100% - 2 * var(--rfinal-gutter));
-      max-width: min(34rem, calc(100% - 2 * var(--rfinal-gutter)));
-      z-index: 3;
-    }
-    .rfinal-hero-kicker {
-      font-family: var(--font-rfinal-body);
-      font-weight: 700;
-      font-size: 15px;
-      line-height: 1.28;
-      color: rgba(249, 245, 237, 0.92);
-      margin: 0 0 4px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-    .rfinal-hero-type {
-      font-family: var(--font-rfinal-display);
-      font-size: clamp(40px, 9.5vw, 58px);
-      font-weight: 700;
-      font-optical-sizing: auto;
-      line-height: 1.05;
-      color: #f9f5ed;
-      letter-spacing: -0.02em;
-      margin: 0;
-      text-shadow: 0 2px 28px rgba(0, 0, 0, 0.35);
-    }
-    /* 角色放大并略下移，下半截由 z-index 更高的波浪/屋顶层盖住，只露上半身 */
     .rfinal-mascot-wrap {
-      position: absolute;
-      left: var(--rfinal-gutter);
-      bottom: 64px;
-      width: min(392px, calc(100% - 2 * var(--rfinal-gutter)));
-      height: min(368px, 62vw);
-      max-height: 412px;
-      z-index: 4;
+      position: relative;
+      z-index: 2;
+      width: min(100%, 420px);
+      height: min(380px, 42vw);
+      max-height: 420px;
       pointer-events: none;
     }
     .rfinal-mascot-wrap img {
@@ -641,36 +612,140 @@
       object-position: center bottom;
       display: block;
       background: transparent;
-      transform: scale(1.2) translateY(22%);
-      transform-origin: center bottom;
-      mix-blend-mode: var(--rfinal-mascot-blend, multiply);
+      mix-blend-mode: normal;
+      filter: drop-shadow(0 16px 28px rgba(45, 27, 20, 0.14));
     }
-    .rfinal-wave-row {
-      position: absolute;
-      left: -0.5px;
-      bottom: 0;
-      width: calc(100% + 1.88px);
-      max-width: none;
-      z-index: 5;
-      line-height: 0;
+    .rfinal-hero-panel {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: clamp(48px, 6vw, 64px) clamp(28px, 4.5vw, 48px);
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #C8DCE8 0,
+          #C8DCE8 7px,
+          #EEF4F8 7px,
+          #EEF4F8 22px
+        );
     }
-    .rfinal-wave-base {
+    .rfinal-hero-panel-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 20rem;
       width: 100%;
-      height: auto;
-      display: block;
     }
-    .rfinal-wave-roof {
-      position: absolute;
-      left: 0.15%;
-      bottom: 0;
-      width: 99.78%;
-      height: auto;
-      display: block;
-      pointer-events: none;
-      z-index: 1;
+    .rfinal-hero-heading {
+      position: static;
+      width: auto;
+      max-width: none;
+    }
+    .rfinal-hero-kicker {
+      font-family: var(--font-rfinal-body);
+      font-weight: 700;
+      font-size: 11px;
+      line-height: 1.4;
+      color: var(--rfinal-espresso);
+      margin: 0 0 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.72;
+    }
+    .rfinal-hero-type {
+      font-family: var(--font-rfinal-display);
+      font-size: clamp(42px, 6vw, 64px);
+      font-weight: 600;
+      font-optical-sizing: auto;
+      line-height: 1;
+      color: var(--rfinal-warm-900);
+      letter-spacing: -0.03em;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.14em;
+    }
+    .rfinal-hero-emoji {
+      font-family: var(--font-rfinal-body);
+      font-size: 0.62em;
+      line-height: 1;
+    }
+    .rfinal-hero-subtitle {
+      margin: 14px 0 0;
+      font-family: var(--font-rfinal-display);
+      font-size: clamp(16px, 1.6vw, 19px);
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--rfinal-ink-soft);
+      max-width: 18rem;
+    }
+    .rfinal-ticker {
+      overflow: hidden;
+      background: var(--rfinal-espresso);
+      border: none;
+      border-radius: 999px;
+      padding: 10px 0;
+      margin: clamp(14px, 2.5vw, 20px) 0 0;
+      flex-shrink: 0;
+    }
+    .rfinal-ticker-track {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      width: max-content;
+      animation: rfinal-ticker 38s linear infinite;
+      font-family: var(--font-rfinal-body);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(250, 246, 239, 0.92);
+      white-space: nowrap;
+    }
+    .rfinal-ticker-dot {
+      color: var(--rfinal-accent-mid);
+      font-size: 9px;
+      letter-spacing: 0;
+    }
+    @keyframes rfinal-ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rfinal-ticker-track { animation: none; }
     }
     .rfinal-body {
-      padding: clamp(22px, 4.5vw, 40px) var(--rfinal-gutter) clamp(36px, 6vw, 52px);
+      padding: clamp(32px, 4.5vw, 44px) 0 clamp(36px, 5vw, 52px);
+      background: transparent;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      color: var(--rfinal-ink-soft);
+      /* 统一正文栏：宽度、间距、字号 */
+      /* 与 Hero 同宽：铺满 print-sheet 内容区 */
+      --rfinal-col: 100%;
+      --rfinal-gap: 16px;
+      --rfinal-pad: 24px;
+      --rfinal-radius: 24px;
+      --rfinal-title-size: clamp(20px, 1.55vw, 22px);
+      --rfinal-quote-size: clamp(21px, 1.75vw, 24px);
+      --rfinal-copy-size: 17px;
+      --rfinal-label-size: 11px;
+      --rfinal-line: 1.6;
+      --rfinal-track-title: -0.02em;
+      --rfinal-track-caps: 0.16em;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--rfinal-gap);
+    }
+    .rfinal-body > * {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin: 0;
+      box-sizing: border-box;
     }
     .results-page.rfinal-page .rfinal-receipt-wrap {
       flex: 1 1 auto;
@@ -680,15 +755,21 @@
     }
     .rfinal-receipt-wrap {
       position: relative;
-      background:
-        radial-gradient(100% 55% at 50% 0%, rgba(255, 200, 150, 0.09) 0%, transparent 58%),
-        radial-gradient(90% 40% at 100% 20%, rgba(255, 255, 255, 0.45) 0%, transparent 50%),
-        var(--rfinal-paper);
-      overflow: visible;
+      background: var(--rfinal-paper);
+      overflow-x: clip;
+      max-width: 100%;
+      min-width: 0;
     }
     .rfinal-receipt-wrap > .rfinal-print-sheet {
       display: flex;
       flex-direction: column;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: clamp(16px, 2.8vw, 28px) clamp(14px, 2.5vw, 22px) 0;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      overflow-x: clip;
     }
     .results-page.rfinal-page .rfinal-receipt-wrap > .rfinal-print-sheet {
       flex: 1 1 auto;
@@ -697,88 +778,114 @@
     .results-page.rfinal-page .rfinal-body {
       flex: 1 1 auto;
       width: 100%;
-      max-width: min(var(--rfinal-copy-max), 100%);
+      max-width: 100%;
+      min-width: 0;
       margin-inline: auto;
       box-sizing: border-box;
+      overflow-x: clip;
+    }
+    @media (max-width: 720px) {
+      .results-page.rfinal-page {
+        --rfinal-gutter: 14px;
+      }
+      .rfinal-hero-split {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+      .rfinal-hero-character {
+        min-height: 280px;
+        padding-top: 52px;
+        padding-bottom: 12px;
+      }
+      .rfinal-mascot-wrap {
+        width: min(100%, 300px);
+        height: min(260px, 58vw);
+      }
+      .rfinal-hero-panel {
+        border-left: none;
+        border-top: 1px solid rgba(74, 50, 40, 0.06);
+        padding: 28px var(--rfinal-gutter) 32px;
+        justify-content: center;
+      }
+      .rfinal-hero-panel-inner {
+        max-width: none;
+        text-align: center;
+      }
+      .rfinal-hero-subtitle {
+        max-width: none;
+        margin-inline: auto;
+      }
+      .rfinal-body { padding-bottom: 36px; }
     }
     @media (max-width: 480px) {
       .results-page.rfinal-page {
         --rfinal-gutter: 14px;
       }
-      .rfinal-body { padding-bottom: 36px; }
-      .rfinal-hero-heading {
-        left: var(--rfinal-gutter);
-        width: calc(100% - 2 * var(--rfinal-gutter));
-        max-width: min(34rem, calc(100% - 2 * var(--rfinal-gutter)));
-      }
-      .rfinal-mascot-wrap {
-        left: var(--rfinal-gutter);
-        bottom: 58px;
-        width: min(348px, calc(100% - 2 * var(--rfinal-gutter)));
-        height: min(326px, 58vw);
-      }
-      .rfinal-mascot-wrap img {
-        transform: scale(1.1) translateY(20%);
-      }
     }
     .rfinal-quote {
       font-family: var(--font-rfinal-body);
-      margin: 0 0 clamp(28px, 5vw, 40px);
-      padding: clamp(20px, 4vw, 28px) clamp(18px, 3.2vw, 26px);
+      padding: var(--rfinal-pad);
       color: var(--rfinal-mute);
-      line-height: 1.5;
+      line-height: var(--rfinal-line);
       display: flow-root;
-      background: var(--rfinal-surface-strong);
-      border: 1px solid var(--rfinal-line);
-      border-radius: 16px;
-      box-shadow: var(--rfinal-shadow-sm), 0 1px 0 rgba(255, 255, 255, 0.75) inset;
+      background: var(--rfinal-surface);
+      border: 1px solid rgba(74, 50, 40, 0.1);
+      border-left: 3px solid rgba(217, 108, 75, 0.55);
+      border-radius: var(--rfinal-radius);
+      box-shadow: none;
+      text-align: left;
     }
-    /* 大号左引号：float 成「下沉首字」，避免行内巨字把结尾引号挤到词中间 */
     .rfinal-quote::before {
       content: '\201c';
       float: left;
-      font-size: clamp(34px, 7.2vw, 52px);
-      line-height: 0.68;
+      font-family: var(--font-rfinal-display);
+      font-size: 2.25rem;
+      line-height: 0.65;
       margin: 2px 10px 0 0;
-      color: rgba(232, 90, 36, 0.35);
-      font-weight: 400;
+      color: rgba(217, 108, 75, 0.32);
+      font-weight: 600;
     }
     .rfinal-quote-body {
       font-family: var(--font-rfinal-display);
-      font-size: clamp(21px, 2.7vw, 26px);
-      font-weight: 500;
+      font-size: var(--rfinal-quote-size);
+      font-weight: 600;
       font-optical-sizing: auto;
       display: block;
-      line-height: 1.52;
+      line-height: 1.45;
+      letter-spacing: var(--rfinal-track-title);
       color: var(--rfinal-warm-900);
+      text-align: left;
+      overflow-wrap: anywhere;
     }
-    /* 小号右引号跟在正文末尾，不参与 64px 行高拆词 */
     .rfinal-quote-body::after {
       content: '\201d';
-      font-size: 1.15em;
-      font-weight: 400;
-      color: rgba(232, 90, 36, 0.35);
-      margin-left: 0.06em;
+      font-size: 1.05em;
+      font-weight: 600;
+      color: rgba(217, 108, 75, 0.32);
+      margin-left: 0.04em;
     }
     .rfinal-roast {
-      font-size: clamp(18px, 1.2vw, 20px);
-      line-height: 1.72;
-      color: var(--rfinal-ink);
-      margin: 0 0 clamp(26px, 4vw, 34px);
-      padding-left: 14px;
-      border-left: 3px solid rgba(232, 90, 36, 0.45);
+      font-family: var(--font-rfinal-display);
+      font-size: var(--rfinal-copy-size);
+      font-weight: 500;
+      font-style: italic;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
+      color: var(--rfinal-ink-soft);
+      padding: 0 var(--rfinal-pad);
+      border-left: none;
+      text-align: left;
     }
     .rfinal-roast:empty {
       display: none;
     }
     .rfinal-stats-list {
       list-style: none;
-      padding: 20px 20px 18px;
-      margin: 0 0 clamp(26px, 4vw, 36px);
-      border: 1px solid var(--rfinal-line);
-      border-radius: 14px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 252, 248, 0.72) 100%);
-      box-shadow: var(--rfinal-shadow-md);
+      padding: var(--rfinal-pad);
+      border: 1px solid rgba(74, 50, 40, 0.1);
+      border-radius: var(--rfinal-radius);
+      background: var(--rfinal-surface);
+      box-shadow: none;
     }
     .rfinal-stats-list:empty {
       display: none;
@@ -797,36 +904,38 @@
       margin-bottom: 8px;
     }
     .rfinal-stat-label {
-      font-size: 15px;
+      font-family: var(--font-rfinal-body);
+      font-size: var(--rfinal-label-size);
       font-weight: 700;
-      letter-spacing: 0.04em;
+      letter-spacing: var(--rfinal-track-caps);
       text-transform: uppercase;
       color: var(--rfinal-warm-700);
     }
     .rfinal-stat-pct {
-      font-size: 18px;
+      font-family: var(--font-rfinal-display);
+      font-size: var(--rfinal-title-size);
       font-weight: 700;
+      letter-spacing: var(--rfinal-track-title);
       font-variant-numeric: tabular-nums;
-      color: #1a1a1a;
+      color: var(--rfinal-warm-900);
       flex-shrink: 0;
     }
     .rfinal-stat-bar {
-      height: 9px;
+      height: 7px;
       border-radius: 999px;
-      background: rgba(77, 50, 33, 0.1);
+      background: rgba(74, 50, 40, 0.06);
       overflow: hidden;
       margin-bottom: 8px;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset;
     }
     .rfinal-stat-fill {
       height: 100%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #ff8a4a 0%, #ff6c37 55%, #e85a24 100%);
+      background: var(--rfinal-accent);
       min-width: 0;
       transition: width 0.45s cubic-bezier(0.33, 0.02, 0.18, 1);
     }
     .rfinal-stat-fill.rfinal-stat-fill--over {
-      background: linear-gradient(90deg, #ffd24a 0%, #ff8a4a 40%, #ff6c37 100%);
+      background: linear-gradient(90deg, #ffd24a 0%, var(--rfinal-accent-mid) 45%, var(--rfinal-accent) 100%);
     }
     @media (prefers-reduced-motion: reduce) {
       .rfinal-stat-fill {
@@ -847,9 +956,11 @@
     }
     .rfinal-stat-note {
       margin: 0;
-      font-size: 17px;
-      line-height: 1.56;
-      color: #444;
+      font-size: var(--rfinal-copy-size);
+      font-weight: 400;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
+      color: var(--rfinal-mute);
     }
     .rfinal-stat-fallback {
       font-size: 18px;
@@ -861,18 +972,19 @@
       margin-bottom: 0;
     }
     .rfinal-survival-tip {
-      grid-column: 1 / -1;
-      font-size: 18px;
-      line-height: 1.72;
+      grid-column: 2;
+      font-size: var(--rfinal-copy-size);
+      font-weight: 400;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
       color: var(--rfinal-ink);
       margin: 0;
-      padding: 20px 22px 20px 22px;
-      border-radius: 14px;
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.55) 0%, transparent 42%),
-        linear-gradient(135deg, rgba(255, 214, 175, 0.55) 0%, rgba(255, 182, 77, 0.22) 100%);
-      border: 1px solid rgba(200, 120, 40, 0.28);
-      box-shadow: var(--rfinal-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: rgba(250, 246, 239, 0.65);
+      border: 1px solid rgba(74, 50, 40, 0.08);
+      border-left: 3px solid rgba(217, 108, 75, 0.45);
+      box-shadow: none;
       position: relative;
       isolation: isolate;
     }
@@ -880,146 +992,114 @@
       content: 'Roomeo survival tip';
       display: block;
       font-family: var(--font-rfinal-body);
-      font-size: 11px;
+      font-size: var(--rfinal-label-size);
       font-weight: 700;
-      letter-spacing: 0.16em;
+      letter-spacing: var(--rfinal-track-caps);
       text-transform: uppercase;
       color: var(--rfinal-warm-700);
-      opacity: 0.85;
-      margin-bottom: 10px;
+      opacity: 0.78;
+      margin-bottom: 8px;
     }
     .rfinal-survival-tip:empty {
       display: none;
     }
     .rfinal-sec {
       border-top: none;
-      padding: clamp(22px, 3.5vw, 30px) clamp(18px, 2.8vw, 26px);
-      margin-bottom: clamp(16px, 2.8vw, 22px);
+      padding: var(--rfinal-pad);
       display: grid;
-      grid-template-columns: auto 1fr;
-      column-gap: clamp(14px, 2.2vw, 20px);
-      row-gap: 14px;
+      grid-template-columns: 2.75rem 1fr;
+      column-gap: 16px;
+      row-gap: 8px;
       align-items: start;
-      background:
-        linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 252, 248, 0.42) 100%),
-        var(--rfinal-surface);
-      border: 1px solid var(--rfinal-line);
-      border-radius: 18px;
-      box-shadow: var(--rfinal-shadow-sm), 0 0 0 1px rgba(255, 255, 255, 0.45) inset;
+      background: var(--rfinal-surface);
+      border: 1px solid rgba(74, 50, 40, 0.1);
+      border-radius: var(--rfinal-radius);
+      box-shadow: none;
     }
     .rfinal-badge {
-      position: relative;
       flex-shrink: 0;
-      overflow: visible;
-      isolation: isolate;
       grid-column: 1;
       grid-row: 1;
-      align-self: center;
-      filter: drop-shadow(0 6px 16px rgba(45, 35, 28, 0.14));
+      align-self: start;
+      width: 2.75rem;
     }
-    .rfinal-badge--1 { width: 88px; height: 60px; }
-    .rfinal-badge--2 { width: 82px; height: 60px; }
-    .rfinal-badge--3 { width: 88px; height: 64px; }
-    .rfinal-badge--4 { width: 88px; height: 81px; }
-    .rfinal-badge--5 { width: 88px; height: 81px; }
-    .rfinal-badge--6 { width: 88px; height: 81px; }
-    .rfinal-badge-shape {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center center;
-      display: block;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .rfinal-badge--1 .rfinal-badge-shape {
-      width: 82px;
-      height: 59.889px;
-      transform: rotate(180deg) scaleY(-1);
-    }
-    /* 铺满徽章盒再用 flex 居中，避免 translate 与裁剪导致看不见 */
     .rfinal-badge-digit {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
       margin: 0;
       font-family: var(--font-rfinal-body);
-      font-size: 32px;
-      font-weight: 700;
-      color: #fff;
+      font-size: 2.25rem;
+      font-weight: 800;
+      font-variant-numeric: lining-nums tabular-nums;
+      font-feature-settings: "lnum" 1;
+      color: var(--rfinal-accent);
       line-height: 1;
-      text-align: center;
-      pointer-events: none;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+      letter-spacing: -0.04em;
     }
     .rfinal-sec-title {
       font-family: var(--font-rfinal-display);
-      font-size: clamp(17px, 1.55vw, 22px);
+      font-size: var(--rfinal-title-size);
       font-weight: 700;
       font-optical-sizing: auto;
-      letter-spacing: 0.02em;
+      letter-spacing: var(--rfinal-track-title);
       text-transform: none;
       color: var(--rfinal-warm-900);
       margin: 0;
-      line-height: 1.22;
+      line-height: 1.2;
       grid-column: 2;
       grid-row: 1;
       align-self: center;
     }
     .rfinal-sec-intro {
-      font-size: clamp(17px, 1.25vw, 19px);
-      line-height: 1.72;
-      color: var(--rfinal-ink-soft);
+      font-family: var(--font-rfinal-body);
+      font-size: var(--rfinal-copy-size);
+      font-weight: 400;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
+      color: var(--rfinal-mute);
       margin: 0;
-      grid-column: 1 / -1;
-    }
-    .rfinal-sec-intro--medium {
-      font-weight: 500;
+      grid-column: 2;
     }
     .rfinal-page .result-list {
       list-style: disc;
-      padding-left: 26px;
+      padding-left: 1.25rem;
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      grid-column: 1 / -1;
+      gap: 8px;
+      grid-column: 2;
     }
     .rfinal-page .result-list li {
-      font-size: clamp(17px, 1.2vw, 19px);
-      line-height: 1.75;
+      font-family: var(--font-rfinal-body);
+      font-size: var(--rfinal-copy-size);
+      font-weight: 400;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
       color: var(--rfinal-ink);
       margin: 0;
     }
     .rfinal-page .result-list li::marker {
-      color: rgba(232, 90, 36, 0.55);
+      color: rgba(196, 90, 46, 0.55);
     }
     .rfinal-matches-stack {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      grid-column: 1 / -1;
+      grid-column: 2;
     }
     .rfinal-match {
-      background: var(--rfinal-surface-strong);
-      border-radius: 12px;
+      background: rgba(250, 246, 239, 0.65);
+      border-radius: 14px;
       padding: 14px 16px;
       display: flex;
       gap: 14px;
       align-items: flex-start;
-      border: 1px solid var(--rfinal-line);
-      box-shadow: var(--rfinal-shadow-sm);
-      transition: transform 0.22s var(--rfinal-ease-out), box-shadow 0.22s var(--rfinal-ease-out), border-color 0.22s var(--rfinal-ease-out);
+      border: 1px solid rgba(74, 50, 40, 0.1);
+      box-shadow: none;
+      transition: transform 0.22s var(--rfinal-ease-out), border-color 0.22s var(--rfinal-ease-out), background 0.22s var(--rfinal-ease-out);
     }
     .rfinal-match:hover {
-      border-color: rgba(232, 90, 36, 0.22);
-      box-shadow: var(--rfinal-shadow-md);
+      border-color: rgba(217, 108, 75, 0.24);
+      background: #fff;
       transform: translateY(-1px);
     }
     .rfinal-match-thumb {
@@ -1032,91 +1112,88 @@
       flex-shrink: 0;
     }
     .rfinal-match-name {
-      font-size: 18px;
+      font-family: var(--font-rfinal-display);
+      font-size: var(--rfinal-title-size);
       font-weight: 600;
-      color: #1a1a1a;
-      margin: 0 0 6px;
-      line-height: 1.45;
+      letter-spacing: var(--rfinal-track-title);
+      color: var(--rfinal-warm-900);
+      margin: 0 0 4px;
+      line-height: 1.2;
     }
     .rfinal-match-line {
-      font-size: 18px;
-      line-height: 1.66;
-      color: #1a1a1a;
+      font-family: var(--font-rfinal-body);
+      font-size: var(--rfinal-copy-size);
+      font-weight: 400;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
+      color: var(--rfinal-mute);
       margin: 0;
     }
     .rfinal-next {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 252, 248, 0.55) 100%);
-      border: 1px solid var(--rfinal-line);
-      border-radius: 16px;
-      padding: 22px 22px 22px 24px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 8px var(--rfinal-pad) 0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 0;
-      box-shadow: var(--rfinal-shadow-sm), inset 4px 0 0 0 rgba(232, 90, 36, 0.5);
+      gap: 8px;
+      box-shadow: none;
+      text-align: left;
     }
     .rfinal-next h2 {
       font-family: var(--font-rfinal-display);
-      font-size: clamp(17px, 1.5vw, 21px);
+      font-size: var(--rfinal-title-size);
       font-weight: 700;
       font-optical-sizing: auto;
-      letter-spacing: 0.02em;
+      letter-spacing: var(--rfinal-track-title);
       text-transform: none;
       color: var(--rfinal-warm-900);
       margin: 0;
-      line-height: 1.22;
+      line-height: 1.2;
     }
     .rfinal-next p {
-      font-size: 19px;
-      line-height: 1.66;
-      color: var(--rfinal-ink);
+      font-family: var(--font-rfinal-body);
+      font-size: var(--rfinal-copy-size);
+      font-weight: 400;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
+      color: var(--rfinal-mute);
       margin: 0;
     }
     .rfinal-cta-block {
-      border-top: none;
-      padding-top: 28px;
-      margin-top: 24px;
+      border-top: 1px solid rgba(74, 50, 40, 0.1);
+      padding: 24px var(--rfinal-pad) 0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       position: relative;
+      width: 100%;
     }
     .rfinal-cta-block::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(77, 50, 33, 0.14) 18%,
-        rgba(77, 50, 33, 0.14) 82%,
-        transparent 100%
-      );
+      content: none;
+      display: none;
     }
     .rfinal-btn-primary {
       width: 100%;
-      min-height: 48px;
+      min-height: 52px;
       border: none;
-      border-radius: 12px;
-      background: #000;
-      color: #f9f5ed;
-      font-family: inherit;
-      font-size: 16px;
-      font-weight: 600;
+      border-radius: 999px;
+      background: var(--rfinal-accent);
+      color: #fff;
+      font-family: var(--font-rfinal-body);
+      font-size: 14px;
+      font-weight: 700;
       line-height: 1.25;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       cursor: pointer;
-      padding: 12px 22px;
+      padding: 14px 28px;
       box-sizing: border-box;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
-      transition: background 0.2s var(--rfinal-ease-out), box-shadow 0.2s var(--rfinal-ease-out), transform 0.2s var(--rfinal-ease-out);
+      box-shadow: none;
+      transition: background 0.2s var(--rfinal-ease-out), transform 0.2s var(--rfinal-ease-out);
     }
     .rfinal-btn-primary:hover {
-      background: #2a2a2a;
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.22);
+      background: var(--rfinal-accent-mid);
       transform: translateY(-1px);
     }
     .rfinal-btn-primary:focus-visible {
@@ -1129,10 +1206,11 @@
       padding: 8px 12px;
       border: none;
       background: none;
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 500;
       line-height: 1.3;
-      color: #666;
+      letter-spacing: 0.01em;
+      color: var(--rfinal-mute);
       text-decoration: underline;
       text-underline-offset: 3px;
       cursor: pointer;
@@ -1140,76 +1218,72 @@
       box-sizing: border-box;
     }
     .rfinal-share {
-      border-top: none;
-      padding-top: 28px;
-      margin-top: 4px;
+      border-top: 1px solid rgba(74, 50, 40, 0.1);
+      padding: 24px var(--rfinal-pad) 0;
       position: relative;
     }
     .rfinal-share::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(77, 50, 33, 0.14) 18%,
-        rgba(77, 50, 33, 0.14) 82%,
-        transparent 100%
-      );
+      content: none;
+      display: none;
     }
     .share-section > h2 {
-      font-family: var(--font-rfinal-display, 'Fraunces', Georgia, serif);
-      font-size: clamp(17px, 1.5vw, 21px);
+      font-family: var(--font-rfinal-display);
+      font-size: var(--rfinal-title-size);
       font-weight: 700;
       font-optical-sizing: auto;
-      letter-spacing: 0.02em;
+      letter-spacing: var(--rfinal-track-title);
       text-transform: none;
-      color: var(--rfinal-warm-900, #2a1f16);
-      margin: 0 0 10px;
-      line-height: 1.22;
+      color: var(--rfinal-warm-900);
+      margin: 0 0 8px;
+      line-height: 1.2;
+      text-align: left;
     }
     .share-section > .hint {
-      font-size: 17px;
-      line-height: 1.62;
-      color: var(--rfinal-mute, #6b6b6b);
+      font-family: var(--font-rfinal-body);
+      font-size: var(--rfinal-copy-size);
+      font-weight: 400;
+      line-height: var(--rfinal-line);
+      letter-spacing: 0.01em;
+      color: var(--rfinal-mute);
       margin: 0 0 16px;
+      text-align: left;
     }
     .share-pills {
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       gap: 8px;
       align-items: stretch;
+      max-width: 100%;
+      min-width: 0;
     }
     .share-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      flex: 1 1 0;
+      flex: 1 1 10rem;
       min-width: 0;
+      max-width: 100%;
       padding: 8px 10px;
       min-height: 44px;
       border-radius: 999px;
-      border: 1px solid var(--rfinal-line, rgba(77, 50, 33, 0.12));
-      background: linear-gradient(180deg, #fff 0%, rgba(255, 252, 248, 0.96) 100%);
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--rfinal-ink, #141414);
+      border: 1px solid rgba(74, 50, 40, 0.12);
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.008em;
+      color: var(--rfinal-ink);
       cursor: pointer;
       font-family: inherit;
       box-sizing: border-box;
       text-align: center;
       line-height: 1.25;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 4px 14px rgba(45, 35, 28, 0.06);
-      transition: border-color 0.2s var(--rfinal-ease-out, cubic-bezier(0.33, 0.02, 0.18, 1)), box-shadow 0.2s var(--rfinal-ease-out, cubic-bezier(0.33, 0.02, 0.18, 1)), transform 0.2s var(--rfinal-ease-out, cubic-bezier(0.33, 0.02, 0.18, 1));
+      box-shadow: none;
+      transition: border-color 0.2s var(--rfinal-ease-out), background 0.2s var(--rfinal-ease-out), transform 0.2s var(--rfinal-ease-out);
     }
     .share-pill:hover {
-      border-color: rgba(232, 90, 36, 0.28);
-      background: #fff;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 8px 22px rgba(45, 35, 28, 0.09);
+      border-color: rgba(217, 108, 75, 0.28);
+      background: rgba(250, 246, 239, 0.9);
       transform: translateY(-1px);
     }
     .share-pill:focus-visible {
@@ -1241,7 +1315,8 @@
         gap: 6px;
         padding: 8px 14px;
         min-height: 44px;
-        font-size: 16px;
+        font-size: 15px;
+        font-weight: 500;
       }
       .share-pill-icon {
         width: 16px;
@@ -1704,33 +1779,23 @@
     }
     .rfinal-footer-links {
       border-top: none;
-      padding-top: 24px;
-      margin-top: 24px;
+      padding: 16px var(--rfinal-pad) 0;
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
       align-items: center;
+      justify-content: flex-start;
       position: relative;
     }
     .rfinal-footer-links::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(77, 50, 33, 0.12) 22%,
-        rgba(77, 50, 33, 0.12) 78%,
-        transparent 100%
-      );
+      content: none;
+      display: none;
     }
     .rfinal-footer-links .btn-text {
-      color: #666;
-      font-size: 16px;
-      font-weight: 600;
+      color: var(--rfinal-mute);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
     }
     .share-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .share-row .btn-back-quiz { min-height: 44px; }
@@ -2017,24 +2082,39 @@
             <button type="button" class="rfinal-back" id="btn-results-back" aria-label="Back to quiz intro">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <div class="rfinal-hero-media" aria-hidden="true">
-              <div class="rfinal-hero-photo-wrap">
-                <img class="rfinal-hero-photo" src="assets/quiz-result-1-0/hero-room.png" alt="" width="1376" height="768" />
+            <div class="rfinal-hero-split">
+              <div class="rfinal-hero-character" aria-hidden="true">
+                <div class="rfinal-mascot-wrap">
+                  <img id="res-rfinal-mascot" src="" alt="" width="295" height="295" />
+                </div>
               </div>
-              <div class="rfinal-hero-scrim"></div>
-            </div>
-            <div class="rfinal-hero-heading">
-              <p class="rfinal-hero-kicker">Your roommate type is:</p>
-              <p class="rfinal-hero-type" id="res-rfinal-type-name"></p>
-            </div>
-            <div class="rfinal-mascot-wrap" aria-hidden="true">
-              <img id="res-rfinal-mascot" src="" alt="" width="295" height="295" />
-            </div>
-            <div class="rfinal-wave-row" aria-hidden="true">
-              <img class="rfinal-wave-base" src="assets/quiz-result-1-0/wave-footer.svg" alt="" width="642" height="147" />
-              <img class="rfinal-wave-roof" src="assets/quiz-result-1-0/hero-roof.svg" alt="" width="641" height="143" />
+              <div class="rfinal-hero-panel">
+                <div class="rfinal-hero-panel-inner">
+                  <div class="rfinal-hero-heading">
+                    <p class="rfinal-hero-kicker">Your roommate type is</p>
+                    <p class="rfinal-hero-type">
+                      <span class="rfinal-hero-emoji" id="res-rfinal-emoji" aria-hidden="true"></span>
+                      <span id="res-rfinal-type-name"></span>
+                    </p>
+                    <p class="rfinal-hero-subtitle" id="res-rfinal-subtitle"></p>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
+
+          <div class="rfinal-ticker" aria-hidden="true">
+            <div class="rfinal-ticker-track">
+              <span>Roommate type quiz</span><span class="rfinal-ticker-dot">✦</span>
+              <span>6 animal types</span><span class="rfinal-ticker-dot">✦</span>
+              <span>Share your result</span><span class="rfinal-ticker-dot">✦</span>
+              <span>Find your match</span><span class="rfinal-ticker-dot">✦</span>
+              <span>Roommate type quiz</span><span class="rfinal-ticker-dot">✦</span>
+              <span>6 animal types</span><span class="rfinal-ticker-dot">✦</span>
+              <span>Share your result</span><span class="rfinal-ticker-dot">✦</span>
+              <span>Find your match</span><span class="rfinal-ticker-dot">✦</span>
+            </div>
+          </div>
 
           <div class="rfinal-body">
             <p class="rfinal-quote" id="res-rfinal-quote"></p>
@@ -2043,8 +2123,7 @@
             <ul class="rfinal-stats-list" id="res-stats"></ul>
 
             <section class="rfinal-sec" aria-labelledby="res-why-heading">
-              <div class="rfinal-badge rfinal-badge--1">
-                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-1.svg" alt="" />
+              <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">1</span>
               </div>
               <h2 class="rfinal-sec-title" id="res-why-heading">Why you got this</h2>
@@ -2053,8 +2132,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-live-heading">
-              <div class="rfinal-badge rfinal-badge--2">
-                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-2.svg" alt="" />
+              <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">2</span>
               </div>
               <h2 class="rfinal-sec-title" id="res-live-heading">Living habits</h2>
@@ -2063,18 +2141,16 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-scenarios-heading">
-              <div class="rfinal-badge rfinal-badge--3">
-                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-3.svg" alt="" />
+              <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">3</span>
               </div>
               <h2 class="rfinal-sec-title" id="res-scenarios-heading">Main-character moments</h2>
-              <p class="rfinal-sec-intro rfinal-sec-intro--medium">Stuff that probably happens at your place:</p>
+              <p class="rfinal-sec-intro">Stuff that probably happens at your place:</p>
               <ul class="result-list" id="res-scenarios"></ul>
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-others-heading">
-              <div class="rfinal-badge rfinal-badge--4">
-                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-4.svg" alt="" />
+              <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">4</span>
               </div>
               <h2 class="rfinal-sec-title" id="res-others-heading">The vibe check</h2>
@@ -2083,8 +2159,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-matches-heading">
-              <div class="rfinal-badge rfinal-badge--5">
-                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-5.svg" alt="" />
+              <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">5</span>
               </div>
               <h2 class="rfinal-sec-title" id="res-matches-heading">Compatibility radar</h2>
@@ -2092,8 +2167,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-ideal-heading">
-              <div class="rfinal-badge rfinal-badge--6">
-                <img class="rfinal-badge-shape" src="assets/quiz-result-1-0/num-6.svg" alt="" />
+              <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">6</span>
               </div>
               <h2 class="rfinal-sec-title" id="res-ideal-heading">Survival manual</h2>
@@ -3028,13 +3102,13 @@
           const thumb = src
             ? `<img class="rfinal-match-thumb" src="${src}" width="57" height="57" alt="" loading="lazy" />`
             : '';
-          return `<div class="rfinal-match">${thumb}<div class="rfinal-match-body"><p class="rfinal-match-name">${escHtml(c.name)}</p><p class="rfinal-match-line">— ${escHtml(c.line)}</p></div></div>`;
+          return `<div class="rfinal-match">${thumb}<div class="rfinal-match-body"><p class="rfinal-match-name">${escHtml(c.name)}</p><p class="rfinal-match-line">— ${escHtml(capitalizeLead(c.line))}</p></div></div>`;
         })
         .join('');
     }
 
     function bulletListHtml(items) {
-      return items.map((t) => `<li>${t}</li>`).join('');
+      return items.map((t) => `<li>${escHtml(capitalizeLead(t))}</li>`).join('');
     }
 
     function buildTraitGridHtml(ans) {
@@ -3138,16 +3212,25 @@
         .replace(/"/g, '&quot;');
     }
 
+    /** First alphabetic character uppercased (sentence lead). */
+    function capitalizeLead(s) {
+      const str = String(s ?? '').trim();
+      if (!str) return '';
+      const i = str.search(/[a-zA-Z]/);
+      if (i === -1) return str;
+      return str.slice(0, i) + str[i].toUpperCase() + str.slice(i + 1);
+    }
+
     /** Parses "Label: 85% — note" (em/en/hyphen dash) into a stat row with bar. */
     function statVisualHtml(line) {
       const raw = String(line).trim();
       const m = raw.match(/^(.+?):\s*(\d{1,3})%\s*\u2014\s*(.+)$/) || raw.match(/^(.+?):\s*(\d{1,3})%\s*-\s*(.+)$/);
       if (!m) {
-        return `<li class="rfinal-stat-fallback">${escHtml(raw)}</li>`;
+        return `<li class="rfinal-stat-fallback">${escHtml(capitalizeLead(raw))}</li>`;
       }
       const label = m[1].trim();
       const pctNum = parseInt(m[2], 10);
-      const note = m[3].trim();
+      const note = capitalizeLead(m[3].trim());
       const barW = Math.min(100, Math.max(0, pctNum));
       const over = pctNum > 100;
       const fillClass = 'rfinal-stat-fill' + (over ? ' rfinal-stat-fill--over' : '');
@@ -3172,23 +3255,27 @@
       const typeWord = t.name.replace(/^The\s+/i, '');
       el('res-headline').textContent = `Your roommate type: ${t.name}`;
       el('res-rfinal-type-name').textContent = typeWord;
-      el('res-tagline').textContent = t.subtitle;
+      const emojiEl = el('res-rfinal-emoji');
+      if (emojiEl) emojiEl.textContent = t.emoji || '';
+      const subtitleEl = el('res-rfinal-subtitle');
+      if (subtitleEl) subtitleEl.textContent = capitalizeLead(t.subtitle || '');
+      el('res-tagline').textContent = capitalizeLead(t.subtitle || '');
       const animal = typeWord.toLowerCase();
       if (t.signatureQuote) {
-        el('res-rfinal-quote').innerHTML = `<span class="rfinal-quote-body">${escHtml(t.signatureQuote)}</span>`;
+        el('res-rfinal-quote').innerHTML = `<span class="rfinal-quote-body">${escHtml(capitalizeLead(t.signatureQuote))}</span>`;
       } else {
-        let subRest = t.subtitle.trim();
+        let subRest = capitalizeLead(t.subtitle.trim());
         subRest = subRest.charAt(0).toLowerCase() + subRest.slice(1);
         const quoteEnd = subRest.endsWith('.') ? subRest.slice(0, -1) : subRest;
         el('res-rfinal-quote').innerHTML =
           `<span class="rfinal-quote-body">As a ${escHtml(animal)}, ${escHtml(quoteEnd)}.</span>`;
       }
       const roastEl = el('res-roast');
-      if (roastEl) roastEl.textContent = t.roast || '';
+      if (roastEl) roastEl.textContent = capitalizeLead(t.roast || '');
       const statsEl = el('res-stats');
       if (statsEl) statsEl.innerHTML = t.stats && t.stats.length ? t.stats.map(statVisualHtml).join('') : '';
       const survEl = el('res-survival');
-      if (survEl) survEl.textContent = t.survivalTip || '';
+      if (survEl) survEl.textContent = capitalizeLead(t.survivalTip || '');
       bindCharacterImgResultPageFirst(el('res-rfinal-mascot'), typeKey, t.name);
       const why = hasFull ? getWhyBullets(ans, typeKey) : t.whyFallback.slice(0, 3);
       el('res-why-list').innerHTML = bulletListHtml(why);
