@@ -1,7 +1,7 @@
 # Sumu Hotel Components
 
 > Full specifications for all 24 components. Grouped by workflow.
-> For tokens see [design.md](design.md). For rules & accessibility see [design-guidelines.md](design-guidelines.md).
+> For tokens see [roomeo-design.md](roomeo-design.md). For rules & accessibility see [roomeo-design-guidelines.md](roomeo-design-guidelines.md).
 
 ## Actions
 

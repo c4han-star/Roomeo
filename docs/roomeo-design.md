@@ -1,6 +1,6 @@
 # Sumu Hotel Design System — Token Reference
 
-> Always read this file first. For component specs see [design-components.md](design-components.md). For accessibility and do's/don'ts see [design-guidelines.md](design-guidelines.md).
+> Always read this file first. For component specs see [roomeo-design-components.md](roomeo-design-components.md). For accessibility and do's/don'ts see [roomeo-design-guidelines.md](roomeo-design-guidelines.md).
 
 Sumu is a boutique apartment hotel brand designed for travelers who wish to "live" rather than merely visit. The design language emphasizes cultural depth, minimalist elegance, and local authenticity. The primary typeface is a clean, modern sans-serif with generous line spacing, supporting both Japanese and English content. Base spacing unit is 8dp, with platform coverage spanning responsive web (mobile-first), desktop, and print materials.
 
