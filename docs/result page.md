@@ -2,7 +2,7 @@
 
 > **Source of truth:** [`quiz.html`](../quiz.html)  
 > **Scoring detail:** [quiz-scoring-logic-en.md](./quiz-scoring-logic-en.md)  
-> **Landing:** [roomeo_landing.md](./roomeo_landing.md)
+> **Landing:** [`index.html`](../index.html)
 
 This document describes **what is built today** in the vibe-coded prototype. Older spec items (pentagon charts, 21 pairing pages, dynamic dual-result compat) are listed under [§ Not built yet](#not-built-yet).
 

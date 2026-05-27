@@ -30,8 +30,8 @@ All docs live in [`docs/`](docs/). Start with **[docs/README.md](docs/README.md)
 |-----|----------------|
 | [result page.md](docs/result%20page.md) | Quiz flow, result page, share/compare modals (matches `quiz.html`) |
 | [quiz-scoring-logic-en.md](docs/quiz-scoring-logic-en.md) | Type assignment algorithm + full vote mapping |
-| [roomeo_landing.md](docs/roomeo_landing.md) | Landing copy (matches `index.html`) |
-| [roomeo-design.md](docs/roomeo-design.md) | Colors, type, spacing tokens from live CSS |
+
+Landing page and design live in [`index.html`](index.html) and [`quiz.html`](quiz.html) — no separate copy/design docs.
 
 ## Repository access
 
