@@ -415,24 +415,40 @@ Example — Beaver:
 ## 8. Not implemented yet
 
 1. Two users finish → automatic compatibility %
-2. Compare with a Friend → dual result card after friend completes quiz
+2. Compare with a Friend → dual result card after friend completes quiz (friend slot stays `?` today)
 3. Backend / waitlist real matching
 4. Linking stats % on the result page to live answer scores
+5. Real QR codes (placeholder: `assets/site/share-qr-placeholder.svg`)
 
 ---
 
-## 9. Debugging
+## 9. sessionStorage
+
+| Key | Contents |
+|-----|----------|
+| `roomeo_quiz_answers` | JSON array of 12 option indices (0–3) |
+| `roomeo_type` | Result slug string |
+| `roomeo_profile_step1` | `{ name, email, city }` |
+| `roomeo_profile_step2` | Profile step 2 fields |
+| `roomeo_compare_friend` | `{ email, name, tips, ts }` on compare form submit |
+
+Quiz retry clears the first four keys (not `roomeo_compare_friend`).
+
+---
+
+## 10. Debugging
 
 | Method | Usage |
 |--------|-------|
-| Hash | `quiz.html#turtle` — open a type’s result page directly |
-| Query | `?previewResult=beaver` |
-| Console | After quiz: `JSON.parse(sessionStorage.roomeo_quiz_answers)` — hand-tally using §3 |
-| Code | `console.log(tally)` before `resolveType` returns |
+| Hash | `quiz.html#turtle` — open a type’s result page directly (`bootFromHash()`) |
+| Figma preview | `quiz.html#figmacapture=1&previewResult=beaver` — **hash** query, not `?previewResult=` alone |
+| Share link | `quiz.html#fox` — same as `shareUrl()` |
+| Console | After quiz: `JSON.parse(sessionStorage.getItem('roomeo_quiz_answers'))` — hand-tally using §3 |
+| Code | Log tally inside `resolveType()` before return |
 
 ---
 
-## 10. Code index
+## 11. Code index
 
 | Symbol | ~Line in quiz.html | Description |
 |--------|-------------------|-------------|
@@ -445,6 +461,6 @@ Example — Beaver:
 
 ---
 
-## 11. One-line summary
+## 12. One-line summary
 
 **Mapping rule:** each option tags 1–2 animal slugs; selecting it adds `1 ÷ tag count` to each tag; after 12 questions the highest tally is your type (Beaver wins ties). There is no standalone “score X = type Y” table — only relative ranking across the six animals.

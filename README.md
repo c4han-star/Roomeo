@@ -1,41 +1,55 @@
-# Roomeo
+# MyRoomeo
 
-Roommate type quiz (`quiz.html`) and marketing landing page (`index.html`).
+Personality-driven roommate matching — marketing landing page (`index.html`) and 12-question roommate type quiz (`quiz.html`).
 
-## Run the site locally (recommended)
+**Brand:** MyRoomeo (logo: `assets/brand/logo02.svg`)
 
-Opening `index.html` directly via `file://` can break relative paths or browser rules. From the project root, start a small static server:
+## Run locally
+
+Opening HTML via `file://` can break paths. From the project root:
 
 ```bash
-cd Roomeo
-python3 -m http.server 8000
+python3 -m http.server 8765
 ```
 
-Then open **http://127.0.0.1:8000/** in your browser. Use **Take the quiz** to open the quiz flow.
+- Landing: **http://127.0.0.1:8765/**
+- Quiz: **http://127.0.0.1:8765/quiz.html**
+- Preview a result: **http://127.0.0.1:8765/quiz.html#turtle**
+
+With Node.js:
+
+```bash
+npx --yes serve -l 8765
+```
 
 ## Documentation
 
-All project docs live in [`docs/`](docs/). Start with **[docs/README.md](docs/README.md)** for the index (quiz spec, scoring logic, landing copy, design reference).
+All docs live in [`docs/`](docs/). Start with **[docs/README.md](docs/README.md)**.
 
-With Node.js installed, you can use:
-
-```bash
-npx --yes serve -l 8000
-```
+| Doc | What it covers |
+|-----|----------------|
+| [result page.md](docs/result%20page.md) | Quiz flow, result page, share/compare modals (matches `quiz.html`) |
+| [quiz-scoring-logic-en.md](docs/quiz-scoring-logic-en.md) | Type assignment algorithm + full vote mapping |
+| [roomeo_landing.md](docs/roomeo_landing.md) | Landing copy (matches `index.html`) |
+| [roomeo-design.md](docs/roomeo-design.md) | Colors, type, spacing tokens from live CSS |
 
 ## Repository access
 
-This GitHub repository is **private**. Only people you invite can see or clone it. Invite collaborators under **Settings → Collaborators** (or **Manage access**) on GitHub.
+This GitHub repository is **private**. Invite collaborators under **Settings → Collaborators** (or **Manage access**).
 
 ## Asset layout
 
 | Path | Contents |
 |------|----------|
-| `assets/brand/` | `logo.svg` |
-| `assets/site/` | Landing imagery: banner, icons, backgrounds, etc. |
-| `assets/quiz/questions/` | `quiz cover.png`, `q1.png`–`q12` (mixed `.png` / `.jpg` as needed) |
-| `assets/characters/` | Type avatars, e.g. `beaver.png` … `turtle.png` |
-| `assets/result-hero/` | Result hero character overlays, e.g. `turtle.png` (transparent PNG over `hero-room`) |
-| `assets/roommate-type-cards/` | Large type cards for the landing page |
-| `assets/quiz-result-1-0/` | Quiz result UI (waves, badges, room background, etc.) |
-| `docs/` | Product and design Markdown — see [docs/README.md](docs/README.md) |
+| `assets/brand/` | `logo02.svg` (nav), `logo.svg` |
+| `assets/site/` | Landing imagery, trust bg, share QR placeholder |
+| `assets/quiz/questions/` | `quiz cover.png`, `q1.png`–`q12` (q4, q10 are `.jpg`) |
+| `assets/characters/` | Type avatars: `beaver.png` … `turtle.png` |
+| `assets/result-hero/` | Result hero mascots per type (transparent PNG) |
+| `assets/roommate-type-cards/` | Six cards on landing `#types` section |
+| `assets/quiz-result-1-0/` | Legacy result SVG assets |
+| `docs/` | Product + design Markdown (not loaded by pages) |
+
+## Stack
+
+Static HTML/CSS/JS — no build step. Quiz uses **html2canvas** (CDN) for share/compare card downloads.

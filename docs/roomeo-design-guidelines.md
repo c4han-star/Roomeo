@@ -1,131 +1,92 @@
-# Sumu Hotel Guidelines — Accessibility & Do's/Don'ts
+# MyRoomeo Design Guidelines
 
-> See [roomeo-design.md](roomeo-design.md) for token values. See [roomeo-design-components.md](roomeo-design-components.md) for component specs.
+> Tokens: [roomeo-design.md](roomeo-design.md) · Components: [roomeo-design-components.md](roomeo-design-components.md)
+
+---
+
+## Brand & voice
+
+- Use **MyRoomeo** (not standalone “Roomeo”) in user-facing copy
+- Tone: playful, specific, roast-friendly, shareable — Gen Z / viral quiz energy
+- Result copy lives in `TYPES` in `quiz.html` — avoid generic SaaS language
+
+---
+
+## Result hero (locked layout)
+
+These constraints apply to `#results-hero` / `.rfinal-hero`:
+
+- **Full-width split hero** — mascot on the left, decorative element on the right
+- **Blue vertical stripes** belong **only** in the hero — do not add stripe motifs to body sections
+- Do not replace hero with dark SaaS card layouts
+- Mascot: `assets/result-hero/{slug}.png` with character fallback
+- Logo in header: `assets/brand/logo02.svg`
+
+---
+
+## Visual do's
+
+- Warm cream backgrounds (`#f9f5ed`, `#FAF6EF`) with espresso text
+- Fraunces for display headlines; Roboto for body
+- Coral (`#ff6a2a`) for quiz progress and energetic accents
+- Generous radius (`24px`) on landing cards and result sections
+- Share/compare cards at **9:16** for Instagram Story export
+
+---
+
+## Visual don'ts
+
+- No dark generic “dashboard” result cards
+- No `icon1.png` / `icon2.png` / `icon3.png` vibe pill patterns from old mocks
+- No blue stripe decoration outside the result hero
+- Do not change result hero structure unless explicitly requested
+
+---
 
 ## Accessibility
 
-### Contrast Requirements
+- Quiz options keyboard-accessible (1–4 keys)
+- Dialog modals use native `<dialog>` with `aria-controls` on share pills
+- Hero emoji marked `aria-hidden` where redundant with type name text
+- SR-only headings where visual hierarchy differs (`#res-headline`, `#res-tagline`)
 
-| Requirement | Ratio |
-|---|---|
-| WCAG AA Normal Text | 4.5:1 |
-| WCAG AA Large Text (18pt+/14pt bold) | 3:1 |
-| WCAG AAA Normal Text | 7:1 |
-| UI Components & Graphical Objects | 3:1 |
+### Contrast
 
-| Component | 3:1 Against |
-|---|---|
-| Buttons | #666666 minimum (text on #FFFFFF) |
-| Links | #0066CC minimum (underlined for clarity) |
-| Form labels | #1a1a1a on #FFFFFF |
-| Disabled text | #999999 acceptable for disabled states |
+- Primary text `#2D1B14` on `#FAF6EF` / `#FFFFFF` — sufficient for body copy
+- Links `#0066CC` on white — use underline on inline links where clarity matters
 
-### Touch Targets
+### Touch targets
 
-- Minimum touch target: 48×48dp (or 44×44dp if unavoidable, with 8dp padding).
-- Button minimum height: 40dp; minimum width: 64dp.
-- Spacing between interactive targets: ≥ 8dp.
-- Density: use comfortable spacing on mobile; reduce slightly on desktop only if >= 48dp.
-- Link padding: 4dp horizontal, 2dp vertical minimum.
-
-### Keyboard Navigation
-
-| Key | Action |
-|---|---|
-| Tab | Move focus forward through interactive elements |
-| Shift + Tab | Move focus backward |
-| Enter | Activate focused button or link |
-| Space | Toggle checkbox/switch; activate button |
-| Escape | Close modals, popovers, dropdowns |
-| Arrow Keys | Navigate within lists, tabs, sliders |
-
-### Assistive Technology
-
-- All interactive elements must have semantic HTML (`<button>`, `<a>`, `<input>`, `<label>`).
-- Use `aria-label` or `aria-labelledby` for icon-only buttons.
-- Form inputs must have associated `<label>` elements.
-- Use `aria-live="polite"` for dynamic content updates.
-- Links must have descriptive anchor text (avoid "Click here").
-- Images require `alt` text; decorative images use `alt=""`.
-- Use `aria-pressed`, `aria-selected`, `aria-expanded` for state indication.
-- Focus indicators must be visible (outline, ring, or highlight); never remove.
-
-## Gestures
-
-| Gesture | Use |
-|---|---|
-| Tap | Activate buttons, links, navigate |
-| Double-tap | Zoom images on mobile (if enabled); zoom form inputs to prevent auto-zoom |
-| Long-press | Context menus, tooltips; ≥ 500ms |
-| Swipe | Carousel navigation, drawer open/close |
-| Pinch-zoom | Image galleries (optional, consider fixed aspect ratios) |
-
-## Content Design
-
-**Writing rules:**
-- Use sentence case for labels and button text (not Title Case).
-- Keep button labels concise (1–3 words, ≤ 20 characters where possible).
-- Line length: 50–75 characters for body text (optimal reading).
-- Avoid jargon; use plain language.
-- End buttons/labels with no punctuation; end full sentences with periods.
-- Capitalization: Headlines use Title Case; body and labels use sentence case.
-- Labels for form fields: use nouns or noun phrases (e.g., "Email address" not "Enter email").
-
-## Do's and Don'ts
-
-### Color
-- **Do** use #000000 black for primary CTAs; ensure 4.5:1 contrast minimum.
-- **Don't** rely on color alone to convey meaning (e.g., red error state needs icon + text).
-- **Do** maintain consistent color usage across the site (primary always = black, success always = green).
-- **Don't** use more than 3 accent colors in a single view.
-
-### Shape
-- **Do** use 4px radius for small interactive elements (buttons, inputs).
-- **Don't** mix corner radii styles within the same component family.
-- **Do** apply 8px radius to cards and medium containers for consistency.
-- **Don't** use sharp corners (0px) for interactive elements.
-
-### Elevation
-- **Do** lift cards on hover (Level 1 shadow, 200ms transition).
-- **Don't** stack multiple shadows; use a single, appropriate level.
-- **Do** reserve Level 4 shadows for modals and full-screen overlays only.
-- **Don't** apply shadows to text or small UI elements.
-
-### Interaction
-- **Do** provide clear visual feedback on all interactive states (hover, focus, pressed, disabled).
-- **Don't** remove native focus indicators (outline, ring); customize if necessary.
-- **Do** use 200ms–300ms transitions for state changes.
-- **Don't** use instant state changes without transition feedback.
-- **Do** disable buttons when form validation fails.
-- **Don't** allow users to submit invalid data.
-
-### Layout
-- **Do** use 8dp baseline grid; keep all spacing multiples of 8 (8, 16, 24, 32, 48).
-- **Don't** use arbitrary spacing values.
-- **Do** apply 16dp padding inside cards on mobile; 32dp on desktop.
-- **Don't** use full-width content on screens > 1024px without max-width container.
-- **Do** test responsive behavior at 320px, 768px, and 1024px minimum.
-
-### Typography
-- **Do** use 16px body text minimum for readability.
-- **Don't** use font sizes < 12px for body content.
-- **Do** set line height ≥ 1.5 for body text.
-- **Don't** use all-caps for body text; use for headings sparingly.
-- **Do** pair headlines with generous line height (1.2–1.3).
-
-### Motion
-- **Do** use motion to guide user attention and provide feedback.
-- **Don't** animate for decoration; every motion must have purpose.
-- **Do** use standard easing curves (cubic-bezier presets).
-- **Don't** use durations > 500ms for standard transitions.
-- **Do** respect `prefers-reduced-motion` media query; disable animations for users who prefer reduced motion.
-
-### Components
-- **Do** use consistent button styles across all contexts (primary, secondary, tertiary).
-- **Don't** create one-off button styles.
-- **Do** clearly mark required form fields with asterisk (*) and aria-required.
-- **Don't** use placeholder text as the only label.
-- **Do** group related form fields with fieldsets and legends.
-- **Don't** nest buttons or interactive elements within each other.
+- Share pills and quiz footer buttons sized for mobile tap (min ~44px height)
 
 ---
+
+## Copy changes
+
+- **Only update marketing/result copy when explicitly requested** — docs should mirror code, not the reverse
+- Landing copy: `index.html` + [roomeo_landing.md](roomeo_landing.md)
+- Quiz questions + types: `quiz.html` `QUIZ` / `TYPES` + [result page.md](result%20page.md)
+
+---
+
+## Assets
+
+- Prefer existing paths under `assets/` — see root [README.md](../README.md)
+- Question art: one file per question in `assets/quiz/questions/`
+- Cache busters on character images: `?v=20260418`
+
+---
+
+## Share & compare
+
+- QR codes are **placeholder SVG** until real deep-link QR is ready
+- Copy link format: `{origin}/quiz.html#{typeSlug}` (e.g. `#fox`)
+- Download filenames: `myroomeo-{slug}-share.png`, `myroomeo-{slug}-compare.png`
+
+---
+
+## Not implemented (don't document as live)
+
+- Dynamic two-person compatibility score after friend completes quiz
+- Real backend for profile / waitlist / verified profiles
+- Instagram/TikTok native share handlers (`shareInstagram()` exists but has no listeners)
