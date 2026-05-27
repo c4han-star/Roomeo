@@ -1,8 +1,7 @@
 # MyRoomeo Quiz Scoring & Roommate Type Matching Logic
 
 > **Implementation:** inline JavaScript in [`quiz.html`](../quiz.html) (`QUIZ`, `TYPES`, `resolveType`)  
-> **Product spec reference:** [`docs/result page.md`](./result%20page.md)  
-> **中文版本：** [`quiz-scoring-logic.md`](./quiz-scoring-logic.md)
+> **Product spec reference:** [`docs/result page.md`](./result%20page.md)
 
 ---
 
