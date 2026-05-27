@@ -1,7 +1,8 @@
 # MyRoomeo 测验记分与角色匹配逻辑
 
 > **实现位置：** [`quiz.html`](../quiz.html) 内联 JavaScript（`QUIZ`、`TYPES`、`resolveType`）  
-> **产品规格参考：** [`docs/result page.md`](./result%20page.md)
+> **产品规格参考：** [`docs/result page.md`](./result%20page.md)  
+> **English version:** [`quiz-scoring-logic-en.md`](./quiz-scoring-logic-en.md)
 
 ---
 
