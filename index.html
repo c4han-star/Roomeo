@@ -903,6 +903,7 @@
     }
     /* Roommate type cards: 无白底、无边框阴影，图直接贴在分区背景上 */
     .personality-card.roommate-type-card {
+      position: relative;
       width: 100%;
       max-width: none;
       background: transparent;
@@ -910,7 +911,7 @@
       border-radius: 0;
       box-shadow: none;
       padding: 0;
-      overflow: visible;
+      overflow: hidden;
       line-height: 0;
       cursor: default;
       transition: transform 0.3s var(--ease);
@@ -927,7 +928,38 @@
       transition: filter 0.35s var(--ease);
     }
     .personality-card.roommate-type-card:hover img {
-      filter: brightness(1.03);
+      filter: brightness(0.92);
+    }
+    .roommate-type-card-label {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: clamp(28px, 5vw, 40px) clamp(12px, 2vw, 16px) clamp(14px, 2.5vw, 18px);
+      font-family: var(--font-display);
+      font-size: clamp(17px, 2.4vw, 21px);
+      font-weight: 600;
+      font-style: italic;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(
+        180deg,
+        rgba(31, 42, 68, 0) 0%,
+        rgba(31, 42, 68, 0.55) 42%,
+        rgba(31, 42, 68, 0.82) 100%
+      );
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+      pointer-events: none;
+    }
+    .personality-card.roommate-type-card:hover .roommate-type-card-label,
+    .personality-card.roommate-type-card:focus-within .roommate-type-card-label {
+      opacity: 1;
+      transform: translateY(0);
     }
     @media (prefers-reduced-motion: reduce) {
       .personality-card.roommate-type-card {
@@ -941,7 +973,15 @@
         transition: none;
       }
       .personality-card.roommate-type-card:hover img {
-        filter: none;
+        filter: brightness(0.92);
+      }
+      .roommate-type-card-label {
+        transition: opacity 0.15s ease;
+        transform: none;
+      }
+      .personality-card.roommate-type-card:hover .roommate-type-card-label,
+      .personality-card.roommate-type-card:focus-within .roommate-type-card-label {
+        transform: none;
       }
     }
     .personality-cta {
@@ -1254,23 +1294,29 @@
         </div>
         <div class="personality-scroll">
         <div class="personality-grid" role="list" aria-label="Roomie type cards">
-          <article class="personality-card roommate-type-card fade-up" role="listitem">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_beaver.png?v=20260529b" width="1152" height="1152" alt="The Beaver — roomie type card" loading="lazy" />
+          <article class="personality-card roommate-type-card fade-up" role="listitem" tabindex="0" aria-label="The Beaver">
+            <img src="assets/roommate-type-cards/RoommateTypeCard_beaver.png?v=20260530b" width="1152" height="1152" alt="" loading="lazy" />
+            <p class="roommate-type-card-label" aria-hidden="true">The Beaver</p>
           </article>
-          <article class="personality-card roommate-type-card fade-up d1" role="listitem">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_bunny.png?v=20260529b" width="1152" height="1152" alt="The Bunny — roomie type card" loading="lazy" />
+          <article class="personality-card roommate-type-card fade-up d1" role="listitem" tabindex="0" aria-label="The Bunny">
+            <img src="assets/roommate-type-cards/RoommateTypeCard_bunny.png?v=20260530b" width="1152" height="1152" alt="" loading="lazy" />
+            <p class="roommate-type-card-label" aria-hidden="true">The Bunny</p>
           </article>
-          <article class="personality-card roommate-type-card fade-up d2" role="listitem">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_cat.png?v=20260529b" width="1152" height="1152" alt="The Cat — roomie type card" loading="lazy" />
+          <article class="personality-card roommate-type-card fade-up d2" role="listitem" tabindex="0" aria-label="The Cat">
+            <img src="assets/roommate-type-cards/RoommateTypeCard_cat.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
+            <p class="roommate-type-card-label" aria-hidden="true">The Cat</p>
           </article>
-          <article class="personality-card roommate-type-card fade-up" role="listitem">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_fox.png?v=20260530a" width="1152" height="1152" alt="The Fox — roomie type card" loading="lazy" />
+          <article class="personality-card roommate-type-card fade-up" role="listitem" tabindex="0" aria-label="The Fox">
+            <img src="assets/roommate-type-cards/RoommateTypeCard_fox.png?v=20260530a" width="1152" height="1152" alt="" loading="lazy" />
+            <p class="roommate-type-card-label" aria-hidden="true">The Fox</p>
           </article>
-          <article class="personality-card roommate-type-card fade-up d1" role="listitem">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_owl.png?v=20260529b" width="1152" height="1152" alt="The Owl — roomie type card" loading="lazy" />
+          <article class="personality-card roommate-type-card fade-up d1" role="listitem" tabindex="0" aria-label="The Owl">
+            <img src="assets/roommate-type-cards/RoommateTypeCard_owl.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
+            <p class="roommate-type-card-label" aria-hidden="true">The Owl</p>
           </article>
-          <article class="personality-card roommate-type-card fade-up d2" role="listitem">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_turtle.png?v=20260529b" width="1152" height="1152" alt="The Turtle — roomie type card" loading="lazy" />
+          <article class="personality-card roommate-type-card fade-up d2" role="listitem" tabindex="0" aria-label="The Turtle">
+            <img src="assets/roommate-type-cards/RoommateTypeCard_turtle.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
+            <p class="roommate-type-card-label" aria-hidden="true">The Turtle</p>
           </article>
         </div>
         </div>
