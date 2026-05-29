@@ -26,9 +26,10 @@
       --warning: #FF9800;
       --error: #F44336;
       --info: #2196F3;
+      /* Radius — scrapbook scale (folders 4px, buttons 6px, cards 8px) */
       --r-sm: 4px;
-      --r-md: 8px;
-      --r-lg: 12px;
+      --r-md: 6px;
+      --r-lg: 8px;
       --shadow-1: 0 1px 3px rgba(0,0,0,0.12);
       --shadow-2: 0 2px 6px rgba(0,0,0,0.16);
       --shadow-3: 0 4px 12px rgba(0,0,0,0.15);
@@ -129,7 +130,7 @@
     .btn-login {
       background: none; border: none; color: rgba(255,255,255,0.8);
       font-family: inherit; font-size: 14px; font-weight: 500;
-      cursor: pointer; padding: 8px 16px; border-radius: var(--r-sm);
+      cursor: pointer; padding: 8px 16px; border-radius: var(--r-md);
       transition: background 0.2s var(--ease), color 0.2s var(--ease);
     }
     .btn-login:hover { background: rgba(255,255,255,0.1); }
@@ -140,7 +141,7 @@
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       background: var(--primary); color: #fff; border: none;
       font-family: inherit; font-size: 14px; font-weight: 600;
-      padding: 8px 16px; border-radius: var(--r-sm); cursor: pointer;
+      padding: 8px 16px; border-radius: var(--r-md); cursor: pointer;
       min-height: 40px;
       transition: background 0.2s var(--ease), box-shadow 0.2s var(--ease);
       text-decoration: none;
@@ -163,7 +164,7 @@
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--bg); color: var(--primary); border: 1px solid var(--primary);
       font-family: inherit; font-size: 14px; font-weight: 600;
-      padding: 8px 16px; border-radius: var(--r-sm); cursor: pointer;
+      padding: 8px 16px; border-radius: var(--r-md); cursor: pointer;
       min-height: 40px;
       transition: background 0.2s var(--ease), color 0.2s var(--ease);
     }
@@ -228,7 +229,7 @@
     body.landing .nav .btn-primary {
       background: var(--accent-warm);
       border: none;
-      border-radius: 999px;
+      border-radius: var(--r-md);
       color: #fff;
       font-weight: 600;
       padding: 8px 18px;
@@ -238,7 +239,6 @@
     .site-canvas {
       background: var(--paper);
       overflow-x: clip;
-      --landing-radius: 24px;
       --landing-surface: #ffffff;
       --landing-line: rgba(74, 50, 40, 0.1);
       --landing-shadow: 0 8px 32px rgba(45, 27, 20, 0.06);
@@ -627,7 +627,7 @@
       position: relative;
       width: 100%;
       min-height: clamp(420px, 52vw, 560px);
-      border-radius: 14px;
+      border-radius: var(--r-lg);
       overflow: hidden;
       display: flex;
       align-items: flex-end;
@@ -737,8 +737,8 @@
       align-items: start;
       padding: 24px;
       background: var(--landing-surface);
-      border: 1px solid var(--landing-line);
-      border-radius: var(--landing-radius);
+      border: none;
+      border-radius: var(--r-lg);
     }
     .how-item-num {
       grid-column: 1;
@@ -810,7 +810,7 @@
       }
       .trust-composite {
         min-height: clamp(360px, 95vw, 480px);
-        border-radius: 10px;
+        border-radius: var(--r-lg);
         padding: 12px 12px 0;
       }
       .trust-figure {
@@ -901,23 +901,31 @@
         grid-template-columns: 1fr;
       }
     }
-    /* Roommate type cards: 无白底、无边框阴影，图直接贴在分区背景上 */
+    /* Roommate type cards — art-first; hover shows typographic caption only */
     .personality-card.roommate-type-card {
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
       width: 100%;
       max-width: none;
       background: transparent;
       border: none;
       border-radius: 0;
       box-shadow: none;
-      padding: 0;
-      overflow: hidden;
-      line-height: 0;
+      padding: 0 0 44px;
+      overflow: visible;
+      line-height: normal;
       cursor: default;
-      transition: transform 0.3s var(--ease);
     }
-    .personality-card.roommate-type-card:hover {
-      box-shadow: none;
+    .roommate-type-card-frame {
+      width: 100%;
+      line-height: 0;
+      transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
+    }
+    .personality-card.roommate-type-card:hover .roommate-type-card-frame,
+    .personality-card.roommate-type-card:focus-within .roommate-type-card-frame {
       transform: translateY(-3px);
     }
     .personality-card.roommate-type-card img {
@@ -925,64 +933,65 @@
       height: auto;
       display: block;
       border-radius: 0;
-      transition: filter 0.35s var(--ease);
     }
-    .personality-card.roommate-type-card:hover img {
-      filter: brightness(0.92);
-    }
-    .roommate-type-card-label {
+    .roommate-type-card-caption {
       position: absolute;
       left: 0;
       right: 0;
       bottom: 0;
       margin: 0;
-      padding: clamp(28px, 5vw, 40px) clamp(12px, 2vw, 16px) clamp(14px, 2.5vw, 18px);
-      font-family: var(--font-display);
-      font-size: clamp(17px, 2.4vw, 21px);
-      font-weight: 600;
-      font-style: italic;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
+      padding: 0 8px;
       text-align: center;
-      color: #fff;
-      background: linear-gradient(
-        180deg,
-        rgba(31, 42, 68, 0) 0%,
-        rgba(31, 42, 68, 0.55) 42%,
-        rgba(31, 42, 68, 0.82) 100%
-      );
       opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+      transform: translateY(6px);
+      transition:
+        opacity 0.25s var(--ease),
+        transform 0.3s var(--ease);
       pointer-events: none;
     }
-    .personality-card.roommate-type-card:hover .roommate-type-card-label,
-    .personality-card.roommate-type-card:focus-within .roommate-type-card-label {
+    .roommate-type-card-caption-name {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.6vw, 26px);
+      font-weight: 600;
+      font-style: italic;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .roommate-type-card-caption-name::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      margin: 10px auto 0;
+      background: var(--accent-warm);
+      border-radius: 1px;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.35s var(--ease);
+    }
+    .personality-card.roommate-type-card:hover .roommate-type-card-caption,
+    .personality-card.roommate-type-card:focus-within .roommate-type-card-caption {
       opacity: 1;
       transform: translateY(0);
     }
+    .personality-card.roommate-type-card:hover .roommate-type-card-caption-name::after,
+    .personality-card.roommate-type-card:focus-within .roommate-type-card-caption-name::after {
+      transform: scaleX(1);
+    }
     @media (prefers-reduced-motion: reduce) {
-      .personality-card.roommate-type-card {
-        transition: none;
-      }
-      .personality-card.roommate-type-card:hover {
-        transform: none;
-        box-shadow: none;
-      }
-      .personality-card.roommate-type-card img {
-        transition: none;
-      }
-      .personality-card.roommate-type-card:hover img {
-        filter: brightness(0.92);
-      }
-      .roommate-type-card-label {
-        transition: opacity 0.15s ease;
+      .roommate-type-card-frame { transition: none; }
+      .personality-card.roommate-type-card:hover .roommate-type-card-frame,
+      .personality-card.roommate-type-card:focus-within .roommate-type-card-frame {
         transform: none;
       }
-      .personality-card.roommate-type-card:hover .roommate-type-card-label,
-      .personality-card.roommate-type-card:focus-within .roommate-type-card-label {
+      .roommate-type-card-caption { transition: opacity 0.15s ease; }
+      .personality-card.roommate-type-card:hover .roommate-type-card-caption,
+      .personality-card.roommate-type-card:focus-within .roommate-type-card-caption {
         transform: none;
       }
+      .roommate-type-card-caption-name::after { transition: none; transform: scaleX(1); }
     }
     .personality-cta {
       align-self: center;
@@ -1295,28 +1304,52 @@
         <div class="personality-scroll">
         <div class="personality-grid" role="list" aria-label="Roomie type cards">
           <article class="personality-card roommate-type-card fade-up" role="listitem" tabindex="0" aria-label="The Beaver">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_beaver.png?v=20260530b" width="1152" height="1152" alt="" loading="lazy" />
-            <p class="roommate-type-card-label" aria-hidden="true">The Beaver</p>
+            <div class="roommate-type-card-frame">
+              <img src="assets/roommate-type-cards/RoommateTypeCard_beaver.png?v=20260530b" width="1152" height="1152" alt="" loading="lazy" />
+            </div>
+            <p class="roommate-type-card-caption" aria-hidden="true">
+              <span class="roommate-type-card-caption-name">The Beaver</span>
+            </p>
           </article>
           <article class="personality-card roommate-type-card fade-up d1" role="listitem" tabindex="0" aria-label="The Bunny">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_bunny.png?v=20260530b" width="1152" height="1152" alt="" loading="lazy" />
-            <p class="roommate-type-card-label" aria-hidden="true">The Bunny</p>
+            <div class="roommate-type-card-frame">
+              <img src="assets/roommate-type-cards/RoommateTypeCard_bunny.png?v=20260530b" width="1152" height="1152" alt="" loading="lazy" />
+            </div>
+            <p class="roommate-type-card-caption" aria-hidden="true">
+              <span class="roommate-type-card-caption-name">The Bunny</span>
+            </p>
           </article>
           <article class="personality-card roommate-type-card fade-up d2" role="listitem" tabindex="0" aria-label="The Cat">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_cat.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
-            <p class="roommate-type-card-label" aria-hidden="true">The Cat</p>
+            <div class="roommate-type-card-frame">
+              <img src="assets/roommate-type-cards/RoommateTypeCard_cat.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
+            </div>
+            <p class="roommate-type-card-caption" aria-hidden="true">
+              <span class="roommate-type-card-caption-name">The Cat</span>
+            </p>
           </article>
           <article class="personality-card roommate-type-card fade-up" role="listitem" tabindex="0" aria-label="The Fox">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_fox.png?v=20260530a" width="1152" height="1152" alt="" loading="lazy" />
-            <p class="roommate-type-card-label" aria-hidden="true">The Fox</p>
+            <div class="roommate-type-card-frame">
+              <img src="assets/roommate-type-cards/RoommateTypeCard_fox.png?v=20260530a" width="1152" height="1152" alt="" loading="lazy" />
+            </div>
+            <p class="roommate-type-card-caption" aria-hidden="true">
+              <span class="roommate-type-card-caption-name">The Fox</span>
+            </p>
           </article>
           <article class="personality-card roommate-type-card fade-up d1" role="listitem" tabindex="0" aria-label="The Owl">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_owl.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
-            <p class="roommate-type-card-label" aria-hidden="true">The Owl</p>
+            <div class="roommate-type-card-frame">
+              <img src="assets/roommate-type-cards/RoommateTypeCard_owl.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
+            </div>
+            <p class="roommate-type-card-caption" aria-hidden="true">
+              <span class="roommate-type-card-caption-name">The Owl</span>
+            </p>
           </article>
           <article class="personality-card roommate-type-card fade-up d2" role="listitem" tabindex="0" aria-label="The Turtle">
-            <img src="assets/roommate-type-cards/RoommateTypeCard_turtle.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
-            <p class="roommate-type-card-label" aria-hidden="true">The Turtle</p>
+            <div class="roommate-type-card-frame">
+              <img src="assets/roommate-type-cards/RoommateTypeCard_turtle.png?v=20260529b" width="1152" height="1152" alt="" loading="lazy" />
+            </div>
+            <p class="roommate-type-card-caption" aria-hidden="true">
+              <span class="roommate-type-card-caption-name">The Turtle</span>
+            </p>
           </article>
         </div>
         </div>
@@ -1332,7 +1365,7 @@
         <h2 class="fade-up">Ready to meet your match?</h2>
         <p class="fade-up d1">Build your profile and connect with roommates who live like you do.</p>
         <div class="fade-up d2">
-          <button class="btn-primary btn-primary-lg">Start my profile</button>
+          <a href="quiz.html?start=1" class="btn-primary btn-primary-lg">Start my profile</a>
         </div>
       </div>
     </section>

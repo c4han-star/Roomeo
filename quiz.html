@@ -26,10 +26,11 @@
       --select-border: #ff9f70;
       --select-bg: #fff5ee;
       --select-ring: rgba(255, 106, 42, 0.32);
+      /* Radius — scrapbook scale (matches index.html: tabs 4px, buttons 6px, cards 8px) */
       --r-sm: 4px;
-      --r-md: 8px;
-      --r-lg: 16px;
-      --r-xl: 20px;
+      --r-md: 6px;
+      --r-lg: 8px;
+      --r-xl: 8px;
       --ease: cubic-bezier(0.4, 0, 0.2, 1);
       --split-max: 1080px;
       --quiz-footer-h: 108px;
@@ -87,7 +88,7 @@
     .quiz-art-panel {
       background: var(--bg);
       border-radius: var(--r-xl);
-      border: 1px solid var(--border-light);
+      border: none;
       min-height: var(--quiz-art-min-h);
       height: 100%;
       align-self: stretch;
@@ -122,14 +123,14 @@
       background: linear-gradient(160deg, #fafafa 0%, #f0f0f0 100%);
     }
     .quiz-art-fallback code {
-      font-size: 12px; background: rgba(0,0,0,0.06); padding: 2px 8px; border-radius: 4px;
+      font-size: 12px; background: rgba(0,0,0,0.06); padding: 2px 8px; border-radius: var(--r-sm);
     }
 
     .quiz-content-panel {
       position: relative;
       background: var(--bg);
       border-radius: var(--r-xl);
-      border: 1px solid var(--border-light);
+      border: none;
       padding: clamp(24px, 3.6vw, 40px);
       display: flex;
       flex-direction: column;
@@ -553,7 +554,7 @@
       flex-shrink: 0;
       background: var(--rfinal-surface);
       border: 1px solid var(--rfinal-line);
-      border-radius: 0 24px 24px 0;
+      border-radius: 0 var(--r-lg) var(--r-lg) 0;
       box-shadow: var(--rfinal-shadow-md);
     }
     .rfinal-back {
@@ -690,7 +691,7 @@
       overflow: hidden;
       background: var(--rfinal-espresso);
       border: none;
-      border-radius: 999px;
+      border-radius: var(--r-md);
       padding: 10px 0;
       margin: clamp(14px, 2.5vw, 20px) 0 0;
       flex-shrink: 0;
@@ -732,7 +733,7 @@
       --rfinal-col: 100%;
       --rfinal-gap: 16px;
       --rfinal-pad: 24px;
-      --rfinal-radius: 24px;
+      --rfinal-radius: var(--r-lg);
       --rfinal-title-size: clamp(20px, 1.55vw, 22px);
       --rfinal-quote-size: clamp(21px, 1.75vw, 24px);
       --rfinal-copy-size: 17px;
@@ -798,7 +799,7 @@
         grid-template-rows: auto auto;
       }
       .results-hero.rfinal-hero {
-        border-radius: 0 0 24px 24px;
+        border-radius: 0 0 var(--r-lg) var(--r-lg);
       }
       .rfinal-hero-character {
         min-height: clamp(220px, 52vw, 300px);
@@ -1008,7 +1009,7 @@
       color: var(--rfinal-ink);
       margin: 0;
       padding: 16px 18px;
-      border-radius: 12px;
+      border-radius: var(--r-lg);
       background: rgba(250, 246, 239, 0.65);
       border: 1px solid rgba(74, 50, 40, 0.08);
       border-left: 3px solid rgba(217, 108, 75, 0.45);
@@ -1116,7 +1117,7 @@
     }
     .rfinal-match {
       background: rgba(250, 246, 239, 0.65);
-      border-radius: 14px;
+      border-radius: var(--r-lg);
       padding: 14px 16px;
       display: flex;
       gap: 14px;
@@ -1133,7 +1134,7 @@
     .rfinal-match-thumb {
       width: 57px;
       height: 57px;
-      border-radius: 8px;
+      border-radius: var(--r-lg);
       border: none;
       background: #fff;
       object-fit: contain;
@@ -1311,7 +1312,7 @@
       margin-top: 12px;
       padding: 16px;
       border: 1px solid #e8e8e8;
-      border-radius: 12px;
+      border-radius: var(--r-lg);
       background: #fff;
     }
     .share-detail-hint {
@@ -1329,7 +1330,7 @@
     }
     .share-detail-actions .btn-back-quiz {
       min-height: 44px;
-      border-radius: 8px;
+      border-radius: var(--r-lg);
       border: 1px solid #e8e8e8;
       background: #fff;
       font-size: 16px;
@@ -1418,7 +1419,7 @@
       min-height: 52px;
       padding: 6px 8px 6px 18px;
       border: 1px solid var(--border-light);
-      border-radius: 999px;
+      border-radius: var(--r-md);
       background: var(--bg);
       transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
     }
@@ -1646,7 +1647,7 @@
       width: min(300px, 78vw);
       margin: 0 auto 20px;
       overflow: visible;
-      border-radius: 18px;
+      border-radius: var(--r-lg);
       filter: drop-shadow(0 16px 40px rgba(45, 27, 20, 0.14));
     }
     .share-story-card {
@@ -1698,7 +1699,7 @@
       display: inline-block;
       margin: 0;
       padding: 10px 22px;
-      border-radius: 999px;
+      border-radius: var(--r-md);
       background: rgba(255, 255, 255, 0.78);
       border: 1px solid rgba(74, 50, 40, 0.1);
       font-size: 24px;
@@ -1831,7 +1832,7 @@
       width: 220px;
       height: 220px;
       padding: 14px;
-      border-radius: 24px;
+      border-radius: var(--r-lg);
       background: #fff;
       border: 1px solid rgba(74, 50, 40, 0.1);
       box-shadow: 0 8px 24px rgba(45, 27, 20, 0.08);
@@ -1934,7 +1935,7 @@
       align-items: center;
       text-align: center;
       padding: 28px 20px 24px;
-      border-radius: 32px;
+      border-radius: var(--r-lg);
       background: rgba(255, 255, 255, 0.72);
       border: 1px solid rgba(74, 50, 40, 0.1);
       box-shadow: 0 10px 28px rgba(45, 27, 20, 0.06);
@@ -2011,7 +2012,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 24px;
+      border-radius: var(--r-lg);
       background: rgba(227, 238, 244, 0.65);
     }
     .compare-story-slot-q {
@@ -2085,7 +2086,7 @@
     .compare-result-panel {
       margin: 0 24px 28px;
       padding: 28px 24px 24px;
-      border-radius: 24px;
+      border-radius: var(--r-lg);
       background: linear-gradient(165deg, #fff 0%, #f3f8fb 100%);
       border: 1px solid rgba(74, 50, 40, 0.1);
       box-shadow: 0 12px 32px rgba(45, 27, 20, 0.08);
@@ -2142,7 +2143,7 @@
       display: inline-block;
       margin: 0 0 12px;
       padding: 8px 16px;
-      border-radius: 999px;
+      border-radius: var(--r-md);
       font-size: 14px;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -2171,7 +2172,7 @@
     }
     .compare-result-person {
       padding: 12px 10px;
-      border-radius: 16px;
+      border-radius: var(--r-lg);
       background: rgba(255, 255, 255, 0.85);
       border: 1px solid rgba(74, 50, 40, 0.08);
     }
@@ -2319,7 +2320,7 @@
       padding: 14px 16px;
       background: #f3f3f3;
       border: 1px dashed #e0e0e0;
-      border-radius: 8px;
+      border-radius: var(--r-lg);
       font-size: 15px;
       line-height: 1.58;
       color: #666;
@@ -2465,13 +2466,50 @@
     }
     .flow-lede { color: var(--text-2); font-size: 16px; margin-bottom: 32px; line-height: 1.55; max-width: 42em; }
 
+    /* Profile setup: no outer card chrome — same as page background, content centered */
     .flow-panel-inner:has(.profile-logistics-form),
     .flow-panel-inner:has(.profile-step2-form),
     .flow-panel-inner:has(.profile-trust-form),
-    .flow-panel-inner.profile-identity-shell {
-      background: #FCF8EF;
-      border: 0;
+    .flow-panel-inner.profile-identity-shell,
+    .flow-panel-inner:has(.final-onboarding) {
+      background: transparent;
+      border: none;
       box-shadow: none;
+      border-radius: 0;
+      max-width: min(720px, 100%);
+      margin-left: auto;
+      margin-right: auto;
+      padding: clamp(20px, 4vw, 36px) clamp(20px, 4vw, 28px) clamp(48px, 6vw, 64px);
+    }
+    .flow-panel-inner:has(.final-onboarding) {
+      max-width: min(720px, 100%);
+    }
+    .flow-panel-inner:has(.profile-logistics-form) > .flow-step-label,
+    .flow-panel-inner:has(.profile-logistics-form) > h1,
+    .flow-panel-inner:has(.profile-logistics-form) > .flow-lede,
+    .flow-panel-inner:has(.profile-logistics-form) > .profile-logistics-form,
+    .flow-panel-inner:has(.profile-step2-form) > .flow-step-label,
+    .flow-panel-inner:has(.profile-step2-form) > h1,
+    .flow-panel-inner:has(.profile-step2-form) > .flow-lede,
+    .flow-panel-inner:has(.profile-step2-form) > .profile-step2-form,
+    .flow-panel-inner:has(.profile-trust-form) > .flow-step-label,
+    .flow-panel-inner:has(.profile-trust-form) > h1,
+    .flow-panel-inner:has(.profile-trust-form) > .flow-lede,
+    .flow-panel-inner:has(.profile-trust-form) > .profile-trust-form,
+    .profile-identity-shell > .profile-identity-header,
+    .profile-identity-shell > .profile-identity-body,
+    .profile-identity-shell > .profile-identity-actions {
+      width: 100%;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .flow-panel-inner:has(.final-onboarding) > .flow-step-label,
+    .flow-panel-inner:has(.final-onboarding) > .final-onboarding {
+      width: 100%;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .profile-logistics-form,
@@ -2511,7 +2549,7 @@
       gap: clamp(18px, 2.5vw, 24px);
       padding: clamp(48px, 5vw, 60px) clamp(24px, 3.5vw, 32px) clamp(28px, 3.5vw, 36px);
       border: 0;
-      border-radius: 4px;
+      border-radius: var(--r-sm);
       background-color: var(--sb-folder-cream);
       background-image:
         var(--sb-grain-speck),
@@ -2541,7 +2579,7 @@
       background-color: inherit;
       background-image: var(--sb-grain-speck), var(--sb-grain-fine), var(--sb-grain-fiber);
       background-blend-mode: soft-light, multiply, multiply;
-      border-radius: 4px 10px 0 0;
+      border-radius: var(--r-sm) var(--r-md) 0 0;
       box-shadow: none;
       z-index: 1;
     }
@@ -2691,7 +2729,7 @@
     .preview-loc { font-size: 13px; color: var(--text-2); margin-bottom: 12px; }
     .preview-type {
       display: inline-block; font-size: 12px; font-weight: 600;
-      padding: 4px 10px; border-radius: 999px;
+      padding: 4px 10px; border-radius: var(--r-md);
       background: rgba(255, 106, 42, 0.12); color: #c2410c;
       margin-bottom: 12px;
     }
@@ -2721,7 +2759,7 @@
     .pref-chip {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 10px 14px; border: 1px solid var(--border-light);
-      border-radius: 999px; background: var(--bg);
+      border-radius: var(--r-md); background: var(--bg);
       font-family: inherit; font-size: 13px; font-weight: 600;
       color: var(--text-1); cursor: pointer; line-height: 1.25;
       transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
@@ -2806,13 +2844,13 @@
     }
     .idpv-vibe-pill {
       display: inline-block; font-size: 12px; font-weight: 700;
-      padding: 6px 12px; border-radius: 999px;
+      padding: 6px 12px; border-radius: var(--r-md);
       background: rgba(255, 106, 42, 0.14); color: #9a3412;
       text-transform: uppercase; letter-spacing: 0.06em;
     }
     .idpv-movein {
       display: inline-block; font-size: 12px; font-weight: 600;
-      padding: 6px 12px; border-radius: 999px;
+      padding: 6px 12px; border-radius: var(--r-md);
       background: var(--page-bg); color: var(--text-2);
       border: 1px solid var(--border-light);
     }
@@ -2838,7 +2876,7 @@
     }
     .idpv-tag {
       font-size: 11px; font-weight: 600; padding: 5px 10px;
-      border-radius: 999px; background: var(--bg);
+      border-radius: var(--r-md); background: var(--bg);
       border: 1px solid var(--border-light); color: var(--text-1);
     }
     .idpv-quiz-strip {
@@ -2852,7 +2890,7 @@
     .idpv-quiz-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .idpv-quiz-tag {
       font-size: 11px; font-weight: 600; padding: 4px 8px;
-      border-radius: 6px; background: var(--page-bg);
+      border-radius: var(--r-md); background: var(--page-bg);
       color: var(--text-2);
     }
     .idpv-warnings {
@@ -2875,7 +2913,7 @@
     .idpv-match-chip {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 12px; font-weight: 600; padding: 6px 10px;
-      border-radius: 999px; background: var(--bg);
+      border-radius: var(--r-md); background: var(--bg);
       border: 1px solid var(--border-light);
     }
     .idpv-living-style {
@@ -2941,7 +2979,7 @@
       background-size: 180px 180px, 280px 280px, 420px 420px, 100% 100%;
       background-repeat: repeat, repeat, repeat, no-repeat;
       border: 0;
-      border-radius: 6px;
+      border-radius: var(--r-md);
       overflow: visible;
       box-shadow:
         0 18px 36px -20px rgba(31, 24, 16, 0.28),
@@ -2959,7 +2997,7 @@
       background-color: inherit;
       background-image: var(--sb-grain-speck), var(--sb-grain-fine), var(--sb-grain-fiber);
       background-blend-mode: soft-light, multiply, multiply;
-      border-radius: 5px 8px 0 0;
+      border-radius: var(--r-sm) var(--r-md) 0 0;
       z-index: 1;
     }
     .src-folder-label {
@@ -2983,28 +3021,15 @@
     .src-polaroid {
       position: relative;
       flex-shrink: 0;
-      width: clamp(92px, 22vw, 104px);
+      width: clamp(112px, 28vw, 132px);
       margin: 0;
-      padding: 6px 6px 24px;
+      padding: 7px 7px 26px;
       background: #fff;
       box-shadow:
         0 5px 14px -5px rgba(31, 24, 16, 0.22),
         0 0 0 1px rgba(31, 24, 16, 0.05);
       transform: rotate(-2deg);
       z-index: 3;
-    }
-    .src-polaroid-clip {
-      position: absolute;
-      top: -22px;
-      left: 50%;
-      width: 32px;
-      height: 64px;
-      transform: translateX(-50%) rotate(-10deg);
-      background:
-        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='%23C6BBA8'/><stop offset='0.45' stop-color='%23F4ECDB'/><stop offset='1' stop-color='%238A7F6E'/></linearGradient></defs><path d='M26 6 Q 40 6 40 20 L 40 78 Q 40 90 26 90 Q 12 90 12 78 L 12 28 Q 12 20 21 20 Q 30 20 30 28 L 30 70' fill='none' stroke='url(%23g)' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / contain;
-      filter: drop-shadow(0 4px 5px rgba(31, 24, 16, 0.22));
-      pointer-events: none;
-      z-index: 4;
     }
     .src-polaroid-photo {
       aspect-ratio: 1;
@@ -3051,7 +3076,8 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 10px;
+      justify-content: center;
+      gap: 8px;
     }
     .src-kicker {
       margin: 0;
@@ -3063,9 +3089,22 @@
       text-align: right;
       color: rgba(31, 42, 68, 0.4);
     }
+    .src-type-lockup {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .src-type-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: clamp(8px, 2vw, 12px);
+      width: 100%;
+    }
     .src-type-name {
       margin: 0;
-      width: 100%;
       font-family: 'Fraunces', Georgia, serif;
       font-size: clamp(21px, 4.8vw, 26px);
       font-weight: 600;
@@ -3075,24 +3114,13 @@
       text-align: right;
       color: var(--src-navy);
     }
-    .src-type-char-wrap {
-      flex-shrink: 0;
-      width: 72px;
-      height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(31, 42, 68, 0.1);
-      border-radius: 14px;
-      box-shadow: 0 4px 14px -6px rgba(31, 24, 16, 0.16);
-    }
     .src-type-char {
-      width: 100%;
-      height: 100%;
+      width: clamp(50px, 13vw, 62px);
+      height: auto;
+      flex-shrink: 0;
       object-fit: contain;
       display: block;
+      filter: drop-shadow(0 3px 6px rgba(31, 24, 16, 0.14));
     }
     .src-meta {
       display: flex;
@@ -3124,7 +3152,7 @@
       font-size: 10px;
       font-weight: 600;
       padding: 5px 10px;
-      border-radius: 999px;
+      border-radius: var(--r-sm);
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid rgba(31, 42, 68, 0.1);
       color: var(--src-muted);
@@ -3163,7 +3191,7 @@
       align-items: center;
       justify-content: center;
       padding: 10px;
-      border-radius: 16px;
+      border-radius: var(--r-lg);
       background: rgba(255, 253, 248, 0.95);
       border: 1px solid rgba(74, 50, 40, 0.1);
       box-shadow: 0 6px 16px -8px rgba(31, 24, 16, 0.18);
@@ -3191,7 +3219,7 @@
     .identity-reveal-vibe-chip {
       display: inline-block;
       font-size: 12px; font-weight: 700;
-      padding: 6px 12px; border-radius: 999px;
+      padding: 6px 12px; border-radius: var(--r-md);
       background: rgba(217, 108, 75, 0.14);
       color: #9a3412;
       border: 1px solid rgba(217, 108, 75, 0.28);
@@ -3201,7 +3229,7 @@
       font-size: 15px; line-height: 1.55;
       color: #4A3D33; margin: 0;
       padding: 14px 16px 14px 18px;
-      border-radius: 8px;
+      border-radius: var(--r-lg);
       background:
         repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgba(31, 42, 68, 0.06) 27px, rgba(31, 42, 68, 0.06) 28px),
         rgba(255, 253, 246, 0.9);
@@ -3215,9 +3243,6 @@
     }
 
     /* Step 3 — identity page layout */
-    .profile-identity-shell {
-      max-width: 720px;
-    }
     .profile-identity-header {
       margin-bottom: clamp(8px, 2vw, 16px);
     }
@@ -3255,7 +3280,7 @@
       gap: 0;
       min-height: 140px;
       padding: 24px 20px;
-      border-radius: 12px;
+      border-radius: var(--r-lg);
       border: 2px dashed rgba(74, 50, 40, 0.22);
       background: rgba(255, 253, 248, 0.92);
       cursor: pointer;
@@ -3303,7 +3328,7 @@
     .identity-photo-drop.is-has-photo .identity-photo-sub { display: none; }
     .identity-photo-thumb {
       width: 56px; height: 56px;
-      border-radius: 12px;
+      border-radius: var(--r-lg);
       flex-shrink: 0;
       border: 2px solid #fff;
       box-shadow: 0 4px 12px rgba(31, 24, 16, 0.12);
@@ -3484,17 +3509,17 @@
       font-size: 11px;
       font-weight: 500;
       padding: 6px 11px;
-      border-radius: 6px;
+      border-radius: var(--r-md);
       color: var(--src-navy);
       background: rgba(255, 255, 255, 0.85);
       border: 1px solid rgba(31, 42, 68, 0.09);
     }
     .src-compat {
-      margin: 10px 0 0;
-      padding: 14px 16px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(31, 42, 68, 0.07);
+      margin: 14px 0 0;
+      padding: 14px 0 0;
+      border-top: 1px dashed rgba(31, 42, 68, 0.14);
+      background: none;
+      border-radius: 0;
     }
     .src-match-heading {
       font-size: 10px;
@@ -3512,14 +3537,11 @@
     }
     .src-match-copy { min-width: 0; }
     .src-match-char {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
+      width: clamp(36px, 9vw, 44px);
+      height: auto;
       flex-shrink: 0;
       object-fit: contain;
-      background: #fff;
-      border: 1px solid rgba(31, 42, 68, 0.1);
-      padding: 3px;
+      filter: drop-shadow(0 2px 4px rgba(31, 24, 16, 0.12));
     }
     .src-match-name {
       font-family: 'Fraunces', Georgia, serif;
@@ -3568,8 +3590,22 @@
       font-size: 14px; line-height: 1.5; color: var(--text-2); margin: 0;
     }
     .final-onboarding {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
-      align-items: start; text-align: left;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: clamp(28px, 4vw, 40px);
+      text-align: left;
+    }
+    .final-onboarding-card {
+      width: 100%;
+      max-width: min(380px, 100%);
+      margin: 0 auto clamp(8px, 2vw, 16px);
+    }
+    .final-onboarding-card .swipe-roommate-card {
+      margin: 0 auto;
+    }
+    .final-onboarding-main {
+      width: 100%;
     }
     .final-onboarding h1 { text-align: left; }
     .final-onboarding-sub {
@@ -3602,10 +3638,57 @@
     }
     .waitlist-form .form-field { text-align: left; }
     .waitlist-success {
-      padding: 24px; background: var(--page-bg); border-radius: var(--r-md);
-      border: 1px solid var(--border-light); margin-bottom: 24px;
+      margin: 4px 0 28px;
+      padding: clamp(28px, 5vw, 36px) clamp(20px, 4vw, 28px);
+      border-radius: var(--r-lg);
+      background:
+        linear-gradient(180deg, rgba(220, 252, 231, 0.92) 0%, rgba(240, 253, 244, 0.88) 100%);
+      border: 1px solid rgba(21, 128, 61, 0.28);
+      box-shadow: 0 8px 24px -12px rgba(21, 128, 61, 0.35);
+      text-align: center;
     }
-    .waitlist-success p { font-size: 16px; color: var(--text-1); }
+    .waitlist-success-icon {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+      color: #15803d;
+      box-shadow: 0 2px 8px rgba(21, 128, 61, 0.15);
+    }
+    .waitlist-success-icon svg {
+      width: 28px;
+      height: 28px;
+      display: block;
+    }
+    .waitlist-success-title {
+      margin: 0 0 10px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(22px, 4.5vw, 28px);
+      font-weight: 600;
+      font-style: italic;
+      line-height: 1.2;
+      color: #14532d;
+    }
+    .waitlist-success-msg {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text-1);
+    }
+    .waitlist-success-msg strong {
+      font-weight: 600;
+      color: #14532d;
+    }
+    .waitlist-success-hint {
+      margin: 12px 0 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-2);
+    }
 
     @media (max-width: 900px) {
       .quiz-split {
@@ -3629,7 +3712,6 @@
       .profile-split { grid-template-columns: 1fr; }
       .profile-split.identity-split { grid-template-columns: 1fr; }
       .pref-vibe-grid { grid-template-columns: 1fr; }
-      .final-onboarding { grid-template-columns: 1fr; }
       .pref-toggle-grid { grid-template-columns: 1fr; }
       .preview-panel { position: static; order: -1; }
     }
@@ -3734,7 +3816,7 @@
       background-size: auto, 280px 280px, 420px 420px, 100% 100% !important;
       background-repeat: repeat, repeat, repeat, no-repeat !important;
       border: 0 !important;
-      border-radius: 8px !important;
+      border-radius: var(--r-lg) !important;
       box-shadow: var(--sb-shadow-card);
       transform: rotate(-0.6deg);
       font-family: 'Fraunces', Georgia, serif !important;
@@ -3781,7 +3863,7 @@
       background-size: 180px 180px, 280px 280px, 420px 420px, 100% 100% !important;
       background-repeat: repeat, repeat, repeat, no-repeat !important;
       border: 0 !important;
-      border-radius: 6px !important;
+      border-radius: var(--r-md) !important;
       box-shadow: var(--sb-shadow-card);
       transform: rotate(0.4deg);
       font-family: 'Fraunces', Georgia, serif !important;
@@ -3832,7 +3914,7 @@
       background-size: 280px 280px, 420px 420px, 100% 100% !important;
       background-repeat: repeat, repeat, no-repeat !important;
       border: 1px dashed rgba(61, 42, 34, 0.25) !important;
-      border-radius: 10px !important;
+      border-radius: var(--r-md) !important;
       box-shadow: var(--sb-shadow-soft);
       list-style: none !important;
       transform: rotate(-0.3deg);
@@ -3858,7 +3940,7 @@
       margin: 0 auto !important;
       padding: clamp(76px, 8vw, 100px) clamp(32px, 4.5vw, 56px) clamp(44px, 5vw, 56px) !important;
       border: 0 !important;
-      border-radius: 4px !important;
+      border-radius: var(--r-sm) !important;
       background-color: var(--sb-folder-cream) !important;
       /* Real paper folder: layered grain + hairline seam, no bright edges. */
       background-image:
@@ -3899,7 +3981,7 @@
         var(--sb-grain-fine),
         var(--sb-grain-fiber);
       background-blend-mode: soft-light, multiply, multiply;
-      border-radius: 4px 10px 0 0;
+      border-radius: var(--r-sm) var(--r-md) 0 0;
       /* No shadows at the tab-to-body join — they are one sheet of paper */
       box-shadow: none;
       z-index: 1;
@@ -3985,6 +4067,25 @@
         var(--sb-tape-blue);
     }
 
+    /* Figma folder sticker decorations (decoration1–6) */
+    .results-page.rfinal-page .rfinal-body .rfinal-folder-deco {
+      position: absolute;
+      top: clamp(68px, 8.5%, 92px);
+      right: clamp(14px, 3.2%, 36px);
+      width: clamp(68px, 11vw, 104px);
+      height: auto;
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 6;
+      filter: drop-shadow(0 4px 8px rgba(31, 24, 16, 0.12));
+    }
+    .results-page.rfinal-page .rfinal-body .rfinal-sec:nth-of-type(1) .rfinal-folder-deco { transform: rotate(0.35deg); }
+    .results-page.rfinal-page .rfinal-body .rfinal-sec:nth-of-type(2) .rfinal-folder-deco { transform: rotate(-0.35deg); }
+    .results-page.rfinal-page .rfinal-body .rfinal-sec:nth-of-type(3) .rfinal-folder-deco { transform: rotate(0.35deg); }
+    .results-page.rfinal-page .rfinal-body .rfinal-sec:nth-of-type(4) .rfinal-folder-deco { transform: rotate(-0.35deg); }
+    .results-page.rfinal-page .rfinal-body .rfinal-sec:nth-of-type(5) .rfinal-folder-deco { transform: rotate(0.35deg); }
+    .results-page.rfinal-page .rfinal-body .rfinal-sec:nth-of-type(6) .rfinal-folder-deco { transform: rotate(-0.35deg); }
+
     .results-page.rfinal-page .rfinal-body .rfinal-sec-title {
       position: relative;
       font-family: 'Fraunces', Georgia, serif !important;
@@ -4030,7 +4131,7 @@
       top: 6px;
       width: 16px; height: 16px;
       border: 1.5px solid rgba(31, 42, 68, 0.5);
-      border-radius: 4px;
+      border-radius: var(--r-sm);
       background: rgba(252, 248, 239, 0.9);
       box-shadow: none;
       margin: 0 !important;
@@ -4067,7 +4168,7 @@
       background-size: 280px 280px, 420px 420px !important;
       background-repeat: repeat, repeat !important;
       border: 0 !important;
-      border-radius: 4px !important;
+      border-radius: var(--r-sm) !important;
       box-shadow: var(--sb-shadow-soft) !important;
       display: flex !important;
       flex-direction: column;
@@ -4123,7 +4224,7 @@
       text-transform: uppercase;
       white-space: nowrap;
       border: 2.5px solid currentColor;
-      border-radius: 3px;
+      border-radius: var(--r-sm);
       background: rgba(252, 248, 239, 0.55);
       box-shadow: none;
       transform: rotate(-9deg);
@@ -4432,6 +4533,9 @@
       .results-page.rfinal-page .rfinal-body .rfinal-sec:nth-of-type(2n)::after {
         display: none;
       }
+      .results-page.rfinal-page .rfinal-body .rfinal-folder-deco {
+        display: none;
+      }
       .results-page.rfinal-page .rfinal-body .rfinal-matches-stack > *:nth-child(3n+2) { margin-top: 0; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -4571,6 +4675,7 @@
             <ul class="rfinal-stats-list" id="res-stats"></ul>
 
             <section class="rfinal-sec" aria-labelledby="res-why-heading">
+              <img class="rfinal-folder-deco" src="assets/journal-props/deco-folder-1.svg" alt="" aria-hidden="true" decoding="async" width="91" height="107" />
               <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">1</span>
               </div>
@@ -4580,6 +4685,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-live-heading">
+              <img class="rfinal-folder-deco" src="assets/journal-props/deco-folder-2.svg" alt="" aria-hidden="true" decoding="async" width="100" height="81" />
               <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">2</span>
               </div>
@@ -4589,6 +4695,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-scenarios-heading">
+              <img class="rfinal-folder-deco" src="assets/journal-props/deco-folder-3.svg" alt="" aria-hidden="true" decoding="async" width="137" height="100" />
               <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">3</span>
               </div>
@@ -4598,6 +4705,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-others-heading">
+              <img class="rfinal-folder-deco" src="assets/journal-props/deco-folder-4.svg" alt="" aria-hidden="true" decoding="async" width="107" height="114" />
               <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">4</span>
               </div>
@@ -4607,6 +4715,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-matches-heading">
+              <img class="rfinal-folder-deco" src="assets/journal-props/deco-folder-5.svg" alt="" aria-hidden="true" decoding="async" width="107" height="111" />
               <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">5</span>
               </div>
@@ -4615,6 +4724,7 @@
             </section>
 
             <section class="rfinal-sec" aria-labelledby="res-ideal-heading">
+              <img class="rfinal-folder-deco" src="assets/journal-props/deco-folder-6.svg" alt="" aria-hidden="true" decoding="async" width="126" height="125" />
               <div class="rfinal-badge" aria-hidden="true">
                 <span class="rfinal-badge-digit">6</span>
               </div>
@@ -5177,8 +5287,11 @@
         <p class="flow-step-label">Setup · 5 of 5 · Join &amp; share</p>
         <div class="final-onboarding">
           <div class="final-onboarding-main">
-            <h1>Save your profile</h1>
-            <p class="final-onboarding-sub">Join the waitlist — we'll match you using housing filters + living compatibility.</p>
+            <h1 id="waitlist-heading">Save your profile</h1>
+            <p class="final-onboarding-sub" id="waitlist-lede">Join the waitlist — we'll match you using housing filters + living compatibility.</p>
+            <aside class="final-onboarding-card" id="waitlist-profile-card" aria-label="Final roommate card">
+              <article class="swipe-roommate-card" id="roommate-card-final"></article>
+            </aside>
             <form id="form-waitlist" class="waitlist-form">
               <div class="form-field">
                 <label for="pf-name">Name <span aria-hidden="true">*</span></label>
@@ -5192,8 +5305,13 @@
                 <button type="submit" class="btn btn-continue" id="btn-waitlist-submit">Join waitlist →</button>
               </div>
             </form>
-            <div id="waitlist-success" class="waitlist-success hidden">
-              <p>You're in. Your roommate profile is saved — watch your inbox for matches.</p>
+            <div id="waitlist-success" class="waitlist-success hidden" role="status" aria-live="polite" tabindex="-1">
+              <div class="waitlist-success-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <h2 class="waitlist-success-title">You're on the waitlist!</h2>
+              <p class="waitlist-success-msg">Your roommate profile is saved. We'll email you at <strong id="waitlist-success-email"></strong> when matching opens.</p>
+              <p class="waitlist-success-hint">Use the share options below to send your result or compare with a friend.</p>
             </div>
             <div class="best-match-panel" id="best-match-panel">
               <h3>Best matched with</h3>
@@ -5219,9 +5337,6 @@
             </section>
             <p style="margin-top:20px"><a href="index.html#types" class="btn-text" style="text-decoration:underline;">Explore roomie types</a></p>
           </div>
-          <aside aria-label="Final roommate card">
-            <article class="swipe-roommate-card" id="roommate-card-final"></article>
-          </aside>
         </div>
       </div>
     </div>
@@ -5574,7 +5689,8 @@
       p1: 'roomeo_profile_step1',
       p2: 'roomeo_profile_step2',
       p3: 'roomeo_profile_step3_trust',
-      compareInvite: 'roomeo_compare_invite'
+      compareInvite: 'roomeo_compare_invite',
+      waitlistJoined: 'roomeo_waitlist_joined'
     };
 
     function setQuizView(view) {
@@ -6670,6 +6786,7 @@
         sessionStorage.removeItem(STORAGE.p1);
         sessionStorage.removeItem(STORAGE.p2);
         sessionStorage.removeItem(STORAGE.p3);
+        sessionStorage.removeItem(STORAGE.waitlistJoined);
       } catch (_) {}
       setQuizFlowFooterVisible(false);
       setQuizIllustration(-1);
@@ -8233,7 +8350,7 @@
       const metaLines = buildCardMetaLines(logistics);
       const photoInitial = name ? name.charAt(0).toUpperCase() : '?';
       const photoHtml = profilePhotoDataUrl
-        ? `<img src="${profilePhotoDataUrl}" alt="" width="96" height="96" />`
+        ? `<img src="${profilePhotoDataUrl}" alt="" width="120" height="120" />`
         : `<span class="src-polaroid-placeholder" aria-hidden="true">${escHtml(photoInitial)}</span>`;
 
       let compatHtml = '';
@@ -8248,7 +8365,7 @@
             <div class="src-compat">
               <p class="src-match-heading">Best roommate match</p>
               <div class="src-match-type-row">
-                ${matchCharSrc ? `<img class="src-match-char" src="${escHtml(matchCharSrc)}" alt="" width="40" height="40" />` : ''}
+                ${matchCharSrc ? `<img class="src-match-char" src="${escHtml(matchCharSrc)}" alt="" width="44" height="44" />` : ''}
                 <div class="src-match-copy">
                   <p class="src-match-name">${escHtml(mt.name)}</p>
                   <p class="src-match-score">${showScore ? escHtml(top.score + '% · ' + top.label) : escHtml(top.label)}</p>
@@ -8267,15 +8384,18 @@
       ).join('');
 
       const typeBlockHtml = t
-        ? `<p class="src-kicker">Your type</p>
-            ${charSrc ? `<div class="src-type-char-wrap"><img class="src-type-char" src="${escHtml(charSrc)}" alt="" width="52" height="52" /></div>` : ''}
-            <p class="src-type-name">${escHtml(t.name)}</p>`
+        ? `<div class="src-type-lockup">
+            <p class="src-kicker">Your type</p>
+            <div class="src-type-row">
+              ${charSrc ? `<img class="src-type-char" src="${escHtml(charSrc)}" alt="" width="62" height="62" />` : ''}
+              <p class="src-type-name">${escHtml(t.name)}</p>
+            </div>
+          </div>`
         : '';
       root.innerHTML = `
         <p class="src-folder-label">Roomie profile</p>
         <div class="src-hero">
           <figure class="src-polaroid">
-            <div class="src-polaroid-clip" aria-hidden="true"></div>
             <div class="src-polaroid-photo">${photoHtml}</div>
             ${name ? `<figcaption class="src-polaroid-caption">${escHtml(name)}</figcaption>` : ''}
           </figure>
@@ -8430,21 +8550,58 @@
       window.scrollTo(0, 0);
     }
 
+    function resetWaitlistFormState() {
+      const form = el('form-waitlist');
+      const success = el('waitlist-success');
+      const heading = el('waitlist-heading');
+      const lede = el('waitlist-lede');
+      const profileCard = el('waitlist-profile-card');
+      if (success) success.classList.add('hidden');
+      if (form) form.classList.remove('hidden');
+      if (profileCard) profileCard.classList.remove('hidden');
+      if (heading) heading.textContent = 'Save your profile';
+      if (lede) lede.textContent = "Join the waitlist — we'll match you using housing filters + living compatibility.";
+    }
+
+    function applyWaitlistSuccessState(email) {
+      const form = el('form-waitlist');
+      const success = el('waitlist-success');
+      const heading = el('waitlist-heading');
+      const lede = el('waitlist-lede');
+      const emailEl = el('waitlist-success-email');
+      const profileCard = el('waitlist-profile-card');
+      if (form) form.classList.add('hidden');
+      if (profileCard) profileCard.classList.add('hidden');
+      if (success) {
+        success.classList.remove('hidden');
+        if (emailEl) emailEl.textContent = email || 'your inbox';
+        requestAnimationFrame(() => {
+          success.focus({ preventScroll: false });
+          success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      }
+      if (heading) heading.textContent = "You're on the waitlist!";
+      if (lede) lede.textContent = 'Your profile is saved — share or compare with a friend while you wait.';
+      try { sessionStorage.setItem(STORAGE.waitlistJoined, '1'); } catch (_) {}
+    }
+
     function showWaitlist() {
       el('quiz-split-wrap').classList.add('hidden');
       el('quiz-results').classList.add('hidden');
       resetResultsPrintAnimation();
       ['flow-profile-1', 'flow-profile-2', 'flow-profile-3', 'flow-profile-4'].forEach((id) => el(id).classList.add('hidden'));
       el('flow-waitlist').classList.remove('hidden');
-      const form = el('form-waitlist');
-      const success = el('waitlist-success');
-      if (success) success.classList.add('hidden');
-      if (form) form.classList.remove('hidden');
+      let joined = false;
+      let savedEmail = '';
       try {
+        joined = sessionStorage.getItem(STORAGE.waitlistJoined) === '1';
         const p1 = JSON.parse(sessionStorage.getItem(STORAGE.p1) || '{}');
         if (p1.name && el('pf-name')) el('pf-name').value = p1.name;
         if (p1.email && el('waitlist-email')) el('waitlist-email').value = p1.email;
+        savedEmail = p1.email || '';
       } catch (_) {}
+      if (joined) applyWaitlistSuccessState(savedEmail);
+      else resetWaitlistFormState();
       renderRoommateCard('roommate-card-final');
       renderBestMatches();
       updateSharePreviewBoxes();
@@ -9033,9 +9190,8 @@
         p1.email = email;
         sessionStorage.setItem(STORAGE.p1, JSON.stringify(p1));
       } catch (_) {}
-      el('form-waitlist').classList.add('hidden');
-      el('waitlist-success').classList.remove('hidden');
-      renderRoommateCard('roommate-card-final');
+      applyWaitlistSuccessState(email);
+      window.scrollTo(0, 0);
     });
 
     const sharePillEmail = el('share-pill-email');
