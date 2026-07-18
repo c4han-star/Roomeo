@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyRoomeo — Roomie Type Quiz</title>
+  <title>MyRoomeo — My Roomie Test</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -4576,7 +4576,7 @@
 
         <div class="quiz-content-panel">
           <div id="quiz-intro" class="quiz-intro">
-            <h1>Roomie Type Quiz</h1>
+            <h1>My Roomie Test</h1>
             <p class="lede">Answer 12 quick questions about how you live at home. We’ll suggest a roomie type based on your habits — about two minutes.</p>
             <div class="quiz-meta">
               <div><span>12</span> questions</div>
@@ -4584,7 +4584,7 @@
               <div><span>~2 min</span> estimated</div>
             </div>
             <div class="quiz-actions-stack intro-stack">
-              <button type="button" class="btn btn-continue" id="btn-start">Start the survey</button>
+              <button type="button" class="btn btn-continue" id="btn-start">Start the Roomie Test</button>
             </div>
           </div>
 
@@ -5529,157 +5529,158 @@
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
+    // Roomie Test v2 — source: Figma page "Roomie test", node 434:972.
     const QUIZ = [
       {
-        section: '🧼 A. Cleanliness & Initiative',
-        q: "It's 2 a.m., you're dying of thirst, and there's no water left. The only cold thing in the fridge is your roommate's unopened Sprite. They're asleep. What are you most likely to do?",
+        section: '🧼 A. Cleanliness & Responsibility',
+        q: 'After cooking or eating, what do your dishes usually look like within the hour?',
         opts: [
-          "Absolutely not. I'd rather dehydrate in peace than touch someone else's drink without asking.",
-          "I'm texting first. If I have to suffer while waiting, so be it.",
-          "If we already have that kind of sharing vibe, I'm taking it and replacing it later.",
-          "I'm drinking it now and dealing with the consequences later."
+          'Spotless, I wipe as I go.',
+          'Clean within the hour.',
+          'Clean by tomorrow.',
+          "Crime scene, don't @ me."
         ],
-        votes: [['owl', 'beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
+        votes: [['beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
       },
       {
-        section: '🧼 A. Cleanliness & Initiative',
-        q: 'You get home exhausted, make the easiest meal possible, eat, and all you want to do is collapse. Your dishes are sitting in the sink. What are you most likely to do?',
+        section: '🧼 A. Cleanliness & Responsibility',
+        q: "Your roomie's leftovers have been growing something in the fridge for weeks. You:",
         opts: [
-          "I wash them right away because I refuse to wake up and see that mess staring back at me.",
-          "I rinse or soak them and deal with them later that night. I'm tired, not feral.",
-          "I leave them for later, but they're still getting done today.",
-          'Those dishes and I will reconnect when the universe allows.'
+          "Toss it myself, can't take it anymore.",
+          'Send a “hey, might be time” nudge.',
+          'Let it become a science experiment, not my business.',
+          "Honestly didn't notice, fridge chaos is normal."
         ],
-        votes: [['beaver'], ['owl', 'fox'], ['turtle'], ['cat']]
+        votes: [['beaver'], ['owl', 'bunny'], ['turtle', 'fox'], ['cat']]
       },
       {
-        section: '🧼 A. Cleanliness & Initiative',
-        q: "The trash is overflowing, it smells a little evil, and nobody has taken it out yet. What's your move?",
+        section: '🧼 A. Cleanliness & Responsibility',
+        q: 'Forgot your trash week. You:',
         opts: [
-          'I take it out immediately because why are we living like this.',
-          "I'll do it, but I'm definitely thinking this should not have gotten this far in the first place.",
-          'I wait a bit and see if someone else handles it before I step in.',
-          "If it's not directly messing with me, I'm not rushing to save the house."
+          'Immediately go do it, mortified.',
+          'Do it as soon as someone mentions it.',
+          "I'm barely home, can someone else grab it?",
+          "It'll get taken out eventually, by someone."
         ],
-        votes: [['beaver'], ['owl', 'bunny'], ['fox', 'turtle'], ['cat']]
+        votes: [['beaver'], ['owl', 'turtle'], ['cat', 'fox'], ['bunny', 'cat']]
       },
       {
-        section: '🎉 B. Social Energy & Guests',
-        q: "You brought someone over, and your roommate gets home way earlier than expected while you're having an intimate moment. What feels most like you?",
+        section: '🧼 A. Cleanliness & Responsibility',
+        q: 'You just cooked something with a strong smell — fish, garlic, whatever. You:',
         opts: [
-          "I'd be spiritually leaving my body. This is exactly why I'd rather give a heads-up first.",
-          "I'm texting my roommate immediately, apologizing, and trying to smooth it over.",
-          "It's awkward, sure, but it's not the end of the world if it's a one-time thing and not causing chaos.",
-          "It's my room. Unless my roommate has an actual issue, I'm not turning this into a whole scandal."
+          'Window open, fan on, maybe a diffuser — sorted before you even started.',
+          "Crack a window once it's done, that's enough.",
+          "Don't really think about it, smell fades eventually.",
+          "Didn't even register it as a thing."
         ],
-        votes: [['owl'], ['beaver', 'turtle'], ['fox'], ['bunny', 'cat']]
+        votes: [['beaver'], ['owl', 'turtle'], ['fox'], ['bunny', 'cat']]
       },
       {
-        section: '🎉 B. Social Energy & Guests',
-        q: "It's Friday night. You and your roommate are both home, no one has work tomorrow, and the apartment vibe is up for grabs. What sounds most like your ideal?",
+        section: '🎉 B. Guests & Social Energy',
+        q: 'Bringing someone home to stay the night — how much notice do you give?',
         opts: [
-          'Separate corners, separate peace. We can coexist quietly and beautifully.',
-          'A cozy little catch-up, then everyone disappears and recharges.',
-          "I'm down to hang if it happens naturally, but I'm not forcing a bonding moment.",
-          'I want the place to actually feel social and alive.'
+          'Full group chat, 24 hours ahead.',
+          'Quick “hey, heads up” the same day.',
+          "They'll find out when they find out.",
+          "What's a notice?"
         ],
-        votes: [['owl'], ['turtle'], ['beaver', 'fox'], ['bunny']]
+        votes: [['beaver', 'owl'], ['turtle', 'fox'], ['bunny'], ['cat']]
       },
       {
-        section: '🎉 B. Social Energy & Guests',
-        q: "It's after 10:30 p.m. Someone's on FaceTime, music is low, and the apartment is definitely not dead quiet. What feels most like you?",
+        section: '🎉 B. Guests & Social Energy',
+        q: 'You want to have a few friends over to hang out. You:',
         opts: [
-          'No. Nighttime means quiet. That is the policy in my soul.',
-          "I like it mostly quiet, but I'm not going to lose it over normal human activity.",
-          "Depends what's going on and how often it happens.",
-          "I'm really not pressed about late-night noise unless it's truly obnoxious."
+          'Ask the group chat first, wait for a yes.',
+          "Give a heads up in advance, don't wait for pushback.",
+          "Just have them over, it's my house too.",
+          'Full-on parties whenever, roomies will deal.'
         ],
-        votes: [['owl', 'turtle'], ['beaver', 'turtle'], ['fox'], ['bunny', 'cat']]
+        votes: [['beaver', 'owl'], ['turtle', 'fox'], ['bunny'], ['cat']]
       },
       {
-        section: '🧭 C. Structure vs Flexibility',
-        q: "Every morning, your roommate is in the bathroom forever right when you need it most, and it's starting to ruin your whole day. What do you do?",
+        section: '🕰️ C. Routine & Reliability',
+        q: 'Your ideal bedtime on a weeknight:',
         opts: [
-          "I'm saying something immediately because this has officially gotten ridiculous.",
-          'I bring it up nicely after it keeps happening, because clearly this is now a pattern.',
-          "I start getting in there before them and taking my sweet time too. Since we're clearly playing games now.",
-          "I suggest an actual bathroom rule or time limit because this house is not doing morning warfare every day."
+          '9–10 p.m., grandma era.',
+          '11 p.m.–12 a.m., respectable.',
+          '1–2 a.m., night owl and proud.',
+          'Time is a construct.'
         ],
-        votes: [['beaver'], ['turtle', 'owl'], ['fox', 'cat'], ['owl', 'beaver']]
+        votes: [['turtle', 'beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
       },
       {
-        section: '🧭 C. Structure vs Flexibility',
-        q: "The sink is messy, guests keep popping up, and nobody agrees on quiet hours. What kind of system feels right to you?",
+        section: '🕰️ C. Routine & Reliability',
+        q: "When rent or bills are due, you're usually:",
         opts: [
-          'No giant rulebook. We deal with things as they come up.',
-          'We should have general rules, but people need to read the room.',
-          "Basic house rules are good, as long as there's flexibility when people communicate.",
-          'Clear rules. Consistent rules. The rules stay the rules.'
+          "Paid early, before it's even due.",
+          'Paid on time, no issues.',
+          'Cutting it close, but it happens.',
+          'Late more often than not, with a story attached.'
         ],
-        votes: [['fox', 'cat'], ['bunny'], ['turtle'], ['owl', 'beaver']]
+        votes: [['beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
       },
       {
-        section: '🧭 C. Structure vs Flexibility',
-        q: "Your roommate's habits are pretty different from yours. What feels most like your instinct?",
+        section: '🕰️ C. Routine & Reliability',
+        q: 'Conflict pops up with a roomie. Your move:',
         opts: [
-          "I'm usually willing to adjust if it keeps the peace.",
-          'I can adjust, but only if we actually talk clearly about expectations.',
-          "I'd rather we both meet in the middle instead of one person doing all the bending.",
-          "I prefer one shared standard so nobody's just freelancing the house rules."
+          'Address it immediately, rip the band-aid.',
+          'Give it a day, then bring it up calmly.',
+          'Avoid it until it fixes itself.',
+          'Vent to everyone except them first.'
         ],
-        votes: [['bunny'], ['owl'], ['turtle', 'fox'], ['beaver']]
+        votes: [['beaver', 'fox'], ['owl', 'turtle'], ['cat'], ['bunny', 'fox']]
       },
       {
-        section: '🧭 C. Structure vs Flexibility',
-        q: 'If your roommate had to describe living with you…\n\nWhich of these would sound the most accurate?',
+        section: '🏠 D. Presence & Connection',
+        q: "It's Saturday, no major plans. Where are you most likely to be?",
         opts: [
-          '"They kind of have their own system, and whether you asked for it or not, the apartment usually ends up running more their way."',
-          '"They\'re pretty solid to live with. They\'re around, they do their part, and the place feels more settled with them there."',
-          '"They\'re not super rigid. They kind of go with the flow and figure things out as they go."',
-          '"They mostly stay in their own lane and don\'t really get involved unless something becomes their problem."'
+          'Home for most of the day, probably using the shared spaces.',
+          'In and out, but home for a decent part of the day.',
+          'Out most of the day, back mainly to eat or sleep.',
+          'Barely home, basically an apartment guest who pays rent.'
         ],
-        votes: [['beaver', 'owl'], ['turtle'], ['fox', 'bunny'], ['cat']]
+        votes: [['turtle', 'beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
       },
       {
-        section: '🏠 D. Presence & Shared-Home Engagement',
-        q: "It's Saturday. Where are you most likely at?",
+        section: '🏠 D. Presence & Connection',
+        q: 'You need laundry detergent and your roomie has some. You:',
         opts: [
-          'Honestly, at home for most of the day.',
-          'In and out, but home pretty regularly.',
-          'Out a lot and popping back in between things.',
-          'Barely home long enough to count.'
+          'Ask first, always.',
+          'Use it, replace it after.',
+          'Use it, mean to mention it.',
+          "Use whatever's around, no big deal."
         ],
-        votes: [['turtle'], ['beaver', 'owl'], ['bunny', 'fox'], ['cat']]
+        votes: [['beaver'], ['owl', 'turtle'], ['fox'], ['bunny', 'cat']]
       },
       {
-        section: '🏠 D. Presence & Shared-Home Engagement',
-        q: "You and your roommate each have your own section in the fridge. One day, you open it and notice something from your roommate's side has leaked and is getting onto your stuff and the shared shelves. What do you do?",
+        section: '🏠 D. Presence & Connection',
+        q: "You're eating dinner and your roomie walks into the kitchen or living room. You:",
         opts: [
-          "I clean it up right away and tell them, because once it starts affecting the whole fridge, it's everybody's problem.",
-          'I text them and tell them to handle it, because it came from their side and they should deal with it.',
-          'I move my stuff, contain the mess if I need to, and wait a bit to see if they take care of it.',
-          "I'm not touching their biohazard unless it starts directly ruining my stuff."
+          'Invite them to sit, actual conversation happens.',
+          'Quick chat, catch up a bit, then back to it.',
+          'Quick hi, back to your own thing.',
+          'Headphones stay on, minimal interaction.'
         ],
-        votes: [['beaver', 'turtle'], ['owl', 'beaver'], ['fox', 'turtle'], ['cat']]
+        votes: [['beaver', 'bunny'], ['turtle', 'fox'], ['owl'], ['cat']]
       }
     ];
 
-    /** One file per question under assets/quiz/questions/ (mixed .png / .jpg ok). */
+    /** One local PNG per question under assets/quiz/questions/. */
     const QUIZ_QUESTION_ART = [
       'assets/quiz/questions/q1.png',
       'assets/quiz/questions/q2.png',
       'assets/quiz/questions/q3.png',
-      'assets/quiz/questions/q4.jpg',
+      'assets/quiz/questions/q4.png',
       'assets/quiz/questions/q5.png',
       'assets/quiz/questions/q6.png',
       'assets/quiz/questions/q7.png',
       'assets/quiz/questions/q8.png',
       'assets/quiz/questions/q9.png',
-      'assets/quiz/questions/q10.jpg',
+      'assets/quiz/questions/q10.png',
       'assets/quiz/questions/q11.png',
       'assets/quiz/questions/q12.png'
     ];
-    const QUIZ_ART_Q = '?v=20260418';
+    const QUIZ_ART_Q = '?v=20260718';
     const QUIZ_INTRO_COVER = 'assets/quiz/questions/quiz cover.png';
 
     const STORAGE = {
@@ -6715,7 +6716,7 @@
     function setQuizIllustration(questionIndex) {
       if (questionIndex < 0) {
         artPanel.classList.remove('is-empty');
-        artImg.alt = 'Roomie Type Quiz cover illustration';
+        artImg.alt = 'My Roomie Test cover illustration';
         artImg.src = encodeURI(QUIZ_INTRO_COVER) + QUIZ_ART_Q;
         return;
       }
