@@ -5540,7 +5540,7 @@
           'Clean by tomorrow.',
           "Crime scene, don't @ me."
         ],
-        votes: [['beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
+        votes: [['beaver'], ['owl', 'fox'], ['turtle'], ['cat']]
       },
       {
         section: '🧼 A. Cleanliness & Responsibility',
@@ -5562,7 +5562,7 @@
           "I'm barely home, can someone else grab it?",
           "It'll get taken out eventually, by someone."
         ],
-        votes: [['beaver'], ['owl', 'turtle'], ['cat', 'fox'], ['bunny', 'cat']]
+        votes: [['beaver', 'owl'], ['turtle', 'bunny'], ['fox'], ['cat']]
       },
       {
         section: '🧼 A. Cleanliness & Responsibility',
@@ -5573,7 +5573,7 @@
           "Don't really think about it, smell fades eventually.",
           "Didn't even register it as a thing."
         ],
-        votes: [['beaver'], ['owl', 'turtle'], ['fox'], ['bunny', 'cat']]
+        votes: [['owl', 'turtle'], ['beaver'], ['fox'], ['bunny']]
       },
       {
         section: '🎉 B. Guests & Social Energy',
@@ -5584,7 +5584,7 @@
           "They'll find out when they find out.",
           "What's a notice?"
         ],
-        votes: [['beaver', 'owl'], ['turtle', 'fox'], ['bunny'], ['cat']]
+        votes: [['beaver'], ['owl', 'turtle'], ['fox'], ['bunny', 'cat']]
       },
       {
         section: '🎉 B. Guests & Social Energy',
@@ -5595,7 +5595,7 @@
           "Just have them over, it's my house too.",
           'Full-on parties whenever, roomies will deal.'
         ],
-        votes: [['beaver', 'owl'], ['turtle', 'fox'], ['bunny'], ['cat']]
+        votes: [['owl', 'turtle'], ['beaver'], ['bunny'], ['fox', 'cat']]
       },
       {
         section: '🕰️ C. Routine & Reliability',
@@ -5606,7 +5606,7 @@
           '1–2 a.m., night owl and proud.',
           'Time is a construct.'
         ],
-        votes: [['turtle', 'beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
+        votes: [['beaver'], ['owl', 'turtle'], ['fox'], ['bunny', 'cat']]
       },
       {
         section: '🕰️ C. Routine & Reliability',
@@ -5617,7 +5617,7 @@
           'Cutting it close, but it happens.',
           'Late more often than not, with a story attached.'
         ],
-        votes: [['beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
+        votes: [['beaver'], ['owl', 'bunny'], ['turtle', 'fox'], ['cat']]
       },
       {
         section: '🕰️ C. Routine & Reliability',
@@ -5628,7 +5628,7 @@
           'Avoid it until it fixes itself.',
           'Vent to everyone except them first.'
         ],
-        votes: [['beaver', 'fox'], ['owl', 'turtle'], ['cat'], ['bunny', 'fox']]
+        votes: [['beaver'], ['owl', 'bunny'], ['turtle', 'fox'], ['cat']]
       },
       {
         section: '🏠 D. Presence & Connection',
@@ -5639,7 +5639,7 @@
           'Out most of the day, back mainly to eat or sleep.',
           'Barely home, basically an apartment guest who pays rent.'
         ],
-        votes: [['turtle', 'beaver'], ['owl', 'turtle'], ['fox', 'bunny'], ['cat']]
+        votes: [['beaver'], ['owl', 'bunny'], ['turtle', 'fox'], ['cat']]
       },
       {
         section: '🏠 D. Presence & Connection',
@@ -5650,7 +5650,7 @@
           'Use it, mean to mention it.',
           "Use whatever's around, no big deal."
         ],
-        votes: [['beaver'], ['owl', 'turtle'], ['fox'], ['bunny', 'cat']]
+        votes: [['beaver'], ['owl', 'bunny'], ['turtle', 'fox'], ['cat']]
       },
       {
         section: '🏠 D. Presence & Connection',
@@ -5661,7 +5661,7 @@
           'Quick hi, back to your own thing.',
           'Headphones stay on, minimal interaction.'
         ],
-        votes: [['beaver', 'bunny'], ['turtle', 'fox'], ['owl'], ['cat']]
+        votes: [['beaver', 'owl'], ['turtle', 'bunny'], ['fox', 'cat'], ['fox', 'bunny']]
       }
     ];
 
@@ -6180,7 +6180,7 @@
       return 'Moderate';
     }
 
-    /** Weighted animal votes from each option’s tag list (1 ÷ number of tags per pick). */
+    /** Each mapped type receives one full point; multi-type answers award one point to every mapped type. */
     function resolveType(ans) {
       const tally = { beaver: 0, cat: 0, owl: 0, fox: 0, bunny: 0, turtle: 0 };
       for (let qi = 0; qi < QUIZ.length; qi++) {
@@ -6188,10 +6188,9 @@
         const row = QUIZ[qi];
         if (ch == null || ch === undefined || !row.votes || !row.votes[ch]) continue;
         const tags = row.votes[ch];
-        const w = 1 / tags.length;
         for (let ti = 0; ti < tags.length; ti++) {
           const t = tags[ti];
-          if (Object.prototype.hasOwnProperty.call(tally, t)) tally[t] += w;
+          if (Object.prototype.hasOwnProperty.call(tally, t)) tally[t] += 1;
         }
       }
       const tieOrder = ['beaver', 'owl', 'turtle', 'fox', 'bunny', 'cat'];
