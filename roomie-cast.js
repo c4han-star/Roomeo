@@ -10,12 +10,12 @@ if (host) {
   const sloganNode = host.querySelector('[data-cast-slogan]');
   const counter = host.querySelector('[data-cast-counter]');
   const roles = [
-    { slug:'cat', name:'The Cat', slogan:"I don't live here. I'm just a recurring guest in your life.", window:'rect', size:[3,2.9] },
-    { slug:'owl', name:'The Owl', slogan:"I'm not being rude, I'm just practicing the fine art of existing without being perceived.", window:'rect', size:[3,2.9] },
-    { slug:'beaver', name:'The Beaver', slogan:"I'm not controlling, I'm just the only one here with a frontal lobe.", window:'arch', size:[3,3.1] },
-    { slug:'bunny', name:'The Bunny', slogan:"Living alone is for people with boring secrets. Anyway, is it okay if 8 people come over for a few drinks?", window:'rect', size:[3,2.9] },
-    { slug:'fox', name:'The Fox', slogan:"I know I haven't done my dishes, but look at this vintage lamp I found on the sidewalk!", window:'arch', size:[3,3.1] },
-    { slug:'turtle', name:'The Turtle', slogan:"I'm not stuck at home. I'm thriving in my ecosystem. Also, is that my specialized mug you're touching?", window:'rect', size:[3,2.9] },
+    { slug:'cat', name:'The Cat', slogan:"I don't live here. I'm just a recurring guest in your life.", window:'rect', size:[2.62,2.42] },
+    { slug:'owl', name:'The Owl', slogan:"I'm not being rude, I'm just practicing the fine art of existing without being perceived.", window:'rect', size:[2.62,2.42] },
+    { slug:'beaver', name:'The Beaver', slogan:"I'm not controlling, I'm just the only one here with a frontal lobe.", window:'arch', size:[2.62,2.58] },
+    { slug:'bunny', name:'The Bunny', slogan:"Living alone is for people with boring secrets. Anyway, is it okay if 8 people come over for a few drinks?", window:'rect', size:[2.62,2.42] },
+    { slug:'fox', name:'The Fox', slogan:"I know I haven't done my dishes, but look at this vintage lamp I found on the sidewalk!", window:'arch', size:[2.62,2.58] },
+    { slug:'turtle', name:'The Turtle', slogan:"I'm not stuck at home. I'm thriving in my ecosystem. Also, is that my specialized mug you're touching?", window:'rect', size:[2.62,2.42] },
   ];
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
@@ -31,38 +31,34 @@ if (host) {
   const house = new THREE.Group(); house.position.y = -3.6; scene.add(house);
   const mat = (color, rough=.9) => new THREE.MeshStandardMaterial({ color, roughness:rough, metalness:0 });
   // Let the facade disappear into the page; the windows and roof define the house.
-  const wallMat = new THREE.MeshBasicMaterial({color:'#f2d8c6',toneMapped:false});
-  const insideMat = mat('#f8e6d8',.94);
-  const sillMat = mat('#cf8468',.78);
-  const frameMat = mat('#b96f59',.8);
-  const roofMat = mat('#df6845',.74);
+  const wallMat = new THREE.MeshBasicMaterial({color:'#eadbcf',toneMapped:false});
+  const sillMat = mat('#bd8977',.82);
+  const frameMat = mat('#a97061',.84);
+  const roofMat = mat('#b96f5b',.82);
+  const roomPalette = ['#f5e8dc','#eedfd4','#f7eadc','#edddd2','#f3e3d7','#efe2d8'];
   scene.add(new THREE.HemisphereLight('#fffaf2','#f2b18d',1.35));
   const sun = new THREE.DirectionalLight('#fff4e5',2.15); sun.position.set(-5,11,10); sun.castShadow=true; scene.add(sun);
 
-  const body = new THREE.Mesh(new THREE.BoxGeometry(13.8,7.2,4.2), wallMat);
-  body.position.set(0,3.6,0); house.add(body);
-  const plinth = new THREE.Mesh(new THREE.BoxGeometry(14.05,.1,.34),wallMat);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(13.55,6.8,4.2), wallMat);
+  body.position.set(0,3.4,0); house.add(body);
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(13.8,.1,.34),wallMat);
   plinth.position.set(0,.05,2.12); house.add(plinth);
-  const roofShape = new THREE.Shape(); roofShape.moveTo(-7.45,0); roofShape.lineTo(0,2.42); roofShape.lineTo(7.45,0); roofShape.closePath();
+  const roofShape = new THREE.Shape(); roofShape.moveTo(-7.3,0); roofShape.lineTo(-2.15,2.02); roofShape.lineTo(2.15,2.02); roofShape.lineTo(7.3,0); roofShape.closePath();
   const roofGeo = new THREE.ExtrudeGeometry(roofShape,{depth:4.35,bevelEnabled:false}); roofGeo.translate(0,0,-2.18);
-  const roof = new THREE.Mesh(roofGeo, roofMat); roof.position.y=7.05; roof.castShadow=true; roof.receiveShadow=true; house.add(roof);
-  const eave = new THREE.Mesh(new THREE.BoxGeometry(15.15,.16,.4), frameMat); eave.position.set(0,7.02,2.22); house.add(eave);
-  const fascia = new THREE.Mesh(new THREE.BoxGeometry(15.12,.08,.2),frameMat); fascia.position.set(0,6.92,2.34); house.add(fascia);
-  const chimneyBase=new THREE.Mesh(new THREE.BoxGeometry(1.05,.7,.32),wallMat); chimneyBase.position.set(-4.15,8.45,2.31); house.add(chimneyBase);
-  [-4.36,-3.94].forEach(x=>{const stack=new THREE.Mesh(new THREE.CylinderGeometry(.1,.115,.68,20),frameMat);stack.position.set(x,9.08,2.42);house.add(stack);});
+  const roof = new THREE.Mesh(roofGeo, roofMat); roof.position.y=6.82; roof.castShadow=true; roof.receiveShadow=true; house.add(roof);
+  const eave = new THREE.Mesh(new THREE.BoxGeometry(14.75,.13,.36), frameMat); eave.position.set(0,6.8,2.22); house.add(eave);
+  const fascia = new THREE.Mesh(new THREE.BoxGeometry(14.72,.055,.18),frameMat); fascia.position.set(0,6.72,2.34); house.add(fascia);
+  const chimneyBase=new THREE.Mesh(new THREE.BoxGeometry(.86,.72,.34),wallMat); chimneyBase.position.set(-4.05,8.12,2.31); house.add(chimneyBase);
+  [-4.21,-3.89].forEach(x=>{const stack=new THREE.Mesh(new THREE.CylinderGeometry(.075,.09,.5,20),frameMat);stack.position.set(x,8.64,2.42);house.add(stack);});
   const smoke=[];
   for(let i=0;i<10;i++){
     const smokeMaterial=new THREE.MeshBasicMaterial({color:'#bba99b',transparent:true,opacity:0,depthWrite:false,toneMapped:false});
     const puff=new THREE.Mesh(new THREE.SphereGeometry(1,18,18),smokeMaterial);
-    puff.userData={phase:i/10,baseX:i%2?-3.94:-4.36}; puff.position.z=2.43; house.add(puff); smoke.push(puff);
+    puff.userData={phase:i/10,baseX:i%2?-3.89:-4.21}; puff.position.z=2.43; house.add(puff); smoke.push(puff);
   }
   const edgeMat = wallMat;
-  const leftEdge = new THREE.Mesh(new THREE.BoxGeometry(.16,7.25,.24), edgeMat); leftEdge.position.set(-6.9,3.6,2.2); house.add(leftEdge);
-  const rightEdge = leftEdge.clone(); rightEdge.position.x=6.9; house.add(rightEdge);
-  const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.72,3.02,.13),mat('#e3dbcf',.82)); doorFrame.position.set(4.65,1.51,2.24); house.add(doorFrame);
-  const door = new THREE.Mesh(new THREE.BoxGeometry(1.5,2.8,.14), frameMat); door.position.set(4.65,1.4,2.34); door.castShadow=true; house.add(door);
-  const knob = new THREE.Mesh(new THREE.SphereGeometry(.065,18,18),mat('#d8aa63',.35)); knob.position.set(5.18,1.46,2.45); house.add(knob);
-  const step = new THREE.Mesh(new THREE.BoxGeometry(1.86,.14,.45), sillMat); step.position.set(4.65,.02,2.42); house.add(step);
+  const leftEdge = new THREE.Mesh(new THREE.BoxGeometry(.13,6.82,.22), edgeMat); leftEdge.position.set(-6.775,3.4,2.2); house.add(leftEdge);
+  const rightEdge = leftEdge.clone(); rightEdge.position.x=6.775; house.add(rightEdge);
 
   function shapeFor(type,w,h) {
     const s = new THREE.Shape();
@@ -99,28 +95,30 @@ if (host) {
   const rooms=[];
   roles.forEach((role,i)=>{
     const col=i%3, row=i<3?0:1, [ww,hh]=role.size;
-    const group=new THREE.Group(); group.name=role.name; group.position.set((col-1)*4.65,row===0?5.12:1.48,2.55);
-    const recess=new THREE.Mesh(new THREE.ShapeGeometry(shapeFor(role.window,ww+.14,hh+.14)),frameMat); recess.position.z=.02; group.add(recess);
+    const group=new THREE.Group(); group.name=role.name; group.position.set((col-1)*4.55,row===0?4.92:1.42,2.55);
+    const recess=new THREE.Mesh(new THREE.ShapeGeometry(shapeFor(role.window,ww+.16,hh+.16)),mat('#8f675c',.9)); recess.position.z=.01; group.add(recess);
     const frameGeometry=new THREE.ExtrudeGeometry(shapeFor(role.window,ww+.09,hh+.09),{depth:.09,bevelEnabled:true,bevelSegments:3,bevelSize:.022,bevelThickness:.022});
     const frame=new THREE.Mesh(frameGeometry,frameMat); frame.position.z=.06; group.add(frame);
-    const inner=new THREE.Mesh(new THREE.ShapeGeometry(shapeFor(role.window,ww,hh)),insideMat); inner.position.z=.23; inner.receiveShadow=true; group.add(inner);
+    const innerMat=mat(roomPalette[i],.96);
+    const inner=new THREE.Mesh(new THREE.ShapeGeometry(shapeFor(role.window,ww,hh)),innerMat); inner.position.z=.21; inner.receiveShadow=true; group.add(inner);
+    const shade=new THREE.Mesh(new THREE.ShapeGeometry(shapeFor(role.window,ww*.94,hh*.94)),new THREE.MeshBasicMaterial({color:'#5d443c',transparent:true,opacity:.04,depthWrite:false,toneMapped:false})); shade.position.set(-.045,.045,.235); group.add(shade);
     const characterMaterial=new THREE.MeshBasicMaterial({transparent:true,alphaTest:.02,depthTest:false,toneMapped:false});
     const character=new THREE.Mesh(new THREE.PlaneGeometry(1,1),characterMaterial); character.position.set(0,-.12,.48); group.add(character);
-    cutoutTexture(`assets/roommate-type-cards/RoommateTypeCard_${role.slug}.png`,(texture,aspect)=>{character.material.map=texture;character.material.needsUpdate=true;const h=hh*.88;character.scale.set(Math.min(ww*.86,h*aspect),h,1);});
-    const windowSill=new THREE.Mesh(new THREE.BoxGeometry(ww+.34,.09,.3),sillMat); windowSill.position.set(0,-hh/2-.045,.37); group.add(windowSill);
+    cutoutTexture(`assets/roommate-type-cards/RoommateTypeCard_${role.slug}.png`,(texture,aspect)=>{character.material.map=texture;character.material.needsUpdate=true;const h=hh*.9;character.scale.set(Math.min(ww*.88,h*aspect),h,1);});
+    const windowSill=new THREE.Mesh(new THREE.BoxGeometry(ww+.28,.075,.26),sillMat); windowSill.position.set(0,-hh/2-.038,.35); group.add(windowSill);
     house.add(group); rooms.push(group);
   });
 
   const route=[
-    {p:0,pos:[0,1.65,25],target:[0,1.3,0]},
-    {p:.12,pos:[-4.4,1.8,7.2],target:[-4.4,1.55,2.3]},
-    {p:.26,pos:[0,1.8,6.4],target:[0,1.55,2.3]},
-    {p:.40,pos:[4.4,1.8,7.2],target:[4.4,1.55,2.3]},
-    {p:.54,pos:[-4.4,-1.75,6.4],target:[-4.4,-1.95,2.3]},
-    {p:.68,pos:[0,-1.75,5.4],target:[0,-1.95,2.3]},
-    {p:.82,pos:[4.4,-1.75,6.4],target:[4.4,-1.95,2.3]},
-    {p:.94,pos:[0,1.65,25],target:[0,1.3,0]},
-    {p:1,pos:[0,1.65,25],target:[0,1.3,0]},
+    {p:0,pos:[0,1.45,25],target:[0,1.45,0]},
+    {p:.12,pos:[-4.4,1.62,25],target:[-4.4,1.62,0]},
+    {p:.26,pos:[0,1.62,25],target:[0,1.62,0]},
+    {p:.40,pos:[4.4,1.62,25],target:[4.4,1.62,0]},
+    {p:.54,pos:[-4.4,-1.88,25],target:[-4.4,-1.88,0]},
+    {p:.68,pos:[0,-1.88,25],target:[0,-1.88,0]},
+    {p:.82,pos:[4.4,-1.88,25],target:[4.4,-1.88,0]},
+    {p:.94,pos:[0,1.45,25],target:[0,1.45,0]},
+    {p:1,pos:[0,1.45,25],target:[0,1.45,0]},
   ];
   const ease=t=>t*t*(3-2*t);
   function routeAt(p){for(let i=0;i<route.length-1;i++)if(p<=route[i+1].p){const a=route[i],b=route[i+1],t=ease((p-a.p)/(b.p-a.p));return{pos:a.pos.map((v,j)=>THREE.MathUtils.lerp(v,b.pos[j],t)),target:a.target.map((v,j)=>THREE.MathUtils.lerp(v,b.target[j],t))};}return route[route.length-1];}
@@ -137,7 +135,7 @@ if (host) {
     if(active<0){info.classList.remove('is-visible');counter.textContent=p>.86?'':'Scroll to meet all six';}
     else{info.classList.add('is-visible');indexNode.textContent=`ROOMIE TYPE · ${String(active+1).padStart(2,'0')} / 06`;nameNode.textContent=roles[active].name;sloganNode.textContent=roles[active].slogan;counter.textContent='';}
     const now=performance.now()*.001;
-    smoke.forEach(puff=>{const cycle=(now*.17+puff.userData.phase)%1;puff.position.x=puff.userData.baseX+Math.sin(now*1.25+puff.userData.phase*12)*.13;puff.position.y=9.45+cycle*1.65;const size=.07+cycle*.23;puff.scale.set(size*1.15,size,size);puff.material.opacity=.24*Math.pow(1-cycle,1.45);});
+    smoke.forEach(puff=>{const cycle=(now*.17+puff.userData.phase)%1;puff.position.x=puff.userData.baseX+Math.sin(now*1.25+puff.userData.phase*12)*.13;puff.position.y=8.99+cycle*1.55;const size=.06+cycle*.21;puff.scale.set(size*1.15,size,size);puff.material.opacity=.19*Math.pow(1-cycle,1.45);});
     rooms.forEach((room,i)=>room.scale.setScalar(active===i?1:.965)); renderer.render(scene,camera); requestAnimationFrame(render);
   }
   render();
